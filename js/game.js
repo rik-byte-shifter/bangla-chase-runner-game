@@ -671,7 +671,8 @@ function onKeyDown(e) {
     if (gameState === 'play' && !paused && player) {
         if (e.code === 'Space') {
             sound.playJump();
-            player.jump(player.isGrounded());
+            const truckLongJump = obstacles ? obstacles.shouldUseTruckLongJump(player) : false;
+            player.jump(player.isGrounded(), truckLongJump);
         }
         if (e.code === 'ArrowDown') {
             player.slide();
@@ -705,7 +706,8 @@ function onTouchEnd(e) {
         player.slide();
     } else {
         sound.playJump();
-        player.jump(player.isGrounded());
+        const truckLongJump = obstacles ? obstacles.shouldUseTruckLongJump(player) : false;
+        player.jump(player.isGrounded(), truckLongJump);
     }
 }
 

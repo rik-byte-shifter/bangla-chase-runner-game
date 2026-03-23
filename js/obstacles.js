@@ -90,30 +90,41 @@ export class ObstacleManager {
         const roll = Math.random();
         if (roll < 0.08) {
             o.kind = 'heart';
-            o.width = 86;
-            o.height = 86;
-            o.y = groundY - 210 - Math.random() * 120;
+            o.width = 72;
+            o.height = 72;
+            o.y = groundY - 190 - Math.random() * 110;
         } else if (roll < 0.2) {
             o.kind = 'coin';
-            o.width = 52;
-            o.height = 52;
-            o.y = groundY - 170 - Math.random() * 150;
+            const coinImgW = Number(/** @type {any} */ (this.images.coin).width) || 1;
+            const coinImgH = Number(/** @type {any} */ (this.images.coin).height) || 1;
+            const coinAspect = Math.max(0.7, Math.min(1.4, coinImgW / coinImgH));
+            const coinBaseH = 62 + Math.random() * 8;
+            o.height = coinBaseH;
+            o.width = coinBaseH * coinAspect;
+            o.y = groundY - 155 - Math.random() * 135;
         } else {
             const t = Math.random();
             if (t < 0.38) {
                 o.kind = 'rock';
-                o.width = 120 + Math.random() * 24;
-                o.height = 110 + Math.random() * 24;
+                // Keep truck sprite proportionate (rock.png now holds truck art).
+                const truckImgW = Number(/** @type {any} */ (this.images.rock).width) || 1;
+                const truckImgH = Number(/** @type {any} */ (this.images.rock).height) || 1;
+                const truckAspect = Math.max(1.1, Math.min(3.8, truckImgW / truckImgH));
+                o.width = 230 + Math.random() * 40;
+                o.height = o.width / truckAspect;
                 o.y = groundY - o.height;
             } else if (t < 0.76) {
                 o.kind = 'riksha';
-                o.width = 150 + Math.random() * 30;
-                o.height = 120 + Math.random() * 24;
+                o.width = 136 + Math.random() * 22;
+                o.height = 106 + Math.random() * 18;
                 o.y = groundY - o.height;
             } else {
                 o.kind = 'rakin';
-                o.width = 96 + Math.random() * 24;
-                o.height = 138 + Math.random() * 18;
+                const rakinImgW = Number(/** @type {any} */ (this.images.rakin).width) || 1;
+                const rakinImgH = Number(/** @type {any} */ (this.images.rakin).height) || 1;
+                const rakinAspect = Math.max(0.38, Math.min(1.15, rakinImgW / rakinImgH));
+                o.height = 146 + Math.random() * 18;
+                o.width = o.height * rakinAspect;
                 o.y = groundY - o.height;
             }
         }
@@ -223,10 +234,36 @@ export class ObstacleManager {
     }
 
     /**
+     * Whether jump input should trigger truck long-jump assist.
+     * @param {import('./player.js').Player} player
+     * @returns {boolean}
+     */
+    shouldUseTruckLongJump(player) {
+        const pb = player.getBounds();
+        const lookAheadX = pb.x + 430;
+        for (const o of this.active) {
+            if (!o.active || o.kind !== 'rock') continue;
+            const truckFrontInRange = o.x <= lookAheadX;
+            const truckNotPassed = o.x + o.width >= pb.x + pb.width * 0.6;
+            if (truckFrontInRange && truckNotPassed) return true;
+        }
+        return false;
+    }
+
+    /**
      * @param {Obstacle} o
      * @returns {{ x: number, y: number, width: number, height: number }}
      */
     _obstacleHitRect(o) {
+        if (o.kind === 'rock') {
+            // Truck uses a tighter body hitbox so jump timing feels fair.
+            return {
+                x: o.x + o.width * 0.1,
+                y: o.y + o.height * 0.04,
+                width: o.width * 0.82,
+                height: o.height * 0.66,
+            };
+        }
         if (o.kind === 'rakin') {
             return {
                 x: o.x + o.width * 0.16,

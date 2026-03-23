@@ -53,6 +53,10 @@ export class Player {
         this.runFrameMs = 85;
         this.jumpFrameMs = 120;
         this.slideFrameMs = 95;
+        /** Long-jump assist (used for truck obstacles). */
+        this.longJumpActive = false;
+        this.longJumpLockMs = 0;
+        this.longJumpGlideMs = 0;
     }
 
     /**
@@ -60,9 +64,11 @@ export class Player {
      */
     update(dtMs) {
         const dt = dtMs / (1000 / 60);
-        const g = 0.62 * dt;
+        const baseG = 0.62 * dt;
         const term = 15 * dt;
-        const fallBoost = this.vy > 0 ? 1.12 : 1;
+        const longJumpLift = this.longJumpActive && this.longJumpGlideMs > 0;
+        const g = baseG * (longJumpLift ? 0.8 : 1);
+        const fallBoost = this.vy > 0 ? (longJumpLift ? 1.08 : 1.12) : 1;
 
         this.x += (this.targetX - this.x) * Math.min(1, 0.2 * dt);
 
@@ -87,6 +93,12 @@ export class Player {
         if (this.jumpBufferMs > 0) {
             this.jumpBufferMs -= dtMs;
         }
+        if (this.longJumpLockMs > 0) {
+            this.longJumpLockMs = Math.max(0, this.longJumpLockMs - dtMs);
+        }
+        if (this.longJumpGlideMs > 0) {
+            this.longJumpGlideMs = Math.max(0, this.longJumpGlideMs - dtMs);
+        }
 
         if (this.state === 'slide') {
             this.slideTimer -= dtMs;
@@ -108,6 +120,9 @@ export class Player {
                 this.coyoteMs = this.coyoteDuration;
                 if (this.state === 'jump') {
                     this.state = 'run';
+                    this.longJumpActive = false;
+                    this.longJumpLockMs = 0;
+                    this.longJumpGlideMs = 0;
                 }
                 this.bobPhase += dtMs * 0.012;
             } else {
@@ -116,7 +131,7 @@ export class Player {
         }
 
         if (this.jumpBufferMs > 0 && this.canJumpNow()) {
-            this.vy = -12.5;
+            this.vy = this.longJumpActive ? -14.9 : -12.5;
             this.state = 'jump';
             this.jumpBufferMs = 0;
             this.coyoteMs = 0;
@@ -128,12 +143,16 @@ export class Player {
 
     /**
      * @param {boolean} onGround
+     * @param {boolean} [longJump=false]
      */
-    jump(onGround) {
+    jump(onGround, longJump = false) {
         if (this.state === 'slide') return;
+        this.longJumpActive = longJump;
+        this.longJumpLockMs = longJump ? 230 : 0;
+        this.longJumpGlideMs = longJump ? 300 : 0;
         this.jumpBufferMs = this.jumpBufferDuration;
         if (onGround || this.canJumpNow()) {
-            this.vy = -12.5;
+            this.vy = longJump ? -14.9 : -12.5;
             this.state = 'jump';
             this.jumpBufferMs = 0;
             this.coyoteMs = 0;
@@ -151,6 +170,7 @@ export class Player {
      * Cut jump height if player releases jump early.
      */
     releaseJump() {
+        if (this.longJumpActive && this.longJumpLockMs > 0) return;
         if (this.state === 'jump' && this.vy < -2) {
             this.vy *= this.jumpCutMultiplier;
         }
@@ -209,12 +229,26 @@ export class Player {
     draw(ctx) {
         const img = this.sprites.image;
         const frame = this._getFrameRect();
+        const visual = this._getVisualSize(frame);
         ctx.save();
         const bob =
             this.state === 'run' && this.isGrounded()
                 ? Math.sin(this.bobPhase) * 5
                 : 0;
         const drawY = this.y + bob;
+        const drawX = this.x + (PLAYER_W - visual.w) * 0.5;
+
+        // Subtle contact shadow helps the character feel less flat.
+        if (this.state !== 'jump') {
+            ctx.save();
+            ctx.globalAlpha = 0.24;
+            ctx.fillStyle = '#000';
+            const shadowW = Math.max(36, visual.w * (this.state === 'slide' ? 0.92 : 0.76));
+            ctx.beginPath();
+            ctx.ellipse(this.x + PLAYER_W / 2, this.groundY - 3, shadowW / 2, 9, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+        }
 
         if (this.state === 'jump') {
             ctx.translate(this.x + PLAYER_W / 2, drawY + PLAYER_H / 2);
@@ -225,15 +259,17 @@ export class Player {
                 frame.sy,
                 frame.sw,
                 frame.sh,
-                -PLAYER_W / 2,
-                -PLAYER_H / 2,
-                PLAYER_W,
-                PLAYER_H
+                -visual.w / 2,
+                -visual.h / 2,
+                visual.w,
+                visual.h
             );
         } else if (this.state === 'slide') {
             const slideFx = this._getSlideVisuals();
             const cx = this.x + PLAYER_W * 0.5;
             const cy = drawY + PLAYER_H * 0.72;
+            const slideH = visual.h - 42;
+            const slideW = visual.w * (slideH / visual.h);
 
             ctx.translate(cx, cy);
             ctx.rotate(slideFx.tilt);
@@ -244,10 +280,10 @@ export class Player {
                 frame.sy,
                 frame.sw,
                 frame.sh,
-                -PLAYER_W * 0.5 + slideFx.forwardShift,
+                -slideW * 0.5 + slideFx.forwardShift,
                 -PLAYER_H * 0.22 + slideFx.drop,
-                PLAYER_W,
-                PLAYER_H - 42
+                slideW,
+                slideH
             );
             this._drawSlideStreak(ctx, slideFx);
         } else {
@@ -257,10 +293,10 @@ export class Player {
                 frame.sy,
                 frame.sw,
                 frame.sh,
-                this.x,
+                drawX,
                 drawY,
-                PLAYER_W,
-                PLAYER_H
+                visual.w,
+                visual.h
             );
         }
 
@@ -295,7 +331,7 @@ export class Player {
                 : 0;
         const settle = enter * (1 - exit * 0.85);
         return {
-            tilt: -0.18 * settle,
+            tilt: 0.2 * settle,
             scaleX: 1 + 0.1 * settle,
             scaleY: 1 - 0.22 * settle,
             drop: 14 * settle + Math.sin(p * Math.PI) * 4,
@@ -371,6 +407,18 @@ export class Player {
             sw: frameW,
             sh: frameH,
         };
+    }
+
+    /**
+     * Keep character proportionate even when custom sprite dimensions vary.
+     * @param {{ sw: number, sh: number }} frame
+     * @returns {{ w: number, h: number }}
+     */
+    _getVisualSize(frame) {
+        const ratio = (Number(frame.sw) || PLAYER_W) / Math.max(1, Number(frame.sh) || PLAYER_H);
+        const h = PLAYER_H;
+        const w = clamp(h * ratio, PLAYER_W * 0.72, PLAYER_W * 1.7);
+        return { w, h };
     }
 
     /**
