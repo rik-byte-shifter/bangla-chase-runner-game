@@ -25,7 +25,8 @@ export class Chaser {
      * @param {number} targetX
      */
     update(dtMs, targetX) {
-        this.displayX = lerp(this.displayX, targetX, 0.2);
+        const blend = Math.min(1, 0.2 * (dtMs / 16.67));
+        this.displayX = lerp(this.displayX, targetX, blend);
         this.bobPhase += dtMs * 0.012;
         const frameCount = this._getFrameCount();
         if (frameCount > 1) {

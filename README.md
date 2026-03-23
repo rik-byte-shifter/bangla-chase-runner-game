@@ -1,6 +1,6 @@
 # Catch Me If You Can
 
-A browser-based 2D endless chase runner: you play the boy running from the girl through a scrolling village-style scene. Jump (**Space**), slide (**Down**), dodge obstacles, collect boosts, and keep your distance.
+A browser-based 2D endless chase runner: you play the **girl** chasing the **boy** through a scrolling village-style scene. Jump (**Space**), slide (**Down**), dodge obstacles, collect pickups, and close the gap.
 
 ## Run locally
 
@@ -27,23 +27,23 @@ Audio is loaded from `assets/audio/` (optional; beeps are used if files are miss
 
 | File | Role | Notes |
 |------|------|--------|
-| `boy.png` | Player | Drawn at **64×96** (scaled to fit). Transparent PNG recommended. |
-| `girl.png` | Chaser | Same size as boy; warm tint when she is close. |
+| `girl.png` | Player | Drawn at **64×96** (scaled to fit). Transparent PNG recommended. |
+| `boy.png` | Chaser | Same size as girl; warm tint when close. |
 | `background.png` | Sky / scene | Tiled horizontally above the ground band. |
 | `ground.png` | Foreground strip | Tiled horizontally from the ground line to the bottom of the canvas. |
-| `rock.png` | Obstacle | **48×48**, jump over. |
-| `box.png` | Obstacle | **48×48**, slide under (or jump over if you clear the top). |
-| `hole.png` | Obstacle | **64×32**, jump over. |
-| `heart.png` | Shield pickup + UI | **32×32** style. |
-| `powerup.png` | Speed boost pickup | **48×48** style. |
+| `rock.png` | Truck obstacle | Wide obstacle; jump timing challenge. |
+| `riksha.png` | Riksha obstacle | Medium obstacle; jump over. |
+| `rakin.png` | Runner obstacle | Tall obstacle; slide under. |
+| `heart.png` | Life pickup + UI | Extra life collectible. |
+| `coin.png` | Coin pickup | Bonus score collectible. |
 
 If any file is missing, the loader logs a warning and **`js/utils.js`** draws a **labeled placeholder** so the game still runs.
 
 ## Deploy
 
 - **GitHub Pages:** Push this folder to a repo, enable Pages from the `main` branch `/` or `/chase-runner-game`, and set the site URL in `index.html` if you use a subpath.
-- **Netlify:** Drag-and-drop the `chase-runner-game` folder, or connect the repo; publish directory = this folder.
-- **Vercel:** Import the project; static output directory = this folder.
+- **Netlify:** `netlify.toml` is included for SPA fallback + cache headers.
+- **Vercel:** `vercel.json` is included with equivalent static headers/routes.
 - **Apache:** `.htaccess` in this folder includes basic cache headers for CSS/JS/images/audio.
 
 ## Production build (optional)
@@ -60,6 +60,11 @@ If any file is missing, the loader logs a warning and **`js/utils.js`** draws a 
 | Down | Slide |
 | P | Pause |
 | D | Toggle hitbox debug |
-| Tap / swipe down | Jump / slide (touch) |
+| Tap / swipe down | Jump / slide (touch/pointer) |
 
 High score is stored in `localStorage` under the key `catchMeHighScore`.
+
+## Runtime issue visibility
+
+- Runtime/audio/asset errors are stored in `localStorage` under `catchMeRuntimeIssues`.
+- While playing, HUD shows issue count if any issue is detected in the current session.

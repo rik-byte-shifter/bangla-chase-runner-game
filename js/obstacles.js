@@ -97,10 +97,11 @@ export class ObstacleManager {
             o.kind = 'coin';
             const coinImgW = Number(/** @type {any} */ (this.images.coin).width) || 1;
             const coinImgH = Number(/** @type {any} */ (this.images.coin).height) || 1;
-            const coinAspect = Math.max(0.7, Math.min(1.4, coinImgW / coinImgH));
-            const coinBaseH = 62 + Math.random() * 8;
+            // Keep coin visually round/proportionate and slightly larger for readability.
+            const coinAspect = Math.max(0.9, Math.min(1.1, coinImgW / coinImgH));
+            const coinBaseH = 88 + Math.random() * 12;
             o.height = coinBaseH;
-            o.width = coinBaseH * coinAspect;
+            o.width = coinBaseH * coinAspect * 1.2;
             o.y = groundY - 155 - Math.random() * 135;
         } else {
             const t = Math.random();
@@ -115,9 +116,14 @@ export class ObstacleManager {
                 o.y = groundY - o.height;
             } else if (t < 0.76) {
                 o.kind = 'riksha';
-                o.width = 136 + Math.random() * 22;
-                o.height = 106 + Math.random() * 18;
-                o.y = groundY - o.height;
+                const rikshaImgW = Number(/** @type {any} */ (this.images.riksha).width) || 1;
+                const rikshaImgH = Number(/** @type {any} */ (this.images.riksha).height) || 1;
+                const rikshaAspect = Math.max(1.3, Math.min(3.4, rikshaImgW / rikshaImgH));
+                // Taller riksha for stronger on-screen presence.
+                o.height = 138 + Math.random() * 24;
+                o.width = o.height * rikshaAspect;
+                // Place riksha deeper into the road band so it stays away from busy shop/background details.
+                o.y = groundY - o.height + 24;
             } else {
                 o.kind = 'rakin';
                 const rakinImgW = Number(/** @type {any} */ (this.images.rakin).width) || 1;
@@ -134,19 +140,35 @@ export class ObstacleManager {
 
     /**
      * @param {number} scrollSpeed
+     * @param {number} [dtMs=16.67]
      */
-    scrollAll(scrollSpeed) {
+    scrollAll(scrollSpeed, dtMs = 16.67) {
+        const frameScale = Math.max(0.45, Math.min(2, dtMs / 16.67));
         for (let i = this.active.length - 1; i >= 0; i--) {
             const o = this.active[i];
             if (!o) continue;
             const extraRun = o.kind === 'rakin' ? scrollSpeed * 0.55 : 0;
-            o.x -= scrollSpeed + extraRun;
+            o.x -= (scrollSpeed + extraRun) * frameScale;
             o.animPhase += o.kind === 'rakin' ? 0.28 : 0.08;
             if (o.x + o.width < -20) {
                 this.pool.release(o);
                 this.active.splice(i, 1);
             }
         }
+    }
+
+    /**
+     * Count how many obstacles of a kind are visible on screen.
+     * @param {ObstacleKind} kind
+     * @returns {number}
+     */
+    countVisibleKind(kind) {
+        let n = 0;
+        for (const o of this.active) {
+            if (!o.active || o.kind !== kind) continue;
+            if (o.x <= this.canvas.width && o.x + o.width >= 0) n += 1;
+        }
+        return n;
     }
 
     /**
@@ -202,19 +224,22 @@ export class ObstacleManager {
 
             let safe = false;
             if (o.kind === 'rock') {
+                const footClear = pb.y + pb.height <= obstacleRect.y + 3;
                 safe =
                     player.state === 'jump' ||
-                    pb.y + pb.height <= obstacleRect.y + 2 ||
+                    footClear ||
                     pb.y > obstacleRect.y + obstacleRect.height;
             } else if (o.kind === 'riksha') {
+                const footClear = pb.y + pb.height <= obstacleRect.y + 4;
                 safe =
                     player.state === 'jump' ||
-                    pb.y + pb.height <= obstacleRect.y + 2 ||
+                    footClear ||
                     pb.y > obstacleRect.y + obstacleRect.height;
             } else if (o.kind === 'rakin') {
+                const headClear = pb.y + pb.height <= obstacleRect.y + 8;
                 safe =
                     player.state === 'slide' ||
-                    pb.y + pb.height <= obstacleRect.y + 4;
+                    headClear;
             }
 
             if (colliding && !safe && !o.dealtDamage) {
@@ -223,7 +248,8 @@ export class ObstacleManager {
             }
 
             if (!o.scoredNearMiss && o.x + o.width < pb.x && !o.dealtDamage) {
-                if (o.minGap < 60) {
+                const nearMissThreshold = Math.max(52, Math.min(88, o.width * 0.22));
+                if (o.minGap < nearMissThreshold) {
                     o.scoredNearMiss = true;
                     nearMiss = true;
                 }
@@ -234,15 +260,16 @@ export class ObstacleManager {
     }
 
     /**
-     * Whether jump input should trigger truck long-jump assist.
+     * Whether jump input should trigger long-jump assist.
+     * Supports large ground obstacles like truck and riksha.
      * @param {import('./player.js').Player} player
      * @returns {boolean}
      */
     shouldUseTruckLongJump(player) {
         const pb = player.getBounds();
-        const lookAheadX = pb.x + 430;
+        const lookAheadX = pb.x + 460;
         for (const o of this.active) {
-            if (!o.active || o.kind !== 'rock') continue;
+            if (!o.active || (o.kind !== 'rock' && o.kind !== 'riksha')) continue;
             const truckFrontInRange = o.x <= lookAheadX;
             const truckNotPassed = o.x + o.width >= pb.x + pb.width * 0.6;
             if (truckFrontInRange && truckNotPassed) return true;
@@ -270,6 +297,15 @@ export class ObstacleManager {
                 y: o.y + o.height * 0.08,
                 width: o.width * 0.68,
                 height: o.height * 0.88,
+            };
+        }
+        if (o.kind === 'riksha') {
+            // Slightly tighter than visual sprite so jump-over timing is forgiving.
+            return {
+                x: o.x + o.width * 0.1,
+                y: o.y + o.height * 0.14,
+                width: o.width * 0.8,
+                height: o.height * 0.72,
             };
         }
         return { x: o.x, y: o.y, width: o.width, height: o.height };
@@ -322,7 +358,29 @@ export class ObstacleManager {
             } else {
                 const bob =
                     o.kind === 'rakin' ? Math.sin(o.animPhase) * 4 : o.kind === 'coin' ? Math.sin(o.animPhase) * 3 : 0;
-                ctx.drawImage(src, o.x, o.y + bob, o.width, o.height);
+                if (o.kind === 'coin') {
+                    // Make coin pop from background with a clean gold glow.
+                    ctx.save();
+                    ctx.filter = 'contrast(1.35) saturate(1.45) brightness(1.15)';
+                    ctx.shadowColor = 'rgba(255, 208, 64, 0.85)';
+                    ctx.shadowBlur = 14;
+                    ctx.shadowOffsetX = 0;
+                    ctx.shadowOffsetY = 0;
+                    ctx.drawImage(src, o.x, o.y + bob, o.width, o.height);
+                    ctx.restore();
+                } else if (o.kind === 'riksha') {
+                    // Boost contrast/saturation and add shadow so riksha stays visible on similar-toned backgrounds.
+                    ctx.save();
+                    ctx.filter = 'contrast(1.28) saturate(1.35) brightness(1.08)';
+                    ctx.shadowColor = 'rgba(0, 0, 0, 0.42)';
+                    ctx.shadowBlur = 12;
+                    ctx.shadowOffsetX = 0;
+                    ctx.shadowOffsetY = 4;
+                    ctx.drawImage(src, o.x, o.y + bob, o.width, o.height);
+                    ctx.restore();
+                } else {
+                    ctx.drawImage(src, o.x, o.y + bob, o.width, o.height);
+                }
             }
 
             if (debug) {

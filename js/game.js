@@ -6,6 +6,7 @@ import { SoundManager } from './audio.js';
 import { Chaser } from './chaser.js';
 import { ObstacleManager } from './obstacles.js';
 import { Player, PLAYER_H } from './player.js';
+import { reportIssue } from './issue-tracker.js';
 import { loadFirstAvailableImage, loadImageOrPlaceholder } from './utils.js';
 
 const STORAGE_KEY = 'catchMeHighScore';
@@ -65,6 +66,7 @@ const floatTexts = [];
 const trailDots = [];
 
 const sound = new SoundManager();
+const MAX_DT_MS = 50;
 
 let bgOffset = 0;
 let paraOffset = 0;
@@ -78,6 +80,11 @@ const achievements = {
     speedDemon: false,
     closeCall: false,
 };
+let runtimeIssueCount = 0;
+
+function getFrameScale(dtMs) {
+    return dtMs / 16.67;
+}
 
 /**
  * Load PNG assets (`boy.png`, `girl.png`, `background.png`, `ground.png`, obstacles, UI).
@@ -206,6 +213,7 @@ function resetRun() {
     floatTexts.length = 0;
     trailDots.length = 0;
     playerIframes = 0;
+    sound.stopRakinEncounter();
     bgOffset = 0;
     paraOffset = 0;
     achievements.firstSteps = false;
@@ -282,6 +290,7 @@ function updateAchievements(dt) {
  */
 function gameOver(reason) {
     gameState = 'over';
+    sound.stopRakinEncounter();
     lastRunScore = Math.floor(score);
     sound.stopGirlVoiceLoop();
     sound.stopBgm();
@@ -320,20 +329,24 @@ function updatePlay(dt) {
     scrollSpeed = BASE_SCROLL * speedTier * player.getSpeedMultiplier();
 
     // Boy slowly escapes; girl player must close the gap.
+    const frameScale = getFrameScale(dt);
     targetEscapeRate = 0.12 + score * 0.00002;
-    gap += targetEscapeRate * (dt / 16.67) * scrollSpeed * 0.08;
+    gap += targetEscapeRate * frameScale * scrollSpeed * 0.08;
     if (player.boostTimer > 0) {
-        gap -= 0.45 * (dt / 16.67);
+        gap -= 0.45 * frameScale;
     }
 
     player.update(dt);
     obstacles.updateSpawn(dt, scrollSpeed, difficulty);
-    obstacles.scrollAll(scrollSpeed);
+    obstacles.scrollAll(scrollSpeed, dt);
     obstacles.trackProximity(player);
+    const visibleRakinCount = obstacles.countVisibleKind('rakin');
+    sound.syncRakinEncounterVoices(visibleRakinCount);
 
     const { hit, nearMiss, coinPoints, lifeGain } = obstacles.checkPlayer(player);
 
     if (lifeGain > 0) {
+        sound.playGirlEvent('heart');
         const prev = lives;
         lives = Math.min(MAX_LIVES, lives + lifeGain);
         if (lives > prev) {
@@ -343,11 +356,13 @@ function updatePlay(dt) {
     }
 
     if (coinPoints > 0) {
+        sound.playGirlEvent('coin');
         score += coinPoints;
         addFloatText(`+${coinPoints}`, player.x + 40, player.y - 60);
     }
 
     if (nearMiss) {
+        sound.playGirlEvent('nearMiss');
         score += 10;
         addFloatText('+10', player.x + 50, player.y - 40);
     }
@@ -361,6 +376,7 @@ function updatePlay(dt) {
         }
         if (took) {
             sound.playHit();
+            sound.playGirlEvent('hit');
             lives -= 1;
             gap += 150;
             player.applyHitSlow();
@@ -398,7 +414,7 @@ function updatePlay(dt) {
 
     obstacles.cullInactive();
 
-    score += dt / 16.67;
+    score += frameScale;
 
     const ms = Math.floor(score);
     if (ms > 0 && ms % 100 === 0 && ms !== lastScoreMilestone) {
@@ -412,7 +428,10 @@ function updatePlay(dt) {
     if (highHud) highHud.textContent = `Best: ${Math.floor(highScore)}`;
     if (speedHud) {
         const spPct = Math.round((scrollSpeed / BASE_SCROLL) * 100);
-        speedHud.textContent = `Speed: ${spPct}%`;
+        speedHud.textContent =
+            runtimeIssueCount > 0
+                ? `Speed: ${spPct}% | Issues: ${runtimeIssueCount}`
+                : `Speed: ${spPct}%`;
     }
 
     if (lives <= 0 || gap <= 0) {
@@ -431,7 +450,7 @@ function updatePlay(dt) {
 /**
  * Draw parallax background.
  */
-function drawBackground() {
+function drawBackground(dt) {
     if (!assets) return;
     const w = canvas.width;
     const h = canvas.height;
@@ -450,20 +469,9 @@ function drawBackground() {
         ctx.drawImage(img, x, 0, tileW, drawH);
     }
 
-    paraOffset += scrollSpeed * 0.5 * (1 / 60);
-    ctx.globalAlpha = 0.55;
-    ctx.fillStyle = 'rgba(255,255,255,0.35)';
-    for (let i = 0; i < 6; i++) {
-        const cx = ((i * 210 - (paraOffset % 400)) % (w + 400)) - 100;
-        ctx.beginPath();
-        ctx.ellipse(cx, 80 + (i % 3) * 15, 50, 22, 0, 0, Math.PI * 2);
-        ctx.fill();
-    }
-    ctx.globalAlpha = 1;
-
     drawRoad(groundY, h);
 
-    bgOffset += scrollSpeed;
+    bgOffset += scrollSpeed * getFrameScale(dt);
     ctx.restore();
 }
 
@@ -529,7 +537,7 @@ function render(dt) {
     ctx.translate(sx, sy);
 
     ctx.clearRect(-20, -20, canvas.width + 40, canvas.height + 40);
-    drawBackground();
+    drawBackground(dt);
 
     const groundY = canvas.height - 150;
     chaser.draw(ctx, groundY, gap);
@@ -578,7 +586,7 @@ function render(dt) {
  * @param {number} ts
  */
 function gameLoop(ts) {
-    const dt = Math.min(50, lastTs ? ts - lastTs : 16.67);
+    const dt = Math.min(MAX_DT_MS, lastTs ? ts - lastTs : 16.67);
     lastTs = ts;
 
     if (gameState === 'play') {
@@ -600,7 +608,7 @@ function gameLoop(ts) {
 function renderTitleIdle(dt) {
     if (!assets || !player || !chaser) return;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    drawBackground();
+    drawBackground(dt);
     const groundY = canvas.height - 150;
     player.y = groundY - PLAYER_H;
     player.x = canvas.width / 2 - 120;
@@ -653,7 +661,6 @@ function startGame() {
     resetRun();
     sound.resume();
     sound.startBgm();
-    sound.startGirlVoiceLoop();
     updateLivesHud();
     if (highHud) highHud.textContent = `Best: ${Math.floor(highScore)}`;
 }
@@ -671,10 +678,12 @@ function onKeyDown(e) {
     if (gameState === 'play' && !paused && player) {
         if (e.code === 'Space') {
             sound.playJump();
+            sound.playGirlEvent('jump');
             const truckLongJump = obstacles ? obstacles.shouldUseTruckLongJump(player) : false;
             player.jump(player.isGrounded(), truckLongJump);
         }
         if (e.code === 'ArrowDown') {
+            sound.playGirlEvent('slide');
             player.slide();
         }
     }
@@ -694,20 +703,52 @@ function onKeyUp(e) {
 }
 
 let touchStartY = 0;
-function onTouchStart(e) {
-    if (e.touches.length !== 1) return;
-    touchStartY = e.touches[0].clientY;
+let touchStartX = 0;
+let touchStartTs = 0;
+let activePointerId = null;
+function onPointerDown(e) {
+    if (activePointerId !== null) return;
+    activePointerId = e.pointerId;
+    touchStartX = e.clientX;
+    touchStartY = e.clientY;
+    touchStartTs = performance.now();
 }
-function onTouchEnd(e) {
+function onPointerUp(e) {
     if (gameState !== 'play' || paused || !player) return;
-    if (!e.changedTouches[0]) return;
-    const dy = e.changedTouches[0].clientY - touchStartY;
-    if (dy > 40) {
+    if (activePointerId !== e.pointerId) return;
+    const dx = e.clientX - touchStartX;
+    const dy = e.clientY - touchStartY;
+    const elapsed = performance.now() - touchStartTs;
+    activePointerId = null;
+    // Ignore long presses and horizontal drags to reduce accidental jumps/slides.
+    if (elapsed > 450 || Math.abs(dx) > 80) return;
+    if (dy > 42) {
+        sound.playGirlEvent('slide');
         player.slide();
     } else {
         sound.playJump();
+        sound.playGirlEvent('jump');
         const truckLongJump = obstacles ? obstacles.shouldUseTruckLongJump(player) : false;
         player.jump(player.isGrounded(), truckLongJump);
+    }
+}
+function onPointerCancel(e) {
+    if (activePointerId === e.pointerId) activePointerId = null;
+}
+
+function resizeCanvasToContainer() {
+    const container = document.getElementById('game-container');
+    if (!container) return;
+    const rect = container.getBoundingClientRect();
+    const nextW = Math.max(320, Math.round(rect.width));
+    const nextH = Math.max(180, Math.round(rect.height));
+    if (canvas.width !== nextW || canvas.height !== nextH) {
+        canvas.width = nextW;
+        canvas.height = nextH;
+        if (player) {
+            player.canvas = canvas;
+            player.groundY = canvas.height - 150;
+        }
     }
 }
 
@@ -722,7 +763,7 @@ async function boot() {
         setLoadProgress(100);
         enterStart();
     } catch (e) {
-        console.error(e);
+        reportIssue('runtime', 'Boot failed', { error: String(e) });
         if (loadingText) loadingText.textContent = 'Failed to load. Refresh to retry.';
     }
 }
@@ -756,7 +797,7 @@ document.getElementById('share-btn')?.addEventListener('click', async () => {
         await navigator.clipboard.writeText(text);
         addFloatText('Copied!', canvas.width / 2 - 30, canvas.height / 2);
     } catch {
-        console.warn('Clipboard failed');
+        reportIssue('ui', 'Clipboard copy failed');
     }
 });
 
@@ -781,13 +822,36 @@ document.getElementById('play-btn')?.addEventListener('mouseenter', () => {
 
 window.addEventListener('keydown', onKeyDown);
 window.addEventListener('keyup', onKeyUp);
+window.addEventListener('resize', resizeCanvasToContainer);
 window.addEventListener('blur', () => {
     if (gameState === 'play') paused = true;
     if (pauseOverlay) pauseOverlay.classList.remove('hidden');
 });
+window.addEventListener('error', (e) => {
+    reportIssue('runtime', 'Unhandled window error', {
+        message: e.message,
+        source: e.filename,
+        line: e.lineno,
+        column: e.colno,
+    });
+});
+window.addEventListener('unhandledrejection', (e) => {
+    reportIssue('runtime', 'Unhandled promise rejection', {
+        reason: String(e.reason),
+    });
+});
+window.addEventListener('game:issue', () => {
+    runtimeIssueCount += 1;
+    if (speedHud && gameState === 'play') {
+        const spPct = Math.round((scrollSpeed / BASE_SCROLL) * 100);
+        speedHud.textContent = `Speed: ${spPct}% | Issues: ${runtimeIssueCount}`;
+    }
+});
 
-canvas.addEventListener('touchstart', onTouchStart, { passive: true });
-canvas.addEventListener('touchend', onTouchEnd, { passive: true });
+canvas.addEventListener('pointerdown', onPointerDown, { passive: true });
+canvas.addEventListener('pointerup', onPointerUp, { passive: true });
+canvas.addEventListener('pointercancel', onPointerCancel, { passive: true });
 
 void boot();
+resizeCanvasToContainer();
 requestAnimationFrame(gameLoop);

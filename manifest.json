@@ -2,8 +2,28 @@
   "name": "Catch Me If You Can",
   "short_name": "Chase Runner",
   "description": "Run, jump, and dodge in this hilarious chase game!",
-  "start_url": "./index.html",
+  "id": "/",
+  "start_url": "./",
+  "scope": "./",
   "display": "standalone",
+  "orientation": "landscape",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": ["games", "entertainment"],
   "background_color": "#F39C12",
-  "theme_color": "#E67E22"
+  "theme_color": "#E67E22",
+  "icons": [
+    {
+      "src": "assets/images/icon-192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/images/icon-512.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
 }

@@ -1,3 +1,4 @@
+import { reportIssue } from './issue-tracker.js';
 /**
  * Shared helpers: math, rects, placeholders, pooling.
  */
@@ -42,18 +43,6 @@ export function checkCollision(rect1, rect2) {
 }
 
 /**
- * Horizontal overlap ratio (for near-miss).
- * @param {Rect} a
- * @param {Rect} b
- * @returns {number}
- */
-export function horizontalOverlapRatio(a, b) {
-    const left = Math.max(a.x, b.x);
-    const right = Math.min(a.x + a.width, b.x + b.width);
-    return Math.max(0, right - left) / Math.min(a.width, b.width);
-}
-
-/**
  * Draw a labeled placeholder sprite to an offscreen canvas.
  * @param {number} w
  * @param {number} h
@@ -95,7 +84,7 @@ export function loadImageOrPlaceholder(src, pw, ph, color, label) {
         img.crossOrigin = 'anonymous';
         img.onload = () => resolve(img);
         img.onerror = () => {
-            console.warn(`[Assets] Missing or failed: ${src} — using placeholder.`);
+            reportIssue('assets', 'Image missing or failed; using placeholder', { src });
             resolve(makePlaceholderCanvas(pw, ph, color, label));
         };
         img.src = src;
@@ -155,11 +144,3 @@ export class ObjectPool {
     }
 }
 
-/**
- * Format integer for UI.
- * @param {number} n
- * @returns {string}
- */
-export function formatScore(n) {
-    return Math.floor(n).toString();
-}
