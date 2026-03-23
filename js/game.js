@@ -1,0 +1,791 @@
+/**
+ * Main entry: game loop, states, rendering, achievements, input.
+ */
+
+import { SoundManager } from './audio.js';
+import { Chaser } from './chaser.js';
+import { ObstacleManager } from './obstacles.js';
+import { Player, PLAYER_H } from './player.js';
+import { loadFirstAvailableImage, loadImageOrPlaceholder } from './utils.js';
+
+const STORAGE_KEY = 'catchMeHighScore';
+const ASSET_BASE = 'assets/images/';
+
+/** @type {'loading'|'start'|'tutorial'|'play'|'over'} */
+let gameState = 'loading';
+
+const canvas = /** @type {HTMLCanvasElement} */ (document.getElementById('gameCanvas'));
+if (!canvas) throw new Error('Canvas missing');
+const ctx = canvas.getContext('2d');
+if (!ctx) throw new Error('2D context unavailable');
+
+const uiLayer = document.getElementById('ui-layer');
+const scoreEl = document.getElementById('score');
+const highHud = document.getElementById('high-score-hud');
+const livesEl = document.getElementById('lives');
+const profileImgEl = document.getElementById('player-profile-img');
+const speedHud = document.getElementById('speed-hud');
+const loadingScreen = document.getElementById('loading-screen');
+const loadingFill = document.getElementById('loading-fill');
+const loadingText = document.getElementById('loading-text');
+const startScreen = document.getElementById('start-screen');
+const tutorialScreen = document.getElementById('tutorial-screen');
+const gameoverScreen = document.getElementById('gameover-screen');
+const pauseOverlay = document.getElementById('pause-overlay');
+const menuHigh = document.getElementById('menu-high-score');
+const finalScoreEl = document.getElementById('final-score');
+const newHighMsg = document.getElementById('new-high-msg');
+const achievementsPanel = document.getElementById('achievements-panel');
+const startHighScoreLine = document.getElementById('start-high-score');
+
+let highScore = Number(localStorage.getItem(STORAGE_KEY) || '0');
+let score = 0;
+const MAX_LIVES = 5;
+let lives = MAX_LIVES;
+/** @type {number} Horizontal gap between boy and girl (px). */
+let gap = 400;
+let paused = false;
+let debug = false;
+
+const BASE_SCROLL = 6;
+let scrollSpeed = BASE_SCROLL;
+let difficulty = 0;
+let targetEscapeRate = 0.12;
+
+let shakeMs = 0;
+let flashMs = 0;
+/** @type {number} Last score whole number that triggered milestone beep. */
+let lastScoreMilestone = 0;
+/** @type {number} Last score shown for share / game over. */
+let lastRunScore = 0;
+
+/** @type {{ text: string, x: number, y: number, life: number }[]} */
+const floatTexts = [];
+/** @type {{ x: number, y: number, vx: number, vy: number, life: number }[]} */
+const trailDots = [];
+
+const sound = new SoundManager();
+
+let bgOffset = 0;
+let paraOffset = 0;
+
+let lastTs = 0;
+let surviveMs = 0;
+let closeChaseMs = 0;
+
+const achievements = {
+    firstSteps: false,
+    speedDemon: false,
+    closeCall: false,
+};
+
+/**
+ * Load PNG assets (`boy.png`, `girl.png`, `background.png`, `ground.png`, obstacles, UI).
+ * Missing files use canvas placeholders (see `utils.loadImageOrPlaceholder`).
+ */
+async function loadSprites() {
+    const loadCustomImage = async (candidates, pw, ph, color, label) => {
+        const found = await loadFirstAvailableImage(candidates);
+        if (found) return found;
+        return loadImageOrPlaceholder(candidates[0], pw, ph, color, label);
+    };
+
+    const customBg = await loadFirstAvailableImage([
+        `${ASSET_BASE}background.png`,
+        `${ASSET_BASE}bg.png`,
+    ]);
+    const [
+        boyImg,
+        girlImg,
+        ground,
+        rock,
+        riksha,
+        rakin,
+        heart,
+        coin,
+    ] = await Promise.all([
+        loadCustomImage(
+            [`${ASSET_BASE}boy.png`],
+            64,
+            96,
+            '#fff8e7',
+            'BOY'
+        ),
+        loadCustomImage(
+            [`${ASSET_BASE}girl.png`],
+            64,
+            96,
+            '#e8f5e9',
+            'GIRL'
+        ),
+        loadCustomImage(
+            [`${ASSET_BASE}ground.png`],
+            100,
+            50,
+            '#c2a068',
+            'GND'
+        ),
+        loadCustomImage(
+            [`${ASSET_BASE}rock.png`, `${ASSET_BASE}obstacle_rock.png`, `${ASSET_BASE}obstacle1.png`],
+            120,
+            120,
+            '#795548',
+            'R'
+        ),
+        loadCustomImage(
+            [`${ASSET_BASE}riksha.png`, `${ASSET_BASE}obstacle_riksha.png`, `${ASSET_BASE}obstacle2.png`],
+            170,
+            130,
+            '#6d4c41',
+            'RIKSHA'
+        ),
+        loadCustomImage(
+            [`${ASSET_BASE}rakin.png`, `${ASSET_BASE}obstacle_rakin.png`, `${ASSET_BASE}obstacle3.png`],
+            110,
+            150,
+            '#8e24aa',
+            'RAKIN'
+        ),
+        loadCustomImage(
+            [`${ASSET_BASE}heart.png`, `${ASSET_BASE}life_heart.png`],
+            56,
+            56,
+            '#e91e63',
+            'HEART'
+        ),
+        loadCustomImage(
+            [`${ASSET_BASE}coin.png`, `${ASSET_BASE}gold_coin.png`],
+            52,
+            52,
+            '#ffca28',
+            'COIN'
+        ),
+    ]);
+    const bg =
+        customBg ||
+        (await loadImageOrPlaceholder(`${ASSET_BASE}background.png`, 1200, 600, '#deb887', 'BG'));
+
+    return {
+        boy: { image: boyImg },
+        girl: { image: girlImg },
+        bg,
+        ground,
+        obs: { rock, riksha, rakin, heart, coin },
+    };
+}
+
+let assets = /** @type {Awaited<ReturnType<typeof loadSprites>> | null} */ (null);
+let player = /** @type {Player | null} */ (null);
+let chaser = /** @type {Chaser | null} */ (null);
+let obstacles = /** @type {ObstacleManager | null} */ (null);
+
+let playerIframes = 0;
+
+/**
+ * @param {number} pct
+ */
+function setLoadProgress(pct) {
+    if (loadingFill) loadingFill.style.width = `${pct}%`;
+}
+
+/**
+ * Reset run state.
+ */
+function resetRun() {
+    score = 0;
+    lives = MAX_LIVES;
+    gap = 400;
+    scrollSpeed = BASE_SCROLL;
+    difficulty = 0;
+    targetEscapeRate = 0.12;
+    surviveMs = 0;
+    closeChaseMs = 0;
+    lastScoreMilestone = 0;
+    shakeMs = 0;
+    flashMs = 0;
+    floatTexts.length = 0;
+    trailDots.length = 0;
+    playerIframes = 0;
+    bgOffset = 0;
+    paraOffset = 0;
+    achievements.firstSteps = false;
+    achievements.speedDemon = false;
+    achievements.closeCall = false;
+    if (assets && canvas) {
+        // Player is now the girl; target/chaser actor is the boy.
+        player = new Player({ canvas, sprites: assets.girl });
+        chaser = new Chaser({ sprites: assets.boy });
+        obstacles = new ObstacleManager({
+            canvas,
+            images: {
+                rock: assets.obs.rock,
+                riksha: assets.obs.riksha,
+                rakin: assets.obs.rakin,
+                heart: assets.obs.heart,
+                coin: assets.obs.coin,
+            },
+        });
+    }
+    if (chaser && player) {
+        chaser.displayX = player.x + gap;
+    }
+}
+
+/**
+ * @param {string} t
+ * @param {number} x
+ * @param {number} y
+ */
+function addFloatText(t, x, y) {
+    floatTexts.push({ text: t, x, y, life: 900 });
+}
+
+/**
+ * Update HUD DOM (hearts).
+ */
+function updateLivesHud() {
+    if (!livesEl) return;
+    livesEl.textContent = '';
+    for (let i = 0; i < MAX_LIVES; i++) {
+        const s = document.createElement('span');
+        s.textContent = i < lives ? '❤️' : '🖤';
+        livesEl.appendChild(s);
+    }
+}
+
+/**
+ * @param {number} dt
+ */
+function updateAchievements(dt) {
+    surviveMs += dt;
+    if (!achievements.firstSteps && surviveMs >= 10000) {
+        achievements.firstSteps = true;
+        addFloatText('Achievement: First Steps', canvas.width / 2 - 80, 80);
+    }
+    if (!achievements.speedDemon && score >= 1000) {
+        achievements.speedDemon = true;
+        addFloatText('Achievement: Speed Demon', canvas.width / 2 - 90, 110);
+    }
+    if (gap < 50) {
+        closeChaseMs += dt;
+        if (!achievements.closeCall && closeChaseMs >= 5000) {
+            achievements.closeCall = true;
+            addFloatText('Achievement: Close Call', canvas.width / 2 - 85, 140);
+        }
+    } else {
+        closeChaseMs = 0;
+    }
+}
+
+/**
+ * @param {string} reason
+ */
+function gameOver(reason) {
+    gameState = 'over';
+    lastRunScore = Math.floor(score);
+    sound.stopGirlVoiceLoop();
+    sound.stopBgm();
+    sound.playGameOver();
+    if (uiLayer) uiLayer.classList.add('hidden');
+    if (gameoverScreen) {
+        gameoverScreen.classList.add('active');
+        if (finalScoreEl) finalScoreEl.textContent = String(lastRunScore);
+        const beat = lastRunScore > highScore;
+        if (beat) {
+            highScore = lastRunScore;
+            localStorage.setItem(STORAGE_KEY, String(highScore));
+        }
+        if (newHighMsg) newHighMsg.classList.toggle('hidden', !beat);
+        if (achievementsPanel) {
+            const lines = [];
+            if (achievements.firstSteps) lines.push('First Steps');
+            if (achievements.speedDemon) lines.push('Speed Demon');
+            if (achievements.closeCall) lines.push('Close Call');
+            achievementsPanel.textContent =
+                lines.length > 0 ? `Unlocked: ${lines.join(', ')}` : '';
+        }
+    }
+}
+
+/**
+ * @param {number} dt
+ */
+function updatePlay(dt) {
+    if (!player || !chaser || !obstacles || !assets) return;
+
+    if (playerIframes > 0) playerIframes -= dt;
+
+    difficulty = score;
+    const speedTier = Math.min(1.5, 1 + Math.floor(score / 500) * 0.1);
+    scrollSpeed = BASE_SCROLL * speedTier * player.getSpeedMultiplier();
+
+    // Boy slowly escapes; girl player must close the gap.
+    targetEscapeRate = 0.12 + score * 0.00002;
+    gap += targetEscapeRate * (dt / 16.67) * scrollSpeed * 0.08;
+    if (player.boostTimer > 0) {
+        gap -= 0.45 * (dt / 16.67);
+    }
+
+    player.update(dt);
+    obstacles.updateSpawn(dt, scrollSpeed, difficulty);
+    obstacles.scrollAll(scrollSpeed);
+    obstacles.trackProximity(player);
+
+    const { hit, nearMiss, coinPoints, lifeGain } = obstacles.checkPlayer(player);
+
+    if (lifeGain > 0) {
+        const prev = lives;
+        lives = Math.min(MAX_LIVES, lives + lifeGain);
+        if (lives > prev) {
+            addFloatText('+1 LIFE', player.x + 20, player.y - 50);
+            updateLivesHud();
+        }
+    }
+
+    if (coinPoints > 0) {
+        score += coinPoints;
+        addFloatText(`+${coinPoints}`, player.x + 40, player.y - 60);
+    }
+
+    if (nearMiss) {
+        score += 10;
+        addFloatText('+10', player.x + 50, player.y - 40);
+    }
+
+    if (hit && playerIframes <= 0) {
+        let took = true;
+        if (player.shieldHits > 0) {
+            player.shieldHits = 0;
+            took = false;
+            addFloatText('Shield!', player.x, player.y - 50);
+        }
+        if (took) {
+            sound.playHit();
+            lives -= 1;
+            gap += 150;
+            player.applyHitSlow();
+            shakeMs = 260;
+            flashMs = 100;
+            playerIframes = 900;
+            updateLivesHud();
+        }
+    }
+
+    const pb = player.getBounds();
+    for (let i = trailDots.length - 1; i >= 0; i--) {
+        const d = trailDots[i];
+        d.x += d.vx;
+        d.y += d.vy;
+        d.life -= dt;
+        if (d.life <= 0) trailDots.splice(i, 1);
+    }
+    if (player.state === 'jump') {
+        trailDots.push({
+            x: pb.x + pb.width / 2,
+            y: pb.y + pb.height / 2,
+            vx: -2 - Math.random() * 2,
+            vy: -0.5,
+            life: 280,
+        });
+    }
+
+    if (shakeMs > 0) shakeMs -= dt;
+    if (flashMs > 0) flashMs -= dt;
+
+    const boyX = player.x;
+    const targetBoyX = boyX + gap;
+    chaser.update(dt, targetBoyX);
+
+    obstacles.cullInactive();
+
+    score += dt / 16.67;
+
+    const ms = Math.floor(score);
+    if (ms > 0 && ms % 100 === 0 && ms !== lastScoreMilestone) {
+        lastScoreMilestone = ms;
+        sound.maybeScoreMilestone(ms);
+    }
+
+    updateAchievements(dt);
+
+    if (scoreEl) scoreEl.textContent = `Score: ${Math.floor(score)}`;
+    if (highHud) highHud.textContent = `Best: ${Math.floor(highScore)}`;
+    if (speedHud) {
+        const spPct = Math.round((scrollSpeed / BASE_SCROLL) * 100);
+        speedHud.textContent = `Speed: ${spPct}%`;
+    }
+
+    if (lives <= 0 || gap <= 0) {
+        gameOver(lives <= 0 ? 'hearts' : 'caught');
+    }
+    gap = Math.max(0, Math.min(1200, gap));
+
+    for (let i = floatTexts.length - 1; i >= 0; i--) {
+        const ft = floatTexts[i];
+        ft.y -= 0.04 * dt;
+        ft.life -= dt;
+        if (ft.life <= 0) floatTexts.splice(i, 1);
+    }
+}
+
+/**
+ * Draw parallax background.
+ */
+function drawBackground() {
+    if (!assets) return;
+    const w = canvas.width;
+    const h = canvas.height;
+    const groundY = h - 150;
+
+    const img = assets.bg;
+    const srcW = Number(img.width) || w;
+    const srcH = Number(img.height) || groundY;
+    const drawH = groundY;
+    const bgScale = drawH / srcH;
+    const tileW = Math.max(w, srcW * bgScale);
+
+    ctx.save();
+    const bx = -(bgOffset % tileW);
+    for (let x = bx; x < w + tileW; x += tileW) {
+        ctx.drawImage(img, x, 0, tileW, drawH);
+    }
+
+    paraOffset += scrollSpeed * 0.5 * (1 / 60);
+    ctx.globalAlpha = 0.55;
+    ctx.fillStyle = 'rgba(255,255,255,0.35)';
+    for (let i = 0; i < 6; i++) {
+        const cx = ((i * 210 - (paraOffset % 400)) % (w + 400)) - 100;
+        ctx.beginPath();
+        ctx.ellipse(cx, 80 + (i % 3) * 15, 50, 22, 0, 0, Math.PI * 2);
+        ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+
+    drawRoad(groundY, h);
+
+    bgOffset += scrollSpeed;
+    ctx.restore();
+}
+
+/**
+ * Draw a stylized asphalt road with lane marks.
+ * @param {number} groundY
+ * @param {number} canvasH
+ */
+function drawRoad(groundY, canvasH) {
+    const roadH = canvasH - groundY;
+
+    // Main asphalt strip.
+    const asphalt = ctx.createLinearGradient(0, groundY, 0, canvasH);
+    asphalt.addColorStop(0, '#3f434a');
+    asphalt.addColorStop(0.5, '#32363d');
+    asphalt.addColorStop(1, '#262a30');
+    ctx.fillStyle = asphalt;
+    ctx.fillRect(0, groundY, canvas.width, roadH);
+
+    // Shoulders.
+    const shoulderH = Math.max(10, roadH * 0.12);
+    ctx.fillStyle = '#545b65';
+    ctx.fillRect(0, groundY, canvas.width, shoulderH);
+    ctx.fillStyle = '#20242a';
+    ctx.fillRect(0, canvasH - shoulderH, canvas.width, shoulderH);
+
+    // Center dashed lane lines.
+    const laneY = groundY + roadH * 0.5;
+    const dashW = 64;
+    const gapW = 40;
+    const startX = -((bgOffset * 1.25) % (dashW + gapW));
+    ctx.fillStyle = '#ffe082';
+    for (let x = startX; x < canvas.width + dashW; x += dashW + gapW) {
+        ctx.fillRect(x, laneY - 4, dashW, 8);
+    }
+
+    // Small texture speckles for cartoon-real vibe.
+    ctx.save();
+    ctx.globalAlpha = 0.08;
+    ctx.fillStyle = '#ffffff';
+    for (let i = 0; i < 70; i++) {
+        const px = (i * 181 + bgOffset * 0.6) % (canvas.width + 40) - 20;
+        const py = groundY + ((i * 37) % Math.max(1, roadH - 6)) + 3;
+        ctx.fillRect(px, py, 2, 2);
+    }
+    ctx.restore();
+}
+
+/**
+ * @param {number} dt
+ */
+function render(dt) {
+    if (!player || !chaser || !obstacles || !assets) return;
+
+    ctx.save();
+    let sx = 0;
+    let sy = 0;
+    if (shakeMs > 0) {
+        const intensity = 7 * (shakeMs / 260);
+        sx = (Math.random() - 0.5) * intensity;
+        sy = (Math.random() - 0.5) * intensity;
+    }
+    ctx.translate(sx, sy);
+
+    ctx.clearRect(-20, -20, canvas.width + 40, canvas.height + 40);
+    drawBackground();
+
+    const groundY = canvas.height - 150;
+    chaser.draw(ctx, groundY, gap);
+    player.drawDust(ctx, scrollSpeed);
+    player.draw(ctx);
+    obstacles.draw(ctx, debug);
+
+    for (const d of trailDots) {
+        ctx.save();
+        ctx.globalAlpha = d.life / 280;
+        ctx.fillStyle = 'rgba(255,255,255,0.7)';
+        ctx.beginPath();
+        ctx.arc(d.x, d.y, 3, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+    }
+
+    for (const ft of floatTexts) {
+        ctx.save();
+        ctx.font = 'bold 18px Arial';
+        ctx.fillStyle = '#5D4037';
+        ctx.strokeStyle = '#fff';
+        ctx.lineWidth = 3;
+        ctx.strokeText(ft.text, ft.x, ft.y);
+        ctx.fillText(ft.text, ft.x, ft.y);
+        ctx.restore();
+    }
+
+    if (debug && player) {
+        const b = player.getBounds();
+        ctx.strokeStyle = 'yellow';
+        ctx.strokeRect(b.x, b.y, b.width, b.height);
+    }
+
+    ctx.restore();
+
+    if (flashMs > 0) {
+        ctx.save();
+        ctx.fillStyle = `rgba(231, 76, 60, ${0.35 * (flashMs / 100)})`;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.restore();
+    }
+}
+
+/**
+ * @param {number} ts
+ */
+function gameLoop(ts) {
+    const dt = Math.min(50, lastTs ? ts - lastTs : 16.67);
+    lastTs = ts;
+
+    if (gameState === 'play') {
+        if (!paused) {
+            updatePlay(dt);
+        }
+        render(dt);
+    } else if (gameState === 'start' || gameState === 'tutorial') {
+        renderTitleIdle(dt);
+    }
+
+    requestAnimationFrame(gameLoop);
+}
+
+/**
+ * Idle animation on start screen.
+ * @param {number} dt
+ */
+function renderTitleIdle(dt) {
+    if (!assets || !player || !chaser) return;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawBackground();
+    const groundY = canvas.height - 150;
+    player.y = groundY - PLAYER_H;
+    player.x = canvas.width / 2 - 120;
+    player.state = 'run';
+    player.bobPhase += dt * 0.012;
+    chaser.displayX = player.x + 140;
+    chaser.bobPhase += dt * 0.012;
+    chaser.draw(ctx, groundY, 200);
+    player.draw(ctx);
+}
+
+/**
+ * Show start screen state.
+ */
+function enterStart() {
+    gameState = 'start';
+    if (loadingScreen) loadingScreen.classList.remove('active');
+    if (startScreen) startScreen.classList.add('active');
+    if (tutorialScreen) tutorialScreen.classList.remove('active');
+    if (gameoverScreen) gameoverScreen.classList.remove('active');
+    if (uiLayer) uiLayer.classList.add('hidden');
+    if (menuHigh) menuHigh.textContent = String(Math.floor(highScore));
+    if (startHighScoreLine) startHighScoreLine.classList.add('hidden');
+    resetRun();
+    // Start menu BGM immediately; user gesture fallback below handles strict browsers.
+    sound.startBgmPreview();
+}
+
+function showTutorial() {
+    gameState = 'tutorial';
+    if (startScreen) startScreen.classList.remove('active');
+    if (tutorialScreen) tutorialScreen.classList.add('active');
+    if (gameoverScreen) gameoverScreen.classList.remove('active');
+    if (uiLayer) uiLayer.classList.add('hidden');
+    if (pauseOverlay) pauseOverlay.classList.add('hidden');
+}
+
+/**
+ * Begin gameplay.
+ */
+function startGame() {
+    gameState = 'play';
+    paused = false;
+    if (startScreen) startScreen.classList.remove('active');
+    if (tutorialScreen) tutorialScreen.classList.remove('active');
+    if (loadingScreen) loadingScreen.classList.remove('active');
+    if (gameoverScreen) gameoverScreen.classList.remove('active');
+    if (uiLayer) uiLayer.classList.remove('hidden');
+    if (pauseOverlay) pauseOverlay.classList.add('hidden');
+    resetRun();
+    sound.resume();
+    sound.startBgm();
+    sound.startGirlVoiceLoop();
+    updateLivesHud();
+    if (highHud) highHud.textContent = `Best: ${Math.floor(highScore)}`;
+}
+
+function togglePause() {
+    if (gameState !== 'play') return;
+    paused = !paused;
+    if (pauseOverlay) pauseOverlay.classList.toggle('hidden', !paused);
+}
+
+function onKeyDown(e) {
+    if (e.code === 'Space') {
+        e.preventDefault();
+    }
+    if (gameState === 'play' && !paused && player) {
+        if (e.code === 'Space') {
+            sound.playJump();
+            player.jump(player.isGrounded());
+        }
+        if (e.code === 'ArrowDown') {
+            player.slide();
+        }
+    }
+    if (e.code === 'KeyP') {
+        togglePause();
+    }
+    if (e.code === 'KeyD') {
+        debug = !debug;
+    }
+}
+
+function onKeyUp(e) {
+    if (e.code === 'Space') {
+        e.preventDefault();
+        if (player) player.releaseJump();
+    }
+}
+
+let touchStartY = 0;
+function onTouchStart(e) {
+    if (e.touches.length !== 1) return;
+    touchStartY = e.touches[0].clientY;
+}
+function onTouchEnd(e) {
+    if (gameState !== 'play' || paused || !player) return;
+    if (!e.changedTouches[0]) return;
+    const dy = e.changedTouches[0].clientY - touchStartY;
+    if (dy > 40) {
+        player.slide();
+    } else {
+        sound.playJump();
+        player.jump(player.isGrounded());
+    }
+}
+
+async function boot() {
+    try {
+        setLoadProgress(10);
+        if (loadingText) loadingText.textContent = 'Loading sounds…';
+        await sound.preloadAll();
+        setLoadProgress(40);
+        if (loadingText) loadingText.textContent = 'Loading graphics…';
+        assets = await loadSprites();
+        setLoadProgress(100);
+        enterStart();
+    } catch (e) {
+        console.error(e);
+        if (loadingText) loadingText.textContent = 'Failed to load. Refresh to retry.';
+    }
+}
+
+document.getElementById('play-btn')?.addEventListener('click', () => {
+    void sound.resume();
+    sound.startBgmPreview();
+    showTutorial();
+});
+
+document.getElementById('highest-btn')?.addEventListener('click', () => {
+    void sound.resume();
+    sound.startBgmPreview();
+    if (menuHigh) menuHigh.textContent = String(Math.floor(highScore));
+    if (startHighScoreLine) startHighScoreLine.classList.remove('hidden');
+});
+
+document.getElementById('tutorial-start-btn')?.addEventListener('click', () => {
+    void sound.resume();
+    sound.startBgmPreview();
+    startGame();
+});
+
+document.getElementById('restart-btn')?.addEventListener('click', () => {
+    startGame();
+});
+
+document.getElementById('share-btn')?.addEventListener('click', async () => {
+    const text = `I scored ${lastRunScore} in Catch Me If You Can!`;
+    try {
+        await navigator.clipboard.writeText(text);
+        addFloatText('Copied!', canvas.width / 2 - 30, canvas.height / 2);
+    } catch {
+        console.warn('Clipboard failed');
+    }
+});
+
+document.getElementById('mute-btn')?.addEventListener('click', () => {
+    const m = sound.toggleMute();
+    const btn = document.getElementById('mute-btn');
+    if (btn) btn.textContent = m ? '🔇' : '🔊';
+});
+
+document.getElementById('pause-btn')?.addEventListener('click', () => togglePause());
+
+if (profileImgEl) {
+    profileImgEl.addEventListener('error', () => {
+        profileImgEl.setAttribute('src', `${ASSET_BASE}girl.png`);
+    });
+}
+
+document.getElementById('play-btn')?.addEventListener('mouseenter', () => {
+    void sound.resume();
+    sound.startBgmPreview();
+});
+
+window.addEventListener('keydown', onKeyDown);
+window.addEventListener('keyup', onKeyUp);
+window.addEventListener('blur', () => {
+    if (gameState === 'play') paused = true;
+    if (pauseOverlay) pauseOverlay.classList.remove('hidden');
+});
+
+canvas.addEventListener('touchstart', onTouchStart, { passive: true });
+canvas.addEventListener('touchend', onTouchEnd, { passive: true });
+
+void boot();
+requestAnimationFrame(gameLoop);

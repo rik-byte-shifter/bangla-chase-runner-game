@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="Run, jump, and dodge in this hilarious chase game!">
+    <meta property="og:title" content="Catch Me If You Can - Fun Chase Runner Game">
+    <meta property="og:description" content="Run, jump, and dodge in this hilarious chase runner game!">
+    <meta property="og:type" content="website">
+    <title>Catch Me If You Can - Fun Chase Runner Game</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="game-container">
+        <canvas id="gameCanvas" width="1200" height="675"></canvas>
+        <div id="ui-layer" class="hidden">
+            <div id="player-profile" aria-label="Player profile">
+                <img id="player-profile-img" src="assets/images/profile.png" alt="Player profile">
+            </div>
+            <div id="score">Score: 0</div>
+            <div id="high-score-hud">Best: 0</div>
+            <div id="lives" aria-label="Lives"></div>
+            <div id="speed-hud">Speed: 100%</div>
+            <button type="button" id="mute-btn" aria-label="Toggle sound">🔊</button>
+            <button type="button" id="pause-btn" aria-label="Pause">⏸</button>
+        </div>
+        <div id="loading-screen" class="screen active">
+            <h1 class="title-font">CATCH ME IF YOU CAN</h1>
+            <p id="loading-text">Loading assets…</p>
+            <div class="loading-bar"><div id="loading-fill"></div></div>
+        </div>
+        <div id="start-screen" class="screen">
+            <h1 class="title-font">CATCH ME IF YOU CAN</h1>
+            <p class="instructions">Funny chase adventure</p>
+            <button type="button" id="play-btn" class="btn-primary">PLAY</button>
+            <button type="button" id="highest-btn" class="btn-secondary">HIGHEST SCORE</button>
+            <p id="start-high-score" class="high-score-line hidden">HIGH SCORE: <span id="menu-high-score">0</span></p>
+        </div>
+        <div id="tutorial-screen" class="screen">
+            <h1 class="title-font">HOW TO PLAY</h1>
+            <p class="instructions">You are the girl. Catch the boy in front.</p>
+            <p class="instructions">SPACE / TAP to Jump rock + riksha.</p>
+            <p class="instructions">DOWN / Swipe down to Slide under rakin.</p>
+            <p class="instructions">P to Pause, avoid hits, close the gap.</p>
+            <button type="button" id="tutorial-start-btn" class="btn-primary">START CHASE</button>
+        </div>
+        <div id="gameover-screen" class="screen">
+            <h1 class="title-font caught">CAUGHT!</h1>
+            <p>Score: <span id="final-score">0</span></p>
+            <p id="new-high-msg" class="hidden">New high score!</p>
+            <p id="achievements-panel"></p>
+            <button type="button" id="restart-btn" class="btn-primary">PLAY AGAIN</button>
+            <button type="button" id="share-btn" class="btn-secondary">COPY SCORE</button>
+        </div>
+        <div id="pause-overlay" class="hidden">
+            <p class="title-font">PAUSED</p>
+            <p>Press P to resume</p>
+        </div>
+    </div>
+    <script type="module" src="js/game.js"></script>
+</body>
+</html>

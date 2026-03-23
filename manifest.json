@@ -1,0 +1,9 @@
+{
+  "name": "Catch Me If You Can",
+  "short_name": "Chase Runner",
+  "description": "Run, jump, and dodge in this hilarious chase game!",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#F39C12",
+  "theme_color": "#E67E22"
+}

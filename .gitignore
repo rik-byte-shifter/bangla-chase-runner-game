@@ -1,0 +1,27 @@
+# OS / editor files
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Dependency directories (if tooling gets added later)
+node_modules/
+
+# Environment / secrets
+.env
+.env.*
+
+# Build/cache artifacts
+dist/
+build/
+coverage/
+.cache/
+*.tmp
