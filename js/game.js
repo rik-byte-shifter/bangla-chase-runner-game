@@ -12,8 +12,8 @@ import { loadFirstAvailableImage, loadImageOrPlaceholder } from './utils.js';
 const STORAGE_KEY = 'catchMeHighScore';
 const ASSET_BASE = 'assets/images/';
 
-/** @type {'loading'|'start'|'tutorial'|'play'|'over'} */
-let gameState = 'loading';
+/** @type {'start'|'intro2'|'intro3'|'play'|'over'} */
+let gameState = 'start';
 
 const canvas = /** @type {HTMLCanvasElement} */ (document.getElementById('gameCanvas'));
 if (!canvas) throw new Error('Canvas missing');
@@ -26,16 +26,13 @@ const highHud = document.getElementById('high-score-hud');
 const livesEl = document.getElementById('lives');
 const profileImgEl = document.getElementById('player-profile-img');
 const speedHud = document.getElementById('speed-hud');
-const loadingScreen = document.getElementById('loading-screen');
-const loadingFill = document.getElementById('loading-fill');
-const loadingText = document.getElementById('loading-text');
 const startScreen = document.getElementById('start-screen');
-const tutorialScreen = document.getElementById('tutorial-screen');
+const introScreen2 = document.getElementById('intro-screen-2');
+const introScreen3 = document.getElementById('intro-screen-3');
 const gameoverScreen = document.getElementById('gameover-screen');
 const pauseOverlay = document.getElementById('pause-overlay');
 const menuHigh = document.getElementById('menu-high-score');
 const finalScoreEl = document.getElementById('final-score');
-const newHighMsg = document.getElementById('new-high-msg');
 const achievementsPanel = document.getElementById('achievements-panel');
 const startHighScoreLine = document.getElementById('start-high-score');
 
@@ -60,7 +57,7 @@ let lastScoreMilestone = 0;
 /** @type {number} Last score shown for share / game over. */
 let lastRunScore = 0;
 
-/** @type {{ text: string, x: number, y: number, life: number }[]} */
+/** @type {{ text: string, x: number, y: number, life: number, maxLife: number, kind: 'generic'|'score'|'life' }[]} */
 const floatTexts = [];
 /** @type {{ x: number, y: number, vx: number, vy: number, life: number }[]} */
 const trailDots = [];
@@ -95,6 +92,19 @@ async function loadSprites() {
         const found = await loadFirstAvailableImage(candidates);
         if (found) return found;
         return loadImageOrPlaceholder(candidates[0], pw, ph, color, label);
+    };
+    const inferFrameMeta = (img) => {
+        const w = Number(img?.width) || 0;
+        const h = Number(img?.height) || 0;
+        if (w <= 0 || h <= 0) return {};
+        const ratio = w / Math.max(1, h);
+        if (ratio < 1.8) return {};
+        const guessedFrames = Math.round(ratio);
+        if (guessedFrames < 2 || guessedFrames > 6) return {};
+        if (Math.abs(ratio - guessedFrames) > 0.14) return {};
+        const frameWidth = Math.floor(w / guessedFrames);
+        if (frameWidth <= 0) return {};
+        return { frameWidth, frameHeight: h };
     };
 
     const customBg = await loadFirstAvailableImage([
@@ -173,8 +183,8 @@ async function loadSprites() {
         (await loadImageOrPlaceholder(`${ASSET_BASE}background.png`, 1200, 600, '#deb887', 'BG'));
 
     return {
-        boy: { image: boyImg },
-        girl: { image: girlImg },
+        boy: { image: boyImg, scale: 1.05, maxWidthMultiplier: 2.8, ...inferFrameMeta(boyImg) },
+        girl: { image: girlImg, scale: 1.04, maxWidthMultiplier: 2.9, ...inferFrameMeta(girlImg) },
         bg,
         ground,
         obs: { rock, riksha, rakin, heart, coin },
@@ -187,13 +197,6 @@ let chaser = /** @type {Chaser | null} */ (null);
 let obstacles = /** @type {ObstacleManager | null} */ (null);
 
 let playerIframes = 0;
-
-/**
- * @param {number} pct
- */
-function setLoadProgress(pct) {
-    if (loadingFill) loadingFill.style.width = `${pct}%`;
-}
 
 /**
  * Reset run state.
@@ -243,9 +246,11 @@ function resetRun() {
  * @param {string} t
  * @param {number} x
  * @param {number} y
+ * @param {'generic'|'score'|'life'} [kind]
  */
-function addFloatText(t, x, y) {
-    floatTexts.push({ text: t, x, y, life: 900 });
+function addFloatText(t, x, y, kind = 'generic') {
+    const life = kind === 'score' ? 760 : kind === 'life' ? 980 : 900;
+    floatTexts.push({ text: t, x, y, life, maxLife: life, kind });
 }
 
 /**
@@ -293,8 +298,11 @@ function gameOver(reason) {
     sound.stopRakinEncounter();
     lastRunScore = Math.floor(score);
     sound.stopGirlVoiceLoop();
+    sound.stopStartingLoop();
+    sound.stopEndscreenLoop();
     sound.stopBgm();
     sound.playGameOver();
+    sound.startEndscreenLoop();
     if (uiLayer) uiLayer.classList.add('hidden');
     if (gameoverScreen) {
         gameoverScreen.classList.add('active');
@@ -304,14 +312,15 @@ function gameOver(reason) {
             highScore = lastRunScore;
             localStorage.setItem(STORAGE_KEY, String(highScore));
         }
-        if (newHighMsg) newHighMsg.classList.toggle('hidden', !beat);
         if (achievementsPanel) {
             const lines = [];
             if (achievements.firstSteps) lines.push('First Steps');
             if (achievements.speedDemon) lines.push('Speed Demon');
             if (achievements.closeCall) lines.push('Close Call');
             achievementsPanel.textContent =
-                lines.length > 0 ? `Unlocked: ${lines.join(', ')}` : '';
+                lines.length > 0
+                    ? `Achievement Unlocked: ${lines.join(', ')}`
+                    : 'Achievement Unlocked: None';
         }
     }
 }
@@ -350,7 +359,7 @@ function updatePlay(dt) {
         const prev = lives;
         lives = Math.min(MAX_LIVES, lives + lifeGain);
         if (lives > prev) {
-            addFloatText('+1 LIFE', player.x + 20, player.y - 50);
+            addFloatText('+1 LIFE', player.x + 20, player.y - 50, 'life');
             updateLivesHud();
         }
     }
@@ -358,13 +367,13 @@ function updatePlay(dt) {
     if (coinPoints > 0) {
         sound.playGirlEvent('coin');
         score += coinPoints;
-        addFloatText(`+${coinPoints}`, player.x + 40, player.y - 60);
+        addFloatText(`+${coinPoints}`, player.x + 40, player.y - 60, 'score');
     }
 
     if (nearMiss) {
         sound.playGirlEvent('nearMiss');
         score += 10;
-        addFloatText('+10', player.x + 50, player.y - 40);
+        addFloatText('+10', player.x + 50, player.y - 40, 'score');
     }
 
     if (hit && playerIframes <= 0) {
@@ -410,7 +419,7 @@ function updatePlay(dt) {
 
     const boyX = player.x;
     const targetBoyX = boyX + gap;
-    chaser.update(dt, targetBoyX);
+    chaser.update(dt, targetBoyX, canvas.width);
 
     obstacles.cullInactive();
 
@@ -557,12 +566,108 @@ function render(dt) {
 
     for (const ft of floatTexts) {
         ctx.save();
-        ctx.font = 'bold 18px Arial';
-        ctx.fillStyle = '#5D4037';
-        ctx.strokeStyle = '#fff';
-        ctx.lineWidth = 3;
-        ctx.strokeText(ft.text, ft.x, ft.y);
-        ctx.fillText(ft.text, ft.x, ft.y);
+        const progress = 1 - ft.life / ft.maxLife;
+        if (ft.kind === 'score') {
+            const alpha = Math.max(0, 1 - progress);
+            const scale = 0.92 + Math.sin(progress * Math.PI) * 0.18;
+            const textY = ft.y - progress * 6;
+            const padX = 10;
+            const pillH = 30;
+            ctx.font = 'bold 20px Arial';
+            const textW = ctx.measureText(ft.text).width;
+            const pillW = textW + padX * 2;
+            const left = ft.x - pillW / 2;
+            const top = textY - 22;
+            const radius = 14;
+
+            ctx.globalAlpha = alpha;
+            ctx.translate(ft.x, textY - 8);
+            ctx.scale(scale, scale);
+            ctx.translate(-ft.x, -(textY - 8));
+
+            const bgGrad = ctx.createLinearGradient(left, top, left, top + pillH);
+            bgGrad.addColorStop(0, 'rgba(255, 218, 121, 0.95)');
+            bgGrad.addColorStop(1, 'rgba(255, 153, 73, 0.95)');
+            ctx.fillStyle = bgGrad;
+            ctx.strokeStyle = 'rgba(255, 243, 204, 0.95)';
+            ctx.lineWidth = 2.5;
+            ctx.shadowColor = 'rgba(255, 183, 77, 0.45)';
+            ctx.shadowBlur = 10;
+            ctx.beginPath();
+            ctx.roundRect(left, top, pillW, pillH, radius);
+            ctx.fill();
+            ctx.stroke();
+
+            ctx.shadowBlur = 0;
+            ctx.fillStyle = '#ffffff';
+            ctx.strokeStyle = 'rgba(113, 46, 24, 0.9)';
+            ctx.lineWidth = 2;
+            ctx.textAlign = 'center';
+            ctx.strokeText(ft.text, ft.x, textY);
+            ctx.fillText(ft.text, ft.x, textY);
+        } else if (ft.kind === 'life') {
+            const progress = 1 - ft.life / ft.maxLife;
+            const alpha = Math.max(0, 1 - progress * 0.9);
+            const rise = progress * 12;
+            const pulse = 1 + Math.sin(progress * Math.PI * 3) * 0.04;
+            const r = 36 + Math.sin(progress * Math.PI * 2) * 2;
+            const cx = ft.x;
+            const cy = ft.y - 10 - rise;
+
+            ctx.globalAlpha = alpha;
+            ctx.translate(cx, cy);
+            ctx.scale(pulse, pulse);
+            ctx.translate(-cx, -cy);
+
+            const orb = ctx.createRadialGradient(cx, cy - 8, 6, cx, cy, r);
+            orb.addColorStop(0, 'rgba(226, 255, 238, 0.98)');
+            orb.addColorStop(0.5, 'rgba(86, 214, 142, 0.78)');
+            orb.addColorStop(1, 'rgba(20, 102, 66, 0.12)');
+            ctx.fillStyle = orb;
+            ctx.beginPath();
+            ctx.arc(cx, cy, r, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.strokeStyle = 'rgba(191, 255, 218, 0.88)';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(cx, cy, r * 0.7, 0, Math.PI * 2);
+            ctx.stroke();
+
+            // Tiny orbiting sparkle particles for a power-up feel.
+            const sparkleCount = 6;
+            for (let i = 0; i < sparkleCount; i++) {
+                const t = progress * 0.018 + i * (Math.PI * 2 / sparkleCount);
+                const orbit = r * (0.78 + 0.2 * Math.sin(progress * 8 + i));
+                const sx = cx + Math.cos(t * 12) * orbit;
+                const sy = cy + Math.sin(t * 10) * orbit * 0.7;
+                const twinkle = 0.45 + 0.55 * Math.sin(progress * 20 + i * 1.7);
+                const sparkleR = 1.2 + twinkle * 1.6;
+                ctx.fillStyle = `rgba(226, 255, 239, ${0.45 + twinkle * 0.5})`;
+                ctx.shadowColor = 'rgba(130, 255, 184, 0.8)';
+                ctx.shadowBlur = 6;
+                ctx.beginPath();
+                ctx.arc(sx, sy, sparkleR, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            ctx.shadowColor = 'rgba(71, 214, 128, 0.45)';
+            ctx.shadowBlur = 12;
+            ctx.fillStyle = '#f2fff7';
+            ctx.strokeStyle = 'rgba(19, 87, 57, 0.92)';
+            ctx.lineWidth = 2.5;
+            ctx.font = 'bold 17px Arial';
+            ctx.textAlign = 'center';
+            ctx.strokeText(ft.text, cx, cy + 6);
+            ctx.fillText(ft.text, cx, cy + 6);
+        } else {
+            ctx.font = 'bold 18px Arial';
+            ctx.fillStyle = '#5D4037';
+            ctx.strokeStyle = '#fff';
+            ctx.lineWidth = 3;
+            ctx.strokeText(ft.text, ft.x, ft.y);
+            ctx.fillText(ft.text, ft.x, ft.y);
+        }
         ctx.restore();
     }
 
@@ -594,7 +699,7 @@ function gameLoop(ts) {
             updatePlay(dt);
         }
         render(dt);
-    } else if (gameState === 'start' || gameState === 'tutorial') {
+    } else if (gameState === 'start' || gameState === 'intro2' || gameState === 'intro3') {
         renderTitleIdle(dt);
     }
 
@@ -625,22 +730,39 @@ function renderTitleIdle(dt) {
  */
 function enterStart() {
     gameState = 'start';
-    if (loadingScreen) loadingScreen.classList.remove('active');
+    sound.stopBgm();
+    sound.stopEndscreenLoop();
     if (startScreen) startScreen.classList.add('active');
-    if (tutorialScreen) tutorialScreen.classList.remove('active');
+    if (introScreen2) introScreen2.classList.remove('active');
+    if (introScreen3) introScreen3.classList.remove('active');
     if (gameoverScreen) gameoverScreen.classList.remove('active');
     if (uiLayer) uiLayer.classList.add('hidden');
     if (menuHigh) menuHigh.textContent = String(Math.floor(highScore));
     if (startHighScoreLine) startHighScoreLine.classList.add('hidden');
     resetRun();
-    // Start menu BGM immediately; user gesture fallback below handles strict browsers.
-    sound.startBgmPreview();
+    // Start pre-game loop; gameplay BGM starts only inside startGame().
+    sound.startStartingLoop();
 }
 
-function showTutorial() {
-    gameState = 'tutorial';
+function showIntro2() {
+    gameState = 'intro2';
+    sound.stopBgm();
+    sound.stopEndscreenLoop();
     if (startScreen) startScreen.classList.remove('active');
-    if (tutorialScreen) tutorialScreen.classList.add('active');
+    if (introScreen2) introScreen2.classList.add('active');
+    if (introScreen3) introScreen3.classList.remove('active');
+    if (gameoverScreen) gameoverScreen.classList.remove('active');
+    if (uiLayer) uiLayer.classList.add('hidden');
+    if (pauseOverlay) pauseOverlay.classList.add('hidden');
+}
+
+function showIntro3() {
+    gameState = 'intro3';
+    sound.stopBgm();
+    sound.stopEndscreenLoop();
+    if (startScreen) startScreen.classList.remove('active');
+    if (introScreen2) introScreen2.classList.remove('active');
+    if (introScreen3) introScreen3.classList.add('active');
     if (gameoverScreen) gameoverScreen.classList.remove('active');
     if (uiLayer) uiLayer.classList.add('hidden');
     if (pauseOverlay) pauseOverlay.classList.add('hidden');
@@ -652,9 +774,11 @@ function showTutorial() {
 function startGame() {
     gameState = 'play';
     paused = false;
+    sound.stopStartingLoop();
+    sound.stopEndscreenLoop();
     if (startScreen) startScreen.classList.remove('active');
-    if (tutorialScreen) tutorialScreen.classList.remove('active');
-    if (loadingScreen) loadingScreen.classList.remove('active');
+    if (introScreen2) introScreen2.classList.remove('active');
+    if (introScreen3) introScreen3.classList.remove('active');
     if (gameoverScreen) gameoverScreen.classList.remove('active');
     if (uiLayer) uiLayer.classList.remove('hidden');
     if (pauseOverlay) pauseOverlay.classList.add('hidden');
@@ -754,36 +878,32 @@ function resizeCanvasToContainer() {
 
 async function boot() {
     try {
-        setLoadProgress(10);
-        if (loadingText) loadingText.textContent = 'Loading sounds…';
         await sound.preloadAll();
-        setLoadProgress(40);
-        if (loadingText) loadingText.textContent = 'Loading graphics…';
         assets = await loadSprites();
-        setLoadProgress(100);
         enterStart();
     } catch (e) {
         reportIssue('runtime', 'Boot failed', { error: String(e) });
-        if (loadingText) loadingText.textContent = 'Failed to load. Refresh to retry.';
     }
 }
 
 document.getElementById('play-btn')?.addEventListener('click', () => {
     void sound.resume();
-    sound.startBgmPreview();
-    showTutorial();
+    showIntro2();
 });
 
 document.getElementById('highest-btn')?.addEventListener('click', () => {
     void sound.resume();
-    sound.startBgmPreview();
     if (menuHigh) menuHigh.textContent = String(Math.floor(highScore));
     if (startHighScoreLine) startHighScoreLine.classList.remove('hidden');
 });
 
-document.getElementById('tutorial-start-btn')?.addEventListener('click', () => {
+document.getElementById('intro-next-btn')?.addEventListener('click', () => {
     void sound.resume();
-    sound.startBgmPreview();
+    showIntro3();
+});
+
+document.getElementById('intro-play-btn')?.addEventListener('click', () => {
+    void sound.resume();
     startGame();
 });
 
@@ -791,14 +911,8 @@ document.getElementById('restart-btn')?.addEventListener('click', () => {
     startGame();
 });
 
-document.getElementById('share-btn')?.addEventListener('click', async () => {
-    const text = `I scored ${lastRunScore} in Catch Me If You Can!`;
-    try {
-        await navigator.clipboard.writeText(text);
-        addFloatText('Copied!', canvas.width / 2 - 30, canvas.height / 2);
-    } catch {
-        reportIssue('ui', 'Clipboard copy failed');
-    }
+document.getElementById('home-btn')?.addEventListener('click', () => {
+    enterStart();
 });
 
 document.getElementById('mute-btn')?.addEventListener('click', () => {
@@ -817,7 +931,6 @@ if (profileImgEl) {
 
 document.getElementById('play-btn')?.addEventListener('mouseenter', () => {
     void sound.resume();
-    sound.startBgmPreview();
 });
 
 window.addEventListener('keydown', onKeyDown);

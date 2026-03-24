@@ -31,11 +31,6 @@
             <button type="button" id="mute-btn" aria-label="Toggle sound">🔊</button>
             <button type="button" id="pause-btn" aria-label="Pause">⏸</button>
         </div>
-        <div id="loading-screen" class="screen active">
-            <h1 class="title-font">CATCH ME IF YOU CAN</h1>
-            <p id="loading-text">Loading assets…</p>
-            <div class="loading-bar"><div id="loading-fill"></div></div>
-        </div>
         <div id="start-screen" class="screen">
             <img class="start-poster-bg" src="assets/images/Poster.png" alt="" width="1920" height="1080" decoding="async">
             <div class="start-poster-ui">
@@ -44,21 +39,26 @@
                 <p id="start-high-score" class="start-high-toast hidden">HIGH SCORE: <span id="menu-high-score">0</span></p>
             </div>
         </div>
-        <div id="tutorial-screen" class="screen">
-            <h1 class="title-font">HOW TO PLAY</h1>
-            <p class="instructions">You are the girl. Catch the boy in front.</p>
-            <p class="instructions">SPACE / TAP to Jump rock + riksha.</p>
-            <p class="instructions">DOWN / Swipe down to Slide under rakin.</p>
-            <p class="instructions">P to Pause, avoid hits, close the gap.</p>
-            <button type="button" id="tutorial-start-btn" class="btn-primary">START CHASE</button>
+        <div id="intro-screen-2" class="screen intro-screen">
+            <img class="intro-bg" src="assets/images/background2.png" alt="" width="1920" height="1080" decoding="async">
+            <div class="intro-ui">
+                <button type="button" id="intro-next-btn" class="btn-primary intro-btn">NEXT</button>
+            </div>
+        </div>
+        <div id="intro-screen-3" class="screen intro-screen">
+            <img class="intro-bg" src="assets/images/background3.png" alt="" width="1920" height="1080" decoding="async">
+            <div class="intro-ui">
+                <button type="button" id="intro-play-btn" class="btn-primary intro-btn">PLAY</button>
+            </div>
         </div>
         <div id="gameover-screen" class="screen">
-            <h1 class="title-font caught">CAUGHT!</h1>
-            <p>Score: <span id="final-score">0</span></p>
-            <p id="new-high-msg" class="hidden">New high score!</p>
-            <p id="achievements-panel"></p>
-            <button type="button" id="restart-btn" class="btn-primary">PLAY AGAIN</button>
-            <button type="button" id="share-btn" class="btn-secondary">COPY SCORE</button>
+            <img class="gameover-bg" src="assets/images/endscreen.png" alt="" width="1920" height="1080" decoding="async">
+            <div class="gameover-ui">
+                <p class="gameover-line">আপনার পাসপোর্ট পাওয়ার দৌড়ে স্কোর: <span id="final-score">0</span></p>
+                <p id="achievements-panel" class="gameover-line"></p>
+                <button type="button" id="restart-btn" class="btn-primary gameover-btn">PLAY</button>
+                <button type="button" id="home-btn" class="btn-secondary gameover-btn">HOME</button>
+            </div>
         </div>
         <div id="pause-overlay" class="hidden">
             <p class="title-font">PAUSED</p>

@@ -57,6 +57,8 @@ export class Player {
         this.longJumpActive = false;
         this.longJumpLockMs = 0;
         this.longJumpGlideMs = 0;
+        /** One mid-air jump allowed (double-press jump key). */
+        this.airJumpAvailable = true;
     }
 
     /**
@@ -123,6 +125,7 @@ export class Player {
                     this.longJumpActive = false;
                     this.longJumpLockMs = 0;
                     this.longJumpGlideMs = 0;
+                    this.airJumpAvailable = true;
                 }
                 this.bobPhase += dtMs * 0.012;
             } else {
@@ -147,6 +150,18 @@ export class Player {
      */
     jump(onGround, longJump = false) {
         if (this.state === 'slide') return;
+        const canAirJump = !onGround && this.state === 'jump' && this.airJumpAvailable;
+        if (canAirJump) {
+            this.vy = -16.5;
+            this.state = 'jump';
+            this.longJumpActive = true;
+            this.longJumpLockMs = 130;
+            this.longJumpGlideMs = 230;
+            this.airJumpAvailable = false;
+            this.jumpBufferMs = 0;
+            this.coyoteMs = 0;
+            return;
+        }
         this.longJumpActive = longJump;
         this.longJumpLockMs = longJump ? 230 : 0;
         this.longJumpGlideMs = longJump ? 300 : 0;
@@ -154,6 +169,7 @@ export class Player {
         if (onGround || this.canJumpNow()) {
             this.vy = longJump ? -14.9 : -12.5;
             this.state = 'jump';
+            this.airJumpAvailable = true;
             this.jumpBufferMs = 0;
             this.coyoteMs = 0;
         }
@@ -235,7 +251,7 @@ export class Player {
             this.state === 'run' && this.isGrounded()
                 ? Math.sin(this.bobPhase) * 5
                 : 0;
-        const drawY = this.y + bob;
+        const drawY = this.y + (PLAYER_H - visual.h) + bob;
         const drawX = this.x + (PLAYER_W - visual.w) * 0.5;
 
         // Subtle contact shadow helps the character feel less flat.
@@ -251,7 +267,7 @@ export class Player {
         }
 
         if (this.state === 'jump') {
-            ctx.translate(this.x + PLAYER_W / 2, drawY + PLAYER_H / 2);
+            ctx.translate(drawX + visual.w / 2, drawY + visual.h / 2);
             ctx.rotate(-0.15);
             ctx.drawImage(
                 img,
@@ -416,8 +432,25 @@ export class Player {
      */
     _getVisualSize(frame) {
         const ratio = (Number(frame.sw) || PLAYER_W) / Math.max(1, Number(frame.sh) || PLAYER_H);
-        const h = PLAYER_H;
-        const w = clamp(h * ratio, PLAYER_W * 0.72, PLAYER_W * 1.7);
+        const customScale = Number(this.sprites.scale) || 1;
+        const scale = Math.max(0.85, Math.min(1.35, customScale));
+        const targetH = PLAYER_H * scale;
+        const minW = PLAYER_W * 0.72;
+        const customMaxWidthMult = Number(this.sprites.maxWidthMultiplier) || 1.65;
+        const maxWidthMult = Math.max(1.2, Math.min(3.4, customMaxWidthMult));
+        const maxW = PLAYER_W * maxWidthMult;
+
+        let w = targetH * ratio;
+        let h = targetH;
+
+        if (w > maxW) {
+            w = maxW;
+            h = w / Math.max(0.0001, ratio);
+        } else if (w < minW) {
+            w = minW;
+            h = Math.min(targetH, w / Math.max(0.0001, ratio));
+        }
+
         return { w, h };
     }
 

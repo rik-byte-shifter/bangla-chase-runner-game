@@ -4,9 +4,11 @@
 import { reportIssue } from './issue-tracker.js';
 
 const BGM_VOL = 0.4;
+const STARTING_VOL = 0.4;
 const GIRL_VOL = 0.6;
 const BOY_VOL = 0.72;
 const GO_VOL = 0.8;
+const END_VOL = 0.5;
 const SCORE_VOL = 0.35;
 const RAKIN_VOL = 0.72;
 const RAKIN_GAP_MIN_MS = 1200;
@@ -130,6 +132,7 @@ export class SoundManager {
      * Preload all game sounds.
      */
     async preloadAll() {
+        await this._loadOne('starting', 'starting.mp3', STARTING_VOL, true);
         // Try a dedicated background song filename first, then fallback.
         await this._loadOneAny('bgm', ['background_song.mp3', 'bgm.mp3'], BGM_VOL, true);
         await this._loadOne('girl1', 'girl1.mp3', GIRL_VOL, false);
@@ -143,6 +146,7 @@ export class SoundManager {
         await this._loadOne('girl9', 'girl9.mp3', GIRL_VOL, false);
         await this._loadOne('boy', 'boy_voice.mp3', BOY_VOL, false);
         await this._loadOne('gameover', 'game_over.mp3', GO_VOL, false);
+        await this._loadOne('endscreen', 'forever.mp3', END_VOL, true);
         await this._loadOne('score', 'score_point.mp3', SCORE_VOL, false);
         await this._loadOne('rakin1', 'rakin1.mp3', RAKIN_VOL, false);
         await this._loadOne('rakin2', 'rakin2.mp3', RAKIN_VOL, false);
@@ -219,6 +223,7 @@ export class SoundManager {
      * Start looping BGM.
      */
     startBgm() {
+        this.stopStartingLoop();
         const a = this._get('bgm');
         if (a) {
             try {
@@ -262,10 +267,38 @@ export class SoundManager {
     }
 
     /**
+     * Start looping pre-game/menu music.
+     */
+    startStartingLoop() {
+        const a = this._get('starting');
+        if (!a) return;
+        try {
+            // If the intro track is already running, keep continuity.
+            if (!a.paused && !a.ended) return;
+            a.loop = true;
+            a.playbackRate = 1;
+            a.volume = STARTING_VOL * (this.muted ? 0 : 1);
+            void a.play();
+        } catch (e) {
+            reportIssue('audio', 'Starting loop play failed', { error: String(e) });
+        }
+    }
+
+    /**
+     * Stop pre-game/menu loop music.
+     */
+    stopStartingLoop() {
+        const a = this._get('starting');
+        if (!a) return;
+        a.pause();
+        a.currentTime = 0;
+    }
+
+    /**
      * Optional: start BGM on menu hover (spec).
      */
     startBgmPreview() {
-        this.startBgm();
+        this.startStartingLoop();
     }
 
     stopGirlVoiceLoop() {
@@ -349,6 +382,27 @@ export class SoundManager {
         if (!ok) {
             this._beep(200, 200, 0.1);
         }
+    }
+
+    startEndscreenLoop() {
+        const a = this._get('endscreen');
+        if (!a) return;
+        try {
+            a.currentTime = 0;
+            a.loop = true;
+            a.playbackRate = 1;
+            a.volume = END_VOL * (this.muted ? 0 : 1);
+            void a.play();
+        } catch (e) {
+            reportIssue('audio', 'Endscreen loop play failed', { error: String(e) });
+        }
+    }
+
+    stopEndscreenLoop() {
+        const a = this._get('endscreen');
+        if (!a) return;
+        a.pause();
+        a.currentTime = 0;
     }
 
     /**
@@ -449,6 +503,8 @@ export class SoundManager {
     }
 
     _applyVolumes() {
+        const starting = this._get('starting');
+        if (starting) starting.volume = STARTING_VOL;
         const bgm = this._get('bgm');
         if (bgm) bgm.volume = BGM_VOL;
         const girlKeys = ['girl1', 'girl2', 'girl3', 'girl4', 'girl5', 'girl6', 'girl7', 'girl8', 'girl9'];
@@ -460,6 +516,8 @@ export class SoundManager {
         if (b) b.volume = BOY_VOL;
         const go = this._get('gameover');
         if (go) go.volume = GO_VOL;
+        const end = this._get('endscreen');
+        if (end) end.volume = END_VOL;
         const sc = this._get('score');
         if (sc) sc.volume = SCORE_VOL;
         const r1 = this._get('rakin1');

@@ -57,6 +57,14 @@ export class ObstacleManager {
         this.spawnAcc = 0;
         this.nextSpawnIn = 2500;
         this.baseScroll = 6;
+        /** @type {number[]} */
+        this.collectibleHeightBag = [];
+        /** @type {number} */
+        this.collectibleHeightCursor = 0;
+        /** @type {number[]} */
+        this.coinHeightBag = [];
+        /** @type {number} */
+        this.coinHeightCursor = 0;
     }
 
     /**
@@ -88,21 +96,21 @@ export class ObstacleManager {
         o.animPhase = Math.random() * Math.PI * 2;
 
         const roll = Math.random();
-        if (roll < 0.08) {
+        if (roll < 0.07) {
             o.kind = 'heart';
             o.width = 72;
             o.height = 72;
-            o.y = groundY - 190 - Math.random() * 110;
-        } else if (roll < 0.2) {
+            o.y = this._getCollectibleY('heart', groundY, o.height);
+        } else if (roll < 0.55) {
             o.kind = 'coin';
             const coinImgW = Number(/** @type {any} */ (this.images.coin).width) || 1;
             const coinImgH = Number(/** @type {any} */ (this.images.coin).height) || 1;
-            // Keep coin visually round/proportionate and slightly larger for readability.
-            const coinAspect = Math.max(0.9, Math.min(1.1, coinImgW / coinImgH));
+            // Preserve the source coin image ratio (254x310) so it doesn't look flattened.
+            const coinAspect = coinImgW / coinImgH;
             const coinBaseH = 88 + Math.random() * 12;
             o.height = coinBaseH;
             o.width = coinBaseH * coinAspect * 1.2;
-            o.y = groundY - 155 - Math.random() * 135;
+            o.y = this._getCollectibleY('coin', groundY, o.height);
         } else {
             const t = Math.random();
             if (t < 0.38) {
@@ -136,6 +144,66 @@ export class ObstacleManager {
         }
 
         this.active.push(o);
+    }
+
+    /**
+     * Returns one of 3 consistent collectible lanes:
+     * 0 = ground lane, 1 = normal-jump lane, 2 = high-jump lane.
+     * Lanes are shuffled in a bag for variety but still cycle consistently.
+     * Coins never use lane 0 (ground).
+     * @param {'heart'|'coin'} kind
+     * @param {number} groundY
+     * @param {number} itemHeight
+     * @returns {number}
+     */
+    _getCollectibleY(kind, groundY, itemHeight) {
+        const lane = kind === 'coin' ? this._nextCoinLane() : this._nextCollectibleLane();
+        const laneCenterOffsets = [28, 172, 330];
+        const laneCenterFromGround = laneCenterOffsets[lane];
+        const centerY = groundY - laneCenterFromGround;
+        return centerY - itemHeight / 2;
+    }
+
+    /**
+     * Draws a heart lane index from shuffled bag [1,2].
+     * Ground lane (0) is excluded for hearts.
+     * @returns {number}
+     */
+    _nextCollectibleLane() {
+        if (this.collectibleHeightCursor >= this.collectibleHeightBag.length) {
+            this.collectibleHeightBag = [1, 2];
+            for (let i = this.collectibleHeightBag.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                const temp = this.collectibleHeightBag[i];
+                this.collectibleHeightBag[i] = this.collectibleHeightBag[j];
+                this.collectibleHeightBag[j] = temp;
+            }
+            this.collectibleHeightCursor = 0;
+        }
+        const lane = this.collectibleHeightBag[this.collectibleHeightCursor];
+        this.collectibleHeightCursor += 1;
+        return lane;
+    }
+
+    /**
+     * Draws a coin lane from shuffled bag [1,2].
+     * Ground lane (0) is intentionally excluded for coins.
+     * @returns {number}
+     */
+    _nextCoinLane() {
+        if (this.coinHeightCursor >= this.coinHeightBag.length) {
+            this.coinHeightBag = [1, 2];
+            for (let i = this.coinHeightBag.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                const temp = this.coinHeightBag[i];
+                this.coinHeightBag[i] = this.coinHeightBag[j];
+                this.coinHeightBag[j] = temp;
+            }
+            this.coinHeightCursor = 0;
+        }
+        const lane = this.coinHeightBag[this.coinHeightCursor];
+        this.coinHeightCursor += 1;
+        return lane;
     }
 
     /**
@@ -359,14 +427,29 @@ export class ObstacleManager {
                 const bob =
                     o.kind === 'rakin' ? Math.sin(o.animPhase) * 4 : o.kind === 'coin' ? Math.sin(o.animPhase) * 3 : 0;
                 if (o.kind === 'coin') {
-                    // Make coin pop from background with a clean gold glow.
+                    // Keep coin visible but avoid an overly strong glow.
                     ctx.save();
-                    ctx.filter = 'contrast(1.35) saturate(1.45) brightness(1.15)';
-                    ctx.shadowColor = 'rgba(255, 208, 64, 0.85)';
-                    ctx.shadowBlur = 14;
+                    ctx.filter = 'contrast(1.18) saturate(1.2) brightness(1.06)';
+                    ctx.shadowColor = 'rgba(255, 208, 64, 0.42)';
+                    ctx.shadowBlur = 6;
                     ctx.shadowOffsetX = 0;
                     ctx.shadowOffsetY = 0;
                     ctx.drawImage(src, o.x, o.y + bob, o.width, o.height);
+                    ctx.restore();
+
+                    // Bonus indicator ring so coin reads as a special item.
+                    const cx = o.x + o.width / 2;
+                    const cy = o.y + bob + o.height / 2;
+                    const pulse = 1 + Math.sin(o.animPhase * 2.4) * 0.05;
+                    const radius = (Math.max(o.width, o.height) * 0.58) * pulse;
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+                    ctx.strokeStyle = 'rgba(255, 224, 120, 0.8)';
+                    ctx.lineWidth = 5;
+                    ctx.shadowColor = 'rgba(255, 215, 90, 0.45)';
+                    ctx.shadowBlur = 8;
+                    ctx.stroke();
                     ctx.restore();
                 } else if (o.kind === 'riksha') {
                     // Boost contrast/saturation and add shadow so riksha stays visible on similar-toned backgrounds.
