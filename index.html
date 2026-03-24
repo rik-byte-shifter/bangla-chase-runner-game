@@ -32,6 +32,10 @@
             <div id="speed-hud">Speed: 100%</div>
             <button type="button" id="mute-btn" aria-label="Toggle sound">🔊</button>
             <button type="button" id="pause-btn" aria-label="Pause">⏸</button>
+            <div id="pause-overlay" class="hidden" aria-hidden="true">
+                <p class="title-font">PAUSED</p>
+                <p>Press P to resume</p>
+            </div>
         </div>
         <div id="start-screen" class="screen active">
             <img class="start-poster-bg" src="assets/images/poster.png" alt="" width="1920" height="1080" decoding="async" fetchpriority="high">
@@ -61,10 +65,6 @@
                 <button type="button" id="restart-btn" class="btn-primary gameover-btn">PLAY</button>
                 <button type="button" id="home-btn" class="btn-secondary gameover-btn">HOME</button>
             </div>
-        </div>
-        <div id="pause-overlay" class="hidden">
-            <p class="title-font">PAUSED</p>
-            <p>Press P to resume</p>
         </div>
     </div>
     <script type="module" src="js/game.js"></script>

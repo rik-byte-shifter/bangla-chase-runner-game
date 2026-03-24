@@ -30,6 +30,7 @@ const startScreen = document.getElementById('start-screen');
 const introScreen2 = document.getElementById('intro-screen-2');
 const introScreen3 = document.getElementById('intro-screen-3');
 const gameoverScreen = document.getElementById('gameover-screen');
+const gameContainer = document.getElementById('game-container');
 const pauseOverlay = document.getElementById('pause-overlay');
 const menuHigh = document.getElementById('menu-high-score');
 const finalScoreEl = document.getElementById('final-score');
@@ -296,6 +297,7 @@ function updateAchievements(dt) {
  */
 function gameOver(reason) {
     gameState = 'over';
+    gameContainer?.classList.remove('gameplay-active');
     paused = false;
     if (pauseOverlay) pauseOverlay.classList.add('hidden');
     sound.stopRakinEncounter();
@@ -702,10 +704,16 @@ function gameLoop(ts) {
     const dt = Math.min(MAX_DT_MS, lastTs ? ts - lastTs : 16.67);
     lastTs = ts;
 
-    // Pause overlay sits above menus (z-index); only allow it during live gameplay.
+    // Pause overlay has z-index above menus; CSS + class gate it to gameplay only.
+    if (gameContainer) {
+        gameContainer.classList.toggle('gameplay-active', gameState === 'play');
+    }
     if (gameState !== 'play') {
         paused = false;
-        if (pauseOverlay) pauseOverlay.classList.add('hidden');
+        if (pauseOverlay) {
+            pauseOverlay.classList.add('hidden');
+            pauseOverlay.setAttribute('aria-hidden', 'true');
+        }
     }
 
     if (gameState === 'play') {
@@ -748,6 +756,7 @@ function tryUnlockPreGameAudio() {
 /** Home / post–game-over menu. */
 function enterStart() {
     gameState = 'start';
+    gameContainer?.classList.remove('gameplay-active');
     sound.stopBgm();
     sound.stopEndscreenLoop();
     if (startScreen) startScreen.classList.add('active');
@@ -766,6 +775,7 @@ function enterStart() {
 
 function showIntro2() {
     gameState = 'intro2';
+    gameContainer?.classList.remove('gameplay-active');
     paused = false;
     if (pauseOverlay) pauseOverlay.classList.add('hidden');
     sound.stopBgm();
@@ -780,6 +790,7 @@ function showIntro2() {
 
 function showIntro3() {
     gameState = 'intro3';
+    gameContainer?.classList.remove('gameplay-active');
     paused = false;
     if (pauseOverlay) pauseOverlay.classList.add('hidden');
     sound.stopBgm();
@@ -798,6 +809,7 @@ function showIntro3() {
 function startGame() {
     gameState = 'play';
     paused = false;
+    gameContainer?.classList.add('gameplay-active');
     sound.stopStartingLoop();
     sound.stopEndscreenLoop();
     if (startScreen) startScreen.classList.remove('active');
@@ -816,7 +828,10 @@ function startGame() {
 function togglePause() {
     if (gameState !== 'play') return;
     paused = !paused;
-    if (pauseOverlay) pauseOverlay.classList.toggle('hidden', !paused);
+    if (pauseOverlay) {
+        pauseOverlay.classList.toggle('hidden', !paused);
+        pauseOverlay.setAttribute('aria-hidden', paused ? 'false' : 'true');
+    }
 }
 
 function onKeyDown(e) {
@@ -896,7 +911,7 @@ function onPointerCancel(e) {
 }
 
 function resizeCanvasToContainer() {
-    const container = document.getElementById('game-container');
+    const container = gameContainer;
     if (!container) return;
     const rect = container.getBoundingClientRect();
     const nextW = Math.max(320, Math.round(rect.width));
@@ -995,7 +1010,10 @@ window.addEventListener('resize', resizeCanvasToContainer);
 window.addEventListener('blur', () => {
     if (gameState === 'play') {
         paused = true;
-        if (pauseOverlay) pauseOverlay.classList.remove('hidden');
+        if (pauseOverlay) {
+            pauseOverlay.classList.remove('hidden');
+            pauseOverlay.setAttribute('aria-hidden', 'false');
+        }
     }
 });
 window.addEventListener('error', (e) => {

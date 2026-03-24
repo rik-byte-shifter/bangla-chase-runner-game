@@ -391,6 +391,17 @@ body {
     display: none !important;
 }
 
+/* Pause UI must never appear on menu / intro / game-over (z-index was above those screens). */
+#game-container:not(.gameplay-active) #pause-overlay {
+    display: none !important;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+#pause-overlay.hidden {
+    display: none !important;
+}
+
 #pause-overlay {
     position: absolute;
     inset: 0;
@@ -401,6 +412,11 @@ body {
     justify-content: center;
     z-index: 15;
     color: #fff;
+}
+
+/* Inside HUD layer so when #ui-layer is hidden (menu / intros / game-over), pause cannot appear. */
+#ui-layer #pause-overlay {
+    z-index: 100;
 }
 
 #pause-overlay .title-font {
