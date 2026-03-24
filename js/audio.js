@@ -116,7 +116,15 @@ export class SoundManager {
             audio.loop = loop;
             audio.volume = vol * (this.muted ? 0 : 1);
             await new Promise((resolve, reject) => {
-                audio.addEventListener('canplaythrough', resolve, { once: true });
+                // `canplay` fires much sooner than `canplaythrough` (full buffer). Parallel + this cuts cold-load time a lot on slow networks.
+                let settled = false;
+                const onReady = () => {
+                    if (settled) return;
+                    settled = true;
+                    resolve();
+                };
+                audio.addEventListener('canplay', onReady, { once: true });
+                audio.addEventListener('loadeddata', onReady, { once: true });
                 audio.addEventListener('error', reject, { once: true });
                 audio.src = url;
                 audio.load();
@@ -129,29 +137,26 @@ export class SoundManager {
     }
 
     /**
-     * Preload all game sounds.
+     * Preload all game sounds (parallel downloads; much faster than sequential on deployed sites).
      */
     async preloadAll() {
-        await this._loadOne('starting', 'starting.mp3', STARTING_VOL, true);
-        // Try a dedicated background song filename first, then fallback.
-        await this._loadOneAny('bgm', ['background_song.mp3', 'bgm.mp3'], BGM_VOL, true);
-        await this._loadOne('girl1', 'girl1.mp3', GIRL_VOL, false);
-        await this._loadOne('girl2', 'girl2.mp3', GIRL_VOL, false);
-        await this._loadOne('girl3', 'girl3.mp3', GIRL_VOL, false);
-        await this._loadOne('girl4', 'girl4.mp3', GIRL_VOL, false);
-        await this._loadOne('girl5', 'girl5.mp3', GIRL_VOL, false);
-        await this._loadOne('girl6', 'girl6.mp3', GIRL_VOL, false);
-        await this._loadOne('girl7', 'girl7.mp3', GIRL_VOL, false);
-        await this._loadOne('girl8', 'girl8.mp3', GIRL_VOL, false);
-        await this._loadOne('girl9', 'girl9.mp3', GIRL_VOL, false);
-        await this._loadOne('boy', 'boy_voice.mp3', BOY_VOL, false);
-        await this._loadOne('gameover', 'game_over.mp3', GO_VOL, false);
-        await this._loadOne('endscreen', 'forever.mp3', END_VOL, true);
-        await this._loadOne('score', 'score_point.mp3', SCORE_VOL, false);
-        await this._loadOne('rakin1', 'rakin1.mp3', RAKIN_VOL, false);
-        await this._loadOne('rakin2', 'rakin2.mp3', RAKIN_VOL, false);
-        await this._loadOne('rakin3', 'rakin3.mp3', RAKIN_VOL, false);
-        await this._loadOne('rakin4', 'rakin4.mp3', RAKIN_VOL, false);
+        const girlLoads = [];
+        for (let i = 1; i <= 9; i += 1) {
+            girlLoads.push(this._loadOne(`girl${i}`, `girl${i}.mp3`, GIRL_VOL, false));
+        }
+        await Promise.all([
+            this._loadOne('starting', 'starting.mp3', STARTING_VOL, true),
+            this._loadOneAny('bgm', ['background_song.mp3', 'bgm.mp3'], BGM_VOL, true),
+            ...girlLoads,
+            this._loadOne('boy', 'boy_voice.mp3', BOY_VOL, false),
+            this._loadOne('gameover', 'game_over.mp3', GO_VOL, false),
+            this._loadOne('endscreen', 'forever.mp3', END_VOL, true),
+            this._loadOne('score', 'score_point.mp3', SCORE_VOL, false),
+            this._loadOne('rakin1', 'rakin1.mp3', RAKIN_VOL, false),
+            this._loadOne('rakin2', 'rakin2.mp3', RAKIN_VOL, false),
+            this._loadOne('rakin3', 'rakin3.mp3', RAKIN_VOL, false),
+            this._loadOne('rakin4', 'rakin4.mp3', RAKIN_VOL, false),
+        ]);
     }
 
     /**

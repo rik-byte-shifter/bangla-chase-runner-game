@@ -889,8 +889,8 @@ function resizeCanvasToContainer() {
 
 async function boot() {
     try {
-        await sound.preloadAll();
-        assets = await loadSprites();
+        const [loadedAssets] = await Promise.all([loadSprites(), sound.preloadAll()]);
+        assets = loadedAssets;
         enterStart();
     } catch (e) {
         reportIssue('runtime', 'Boot failed', { error: String(e) });
