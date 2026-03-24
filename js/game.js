@@ -734,6 +734,15 @@ function renderTitleIdle(dt) {
 /**
  * Show start screen state.
  */
+/**
+ * Browsers block autoplay; menu music must start in the same turn as a user gesture (no async gap before play()).
+ */
+function tryUnlockPreGameAudio() {
+    if (gameState !== 'start' && gameState !== 'intro2' && gameState !== 'intro3') return;
+    void sound.resume();
+    sound.startStartingLoop();
+}
+
 function enterStart() {
     gameState = 'start';
     sound.stopBgm();
@@ -903,18 +912,18 @@ async function boot() {
 }
 
 document.getElementById('play-btn')?.addEventListener('click', () => {
-    void sound.resume();
+    tryUnlockPreGameAudio();
     showIntro2();
 });
 
 document.getElementById('highest-btn')?.addEventListener('click', () => {
-    void sound.resume();
+    tryUnlockPreGameAudio();
     if (menuHigh) menuHigh.textContent = String(Math.floor(highScore));
     if (startHighScoreLine) startHighScoreLine.classList.remove('hidden');
 });
 
 document.getElementById('intro-next-btn')?.addEventListener('click', () => {
-    void sound.resume();
+    tryUnlockPreGameAudio();
     showIntro3();
 });
 
@@ -946,8 +955,17 @@ if (profileImgEl) {
 }
 
 document.getElementById('play-btn')?.addEventListener('mouseenter', () => {
-    void sound.resume();
+    tryUnlockPreGameAudio();
 });
+
+const gameContainerEl = document.getElementById('game-container');
+gameContainerEl?.addEventListener(
+    'pointerdown',
+    () => {
+        tryUnlockPreGameAudio();
+    },
+    { capture: true }
+);
 
 window.addEventListener('keydown', onKeyDown);
 window.addEventListener('keyup', onKeyUp);

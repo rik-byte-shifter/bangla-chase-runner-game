@@ -305,7 +305,12 @@ export class SoundManager {
             a.loop = true;
             a.playbackRate = 1;
             a.volume = STARTING_VOL * (this.muted ? 0 : 1);
-            void a.play();
+            const p = a.play();
+            if (p !== undefined && typeof p.catch === 'function') {
+                p.catch(() => {
+                    // Autoplay policy: will work after a user gesture (see tryUnlockPreGameAudio in game.js).
+                });
+            }
         } catch (e) {
             reportIssue('audio', 'Starting loop play failed', { error: String(e) });
         }
