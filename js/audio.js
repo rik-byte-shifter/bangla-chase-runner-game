@@ -137,15 +137,30 @@ export class SoundManager {
     }
 
     /**
-     * Preload all game sounds (parallel downloads; much faster than sequential on deployed sites).
+     * Only menu loop — await this so the home screen can show and play music quickly.
      */
-    async preloadAll() {
+    async preloadStartingOnly() {
+        await this._loadOne('starting', 'starting.mp3', STARTING_VOL, true);
+    }
+
+    /**
+     * Everything except `starting` — run after first paint; does not block boot.
+     */
+    preloadRemainingInBackground() {
+        void this._preloadRemainingClips().catch((e) => {
+            reportIssue('audio', 'Deferred audio preload failed', { error: String(e) });
+        });
+    }
+
+    /**
+     * @returns {Promise<void>}
+     */
+    async _preloadRemainingClips() {
         const girlLoads = [];
         for (let i = 1; i <= 9; i += 1) {
             girlLoads.push(this._loadOne(`girl${i}`, `girl${i}.mp3`, GIRL_VOL, false));
         }
         await Promise.all([
-            this._loadOne('starting', 'starting.mp3', STARTING_VOL, true),
             this._loadOneAny('bgm', ['background_song.mp3', 'bgm.mp3'], BGM_VOL, true),
             ...girlLoads,
             this._loadOne('boy', 'boy_voice.mp3', BOY_VOL, false),
@@ -157,6 +172,13 @@ export class SoundManager {
             this._loadOne('rakin3', 'rakin3.mp3', RAKIN_VOL, false),
             this._loadOne('rakin4', 'rakin4.mp3', RAKIN_VOL, false),
         ]);
+    }
+
+    /**
+     * Full preload (e.g. tests); production boot uses {@link preloadStartingOnly} + {@link preloadRemainingInBackground}.
+     */
+    async preloadAll() {
+        await Promise.all([this.preloadStartingOnly(), this._preloadRemainingClips()]);
     }
 
     /**

@@ -193,6 +193,11 @@ body {
     background: linear-gradient(to top, rgba(0, 0, 0, 0.72) 0%, rgba(0, 0, 0, 0.35) 55%, transparent 100%);
 }
 
+#start-screen .start-poster-ui.boot-loading {
+    pointer-events: none;
+    opacity: 0.92;
+}
+
 #start-screen .start-poster-btn {
     min-width: min(280px, 85vw);
     margin: 0;

@@ -35,6 +35,7 @@ const menuHigh = document.getElementById('menu-high-score');
 const finalScoreEl = document.getElementById('final-score');
 const achievementsPanel = document.getElementById('achievements-panel');
 const startHighScoreLine = document.getElementById('start-high-score');
+const startPosterUi = document.querySelector('#start-screen .start-poster-ui');
 
 let highScore = Number(localStorage.getItem(STORAGE_KEY) || '0');
 let score = 0;
@@ -888,12 +889,16 @@ function resizeCanvasToContainer() {
 }
 
 async function boot() {
+    startPosterUi?.classList.add('boot-loading');
     try {
-        const [loadedAssets] = await Promise.all([loadSprites(), sound.preloadAll()]);
+        const [loadedAssets] = await Promise.all([loadSprites(), sound.preloadStartingOnly()]);
         assets = loadedAssets;
         enterStart();
+        sound.preloadRemainingInBackground();
     } catch (e) {
         reportIssue('runtime', 'Boot failed', { error: String(e) });
+    } finally {
+        startPosterUi?.classList.remove('boot-loading');
     }
 }
 
