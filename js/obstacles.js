@@ -15,6 +15,7 @@ import { ObjectPool, checkCollision } from './utils.js';
  * @property {ObstacleKind} kind
  * @property {boolean} active
  * @property {boolean} scoredNearMiss
+ * @property {boolean} slideBonusScored
  */
 
 const MAX_ACTIVE = 10;
@@ -29,6 +30,7 @@ function createObstacle() {
         active: false,
         scoredNearMiss: false,
         dealtDamage: false,
+        slideBonusScored: false,
         /** @type {number} */
         minGap: Infinity,
         animPhase: 0,
@@ -39,6 +41,7 @@ function resetObstacle(o) {
     o.active = false;
     o.scoredNearMiss = false;
     o.dealtDamage = false;
+    o.slideBonusScored = false;
     o.minGap = Infinity;
 }
 
@@ -57,6 +60,7 @@ export class ObstacleManager {
         this.spawnAcc = 0;
         this.nextSpawnIn = 2500;
         this.baseScroll = 6;
+        this.elapsedMs = 0;
         /** @type {number[]} */
         this.collectibleHeightBag = [];
         /** @type {number} */
@@ -73,6 +77,7 @@ export class ObstacleManager {
      * @param {number} difficulty
      */
     updateSpawn(dtMs, scrollSpeed, difficulty) {
+        this.elapsedMs += dtMs;
         this.spawnAcc += dtMs;
         const tier = Math.floor(difficulty / 1000) * 0.15;
         const freqMod = 1 - Math.min(0.55, difficulty * 0.00015 + tier);
@@ -113,7 +118,11 @@ export class ObstacleManager {
             o.y = this._getCollectibleY('coin', groundY, o.height);
         } else {
             const t = Math.random();
-            if (t < 0.38) {
+            const canSpawnRakin = this.elapsedMs >= 8000;
+            const rakinChance = canSpawnRakin ? 0.45 : 0;
+            const rockChance = canSpawnRakin ? 0.3 : 0.55;
+            const rikshaChance = 1 - rockChance - rakinChance;
+            if (t < rockChance) {
                 o.kind = 'rock';
                 // Keep truck sprite proportionate (rock.png now holds truck art).
                 const truckImgW = Number(/** @type {any} */ (this.images.rock).width) || 1;
@@ -122,7 +131,7 @@ export class ObstacleManager {
                 o.width = 230 + Math.random() * 40;
                 o.height = o.width / truckAspect;
                 o.y = groundY - o.height;
-            } else if (t < 0.76) {
+            } else if (t < rockChance + rikshaChance) {
                 o.kind = 'riksha';
                 const rikshaImgW = Number(/** @type {any} */ (this.images.riksha).width) || 1;
                 const rikshaImgH = Number(/** @type {any} */ (this.images.riksha).height) || 1;
@@ -258,7 +267,7 @@ export class ObstacleManager {
 
     /**
      * @param {import('./player.js').Player} player
-     * @returns {{ hit: boolean, powerup: ObstacleKind | null, nearMiss: boolean, coinPoints: number, lifeGain: number }}
+     * @returns {{ hit: boolean, powerup: ObstacleKind | null, nearMiss: boolean, coinPoints: number, lifeGain: number, rakinSlidePoints: number }}
      */
     checkPlayer(player) {
         const pb = player.getBounds();
@@ -268,6 +277,7 @@ export class ObstacleManager {
         let nearMiss = false;
         let coinPoints = 0;
         let lifeGain = 0;
+        let rakinSlidePoints = 0;
 
         for (const o of this.active) {
             if (!o.active) continue;
@@ -280,7 +290,7 @@ export class ObstacleManager {
                         lifeGain += 1;
                     } else {
                         powerup = 'coin';
-                        coinPoints += 25;
+                        coinPoints += 100;
                     }
                     o.active = false;
                 }
@@ -310,6 +320,17 @@ export class ObstacleManager {
                     headClear;
             }
 
+            if (
+                o.kind === 'rakin' &&
+                colliding &&
+                safe &&
+                player.state === 'slide' &&
+                !o.slideBonusScored
+            ) {
+                o.slideBonusScored = true;
+                rakinSlidePoints += 50;
+            }
+
             if (colliding && !safe && !o.dealtDamage) {
                 hit = true;
                 o.dealtDamage = true;
@@ -324,7 +345,7 @@ export class ObstacleManager {
             }
         }
 
-        return { hit, powerup, nearMiss, coinPoints, lifeGain };
+        return { hit, powerup, nearMiss, coinPoints, lifeGain, rakinSlidePoints };
     }
 
     /**

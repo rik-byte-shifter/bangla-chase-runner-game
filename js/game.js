@@ -352,7 +352,7 @@ function updatePlay(dt) {
     const visibleRakinCount = obstacles.countVisibleKind('rakin');
     sound.syncRakinEncounterVoices(visibleRakinCount);
 
-    const { hit, nearMiss, coinPoints, lifeGain } = obstacles.checkPlayer(player);
+    const { hit, nearMiss, coinPoints, lifeGain, rakinSlidePoints } = obstacles.checkPlayer(player);
 
     if (lifeGain > 0) {
         sound.playGirlEvent('heart');
@@ -368,6 +368,11 @@ function updatePlay(dt) {
         sound.playGirlEvent('coin');
         score += coinPoints;
         addFloatText(`+${coinPoints}`, player.x + 40, player.y - 60, 'score');
+    }
+
+    if (rakinSlidePoints > 0) {
+        score += rakinSlidePoints;
+        addFloatText(`+${rakinSlidePoints}`, player.x + 35, player.y - 52, 'score');
     }
 
     if (nearMiss) {
