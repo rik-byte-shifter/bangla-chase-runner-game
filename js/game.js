@@ -742,6 +742,8 @@ function enterStart() {
     if (introScreen3) introScreen3.classList.remove('active');
     if (gameoverScreen) gameoverScreen.classList.remove('active');
     if (uiLayer) uiLayer.classList.add('hidden');
+    if (pauseOverlay) pauseOverlay.classList.add('hidden');
+    paused = false;
     if (menuHigh) menuHigh.textContent = String(Math.floor(highScore));
     if (startHighScoreLine) startHighScoreLine.classList.add('hidden');
     resetRun();
@@ -804,6 +806,13 @@ function onKeyDown(e) {
     if (e.code === 'Space') {
         e.preventDefault();
     }
+    if (e.code === 'KeyP') {
+        e.preventDefault();
+        if (gameState === 'play' && !e.repeat) {
+            togglePause();
+        }
+        return;
+    }
     if (gameState === 'play' && !paused && player) {
         if (e.code === 'Space') {
             sound.playJump();
@@ -815,9 +824,6 @@ function onKeyDown(e) {
             sound.playGirlEvent('slide');
             player.slide();
         }
-    }
-    if (e.code === 'KeyP') {
-        togglePause();
     }
     if (e.code === 'KeyD') {
         debug = !debug;
@@ -942,8 +948,10 @@ window.addEventListener('keydown', onKeyDown);
 window.addEventListener('keyup', onKeyUp);
 window.addEventListener('resize', resizeCanvasToContainer);
 window.addEventListener('blur', () => {
-    if (gameState === 'play') paused = true;
-    if (pauseOverlay) pauseOverlay.classList.remove('hidden');
+    if (gameState === 'play') {
+        paused = true;
+        if (pauseOverlay) pauseOverlay.classList.remove('hidden');
+    }
 });
 window.addEventListener('error', (e) => {
     reportIssue('runtime', 'Unhandled window error', {
