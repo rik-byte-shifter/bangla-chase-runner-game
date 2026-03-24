@@ -31,6 +31,7 @@ const introScreen2 = document.getElementById('intro-screen-2');
 const introScreen3 = document.getElementById('intro-screen-3');
 const gameoverScreen = document.getElementById('gameover-screen');
 const gameContainer = document.getElementById('game-container');
+const gameStage = document.getElementById('game-stage');
 const pauseOverlay = document.getElementById('pause-overlay');
 const menuHigh = document.getElementById('menu-high-score');
 const finalScoreEl = document.getElementById('final-score');
@@ -911,9 +912,9 @@ function onPointerCancel(e) {
 }
 
 function resizeCanvasToContainer() {
-    const container = gameContainer;
-    if (!container) return;
-    const rect = container.getBoundingClientRect();
+    const layoutEl = gameStage ?? gameContainer;
+    if (!layoutEl) return;
+    const rect = layoutEl.getBoundingClientRect();
     const nextW = Math.max(320, Math.round(rect.width));
     const nextH = Math.max(180, Math.round(rect.height));
     if (canvas.width !== nextW || canvas.height !== nextH) {
