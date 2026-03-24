@@ -28,8 +28,10 @@ export class SoundManager {
      * @param {Object} options
      * @param {string} options.basePath
      */
-    constructor({ basePath = 'assets/audio/' } = {}) {
-        this.basePath = basePath;
+    constructor({ basePath } = {}) {
+        // Root-relative so requests always hit `/assets/audio/...` (reliable on Vercel; avoids broken relative resolution).
+        this.basePath = basePath ?? '/assets/audio/';
+        if (!this.basePath.endsWith('/')) this.basePath += '/';
         /** @type {boolean} */
         this.muted = false;
         /** @type {AudioContext | null} */
@@ -308,11 +310,41 @@ export class SoundManager {
             const p = a.play();
             if (p !== undefined && typeof p.catch === 'function') {
                 p.catch(() => {
-                    // Autoplay policy: will work after a user gesture (see tryUnlockPreGameAudio in game.js).
+                    // Autoplay policy: will work after a user gesture (see playStartingFromUserGesture).
                 });
             }
         } catch (e) {
             reportIssue('audio', 'Starting loop play failed', { error: String(e) });
+        }
+    }
+
+    /**
+     * Call from a user gesture (tap/click). Creates the menu track if preload failed and starts `starting.mp3`.
+     */
+    playStartingFromUserGesture() {
+        void this.resume();
+        const url = `${this.basePath}starting.mp3`;
+        let a = this._get('starting');
+        if (!a) {
+            a = new Audio(url);
+            a.preload = 'auto';
+            this._buffers.set('starting', a);
+        }
+        if (!a.paused && !a.ended) return;
+        a.loop = true;
+        a.playbackRate = 1;
+        a.volume = STARTING_VOL * (this.muted ? 0 : 1);
+        try {
+            if (!a.currentSrc || !a.currentSrc.includes('starting')) {
+                a.src = url;
+                a.load();
+            }
+            const p = a.play();
+            if (p !== undefined && typeof p.catch === 'function') {
+                p.catch(() => {});
+            }
+        } catch (e) {
+            reportIssue('audio', 'Menu music gesture play failed', { error: String(e) });
         }
     }
 

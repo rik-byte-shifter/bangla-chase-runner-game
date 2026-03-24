@@ -10,7 +10,7 @@ import { reportIssue } from './issue-tracker.js';
 import { loadFirstAvailableImage, loadImageOrPlaceholder } from './utils.js';
 
 const STORAGE_KEY = 'catchMeHighScore';
-const ASSET_BASE = 'assets/images/';
+const ASSET_BASE = '/assets/images/';
 
 /** @type {'start'|'intro2'|'intro3'|'play'|'over'} */
 let gameState = 'start';
@@ -296,6 +296,8 @@ function updateAchievements(dt) {
  */
 function gameOver(reason) {
     gameState = 'over';
+    paused = false;
+    if (pauseOverlay) pauseOverlay.classList.add('hidden');
     sound.stopRakinEncounter();
     lastRunScore = Math.floor(score);
     sound.stopGirlVoiceLoop();
@@ -731,18 +733,13 @@ function renderTitleIdle(dt) {
     player.draw(ctx);
 }
 
-/**
- * Show start screen state.
- */
-/**
- * Browsers block autoplay; menu music must start in the same turn as a user gesture (no async gap before play()).
- */
+/** Start menu music in the same turn as a user gesture (required on Vercel / most browsers). */
 function tryUnlockPreGameAudio() {
     if (gameState !== 'start' && gameState !== 'intro2' && gameState !== 'intro3') return;
-    void sound.resume();
-    sound.startStartingLoop();
+    sound.playStartingFromUserGesture();
 }
 
+/** Home / post–game-over menu. */
 function enterStart() {
     gameState = 'start';
     sound.stopBgm();
@@ -763,6 +760,8 @@ function enterStart() {
 
 function showIntro2() {
     gameState = 'intro2';
+    paused = false;
+    if (pauseOverlay) pauseOverlay.classList.add('hidden');
     sound.stopBgm();
     sound.stopEndscreenLoop();
     if (startScreen) startScreen.classList.remove('active');
@@ -775,6 +774,8 @@ function showIntro2() {
 
 function showIntro3() {
     gameState = 'intro3';
+    paused = false;
+    if (pauseOverlay) pauseOverlay.classList.add('hidden');
     sound.stopBgm();
     sound.stopEndscreenLoop();
     if (startScreen) startScreen.classList.remove('active');
@@ -813,12 +814,19 @@ function togglePause() {
 }
 
 function onKeyDown(e) {
+    if (
+        (gameState === 'start' || gameState === 'intro2' || gameState === 'intro3') &&
+        !e.repeat &&
+        (e.code === 'Space' || e.code === 'Enter')
+    ) {
+        tryUnlockPreGameAudio();
+    }
     if (e.code === 'Space') {
         e.preventDefault();
     }
     if (e.code === 'KeyP') {
-        e.preventDefault();
         if (gameState === 'play' && !e.repeat) {
+            e.preventDefault();
             togglePause();
         }
         return;
@@ -938,6 +946,7 @@ document.getElementById('restart-btn')?.addEventListener('click', () => {
 
 document.getElementById('home-btn')?.addEventListener('click', () => {
     enterStart();
+    tryUnlockPreGameAudio();
 });
 
 document.getElementById('mute-btn')?.addEventListener('click', () => {
@@ -946,7 +955,9 @@ document.getElementById('mute-btn')?.addEventListener('click', () => {
     if (btn) btn.textContent = m ? '🔇' : '🔊';
 });
 
-document.getElementById('pause-btn')?.addEventListener('click', () => togglePause());
+document.getElementById('pause-btn')?.addEventListener('click', () => {
+    if (gameState === 'play') togglePause();
+});
 
 if (profileImgEl) {
     profileImgEl.addEventListener('error', () => {
