@@ -702,6 +702,12 @@ function gameLoop(ts) {
     const dt = Math.min(MAX_DT_MS, lastTs ? ts - lastTs : 16.67);
     lastTs = ts;
 
+    // Pause overlay sits above menus (z-index); only allow it during live gameplay.
+    if (gameState !== 'play') {
+        paused = false;
+        if (pauseOverlay) pauseOverlay.classList.add('hidden');
+    }
+
     if (gameState === 'play') {
         if (!paused) {
             updatePlay(dt);
@@ -961,7 +967,12 @@ document.getElementById('pause-btn')?.addEventListener('click', () => {
 
 if (profileImgEl) {
     profileImgEl.addEventListener('error', () => {
-        profileImgEl.setAttribute('src', `${ASSET_BASE}girl.png`);
+        const s = profileImgEl.getAttribute('src') || '';
+        if (s.includes('profile.png')) {
+            profileImgEl.setAttribute('src', `${ASSET_BASE}profileoo.png`);
+        } else {
+            profileImgEl.setAttribute('src', `${ASSET_BASE}girl.png`);
+        }
     });
 }
 
