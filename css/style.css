@@ -16,7 +16,9 @@ html, body {
     margin: 0;
     padding: 0;
     width: 100%;
-    height: 100%;
+    min-height: 100%;
+    min-height: 100vh;
+    min-height: 100dvh;
     overflow: hidden;
     font-family: Arial, Helvetica, sans-serif;
     background: var(--sand);
@@ -30,22 +32,45 @@ body {
     justify-content: center;
 }
 
+/* Fit 16:9 in the dynamic viewport; respect notches (viewport-fit=cover). */
 #game-container {
     position: relative;
-    width: 100%;
-    max-width: 1200px;
+    width: min(
+        100%,
+        1200px,
+        calc((100vh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)) * 16 / 9)
+    );
     margin: 0 auto;
     aspect-ratio: 16 / 9;
-    max-height: 100vh;
+    max-height: min(
+        calc(100vh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)),
+        calc((100vw - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px)) * 9 / 16)
+    );
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+@supports (height: 100dvh) {
+    #game-container {
+        width: min(
+            100%,
+            1200px,
+            calc((100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)) * 16 / 9)
+        );
+        max-height: min(
+            calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)),
+            calc((100vw - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px)) * 9 / 16)
+        );
+    }
 }
 
 #gameCanvas {
     display: block;
     width: 100%;
     height: auto;
+    max-width: 100%;
+    max-height: 100%;
     border: 4px solid var(--brown-border);
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
     background: #87CEEB;
@@ -412,6 +437,28 @@ body {
     justify-content: center;
     z-index: 15;
     color: #fff;
+    cursor: pointer;
+    touch-action: manipulation;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.pause-resume-hint {
+    margin: 0;
+    font-size: clamp(0.9rem, 3.5vw, 1.1rem);
+    text-align: center;
+    padding: 0 16px;
+    line-height: 1.5;
+}
+
+.pause-resume-hint kbd {
+    display: inline-block;
+    padding: 0.15em 0.5em;
+    font-size: 0.85em;
+    font-family: inherit;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    background: rgba(0, 0, 0, 0.35);
 }
 
 /* Inside HUD layer so when #ui-layer is hidden (menu / intros / game-over), pause cannot appear. */
@@ -432,4 +479,211 @@ body {
 
 #ui-layer.hidden {
     display: none;
+}
+
+/* ——— Mobile & small viewports ——— */
+.btn-primary,
+.btn-secondary,
+.start-poster-btn,
+.intro-btn,
+.gameover-btn {
+    touch-action: manipulation;
+    min-height: 44px;
+}
+
+#start-screen .start-poster-ui {
+    padding-bottom: max(clamp(24px, 6vh, 48px), env(safe-area-inset-bottom, 0px));
+}
+
+.intro-screen .intro-ui {
+    bottom: max(10px, env(safe-area-inset-bottom, 0px));
+    padding-left: max(12px, env(safe-area-inset-left, 0px));
+    padding-right: max(12px, env(safe-area-inset-right, 0px));
+}
+
+@media (max-width: 640px) {
+    #gameCanvas {
+        border-width: 2px;
+        box-shadow: 0 0 12px rgba(0, 0, 0, 0.25);
+    }
+
+    #gameover-screen .gameover-ui {
+        left: 50%;
+        right: auto;
+        transform: translate(-50%, -50%);
+        width: min(calc(100% - 24px), 420px);
+        top: 56%;
+        align-items: stretch;
+    }
+
+    #gameover-screen .gameover-line {
+        font-size: clamp(0.95rem, 4.2vw, 1.35rem);
+        padding: 8px 12px;
+    }
+
+    #gameover-screen #achievements-panel {
+        font-size: clamp(0.8rem, 3.5vw, 0.95rem);
+    }
+
+    #gameover-screen .gameover-btn {
+        width: 100%;
+        max-width: 280px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+@media (max-width: 520px) {
+    #ui-layer {
+        padding: 8px 10px;
+    }
+
+    #player-profile {
+        top: 6px;
+        left: 8px;
+        width: clamp(48px, 14vw, 72px);
+        height: clamp(48px, 14vw, 72px);
+        border-width: 3px;
+    }
+
+    #score {
+        top: 6px;
+        left: clamp(58px, 14vw, 82px);
+        right: 108px;
+        font-size: clamp(0.85rem, 4vw, 1.1rem);
+        line-height: 1.2;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    #high-score-hud {
+        top: clamp(26px, 8vw, 34px);
+        left: clamp(58px, 14vw, 82px);
+        right: 108px;
+        font-size: clamp(0.65rem, 2.8vw, 0.8rem);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    #lives {
+        top: clamp(40px, 11vw, 52px);
+        left: 8px;
+        right: auto;
+        font-size: clamp(1.1rem, 5vw, 1.4rem);
+        gap: 2px;
+    }
+
+    #speed-hud {
+        bottom: 6px;
+        right: 8px;
+        left: auto;
+        font-size: clamp(0.65rem, 2.8vw, 0.75rem);
+        max-width: 42%;
+        text-align: right;
+    }
+
+    #mute-btn,
+    #pause-btn {
+        top: max(6px, env(safe-area-inset-top, 0px));
+        min-width: 44px;
+        min-height: 44px;
+        padding: 6px 12px;
+        font-size: 1.1rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #pause-btn {
+        right: max(58px, calc(env(safe-area-inset-right, 0px) + 52px));
+    }
+
+    #mute-btn {
+        right: max(8px, env(safe-area-inset-right, 0px));
+    }
+}
+
+@media (max-width: 380px) {
+    #score {
+        right: 100px;
+    }
+
+    #high-score-hud {
+        right: 100px;
+    }
+
+    #lives {
+        top: auto;
+        bottom: 40px;
+        left: 8px;
+        font-size: 1.15rem;
+    }
+}
+
+/* Short landscape (phones): keep HUD out of the way */
+@media (max-height: 420px) and (orientation: landscape) {
+    #ui-layer {
+        padding: 4px 8px;
+    }
+
+    #player-profile {
+        width: 36px;
+        height: 36px;
+        border-width: 2px;
+        top: 4px;
+        left: 6px;
+    }
+
+    #score {
+        top: 4px;
+        left: 46px;
+        right: 96px;
+        font-size: 0.8rem;
+    }
+
+    #high-score-hud {
+        top: 22px;
+        left: 46px;
+        right: 96px;
+        font-size: 0.6rem;
+    }
+
+    #lives {
+        top: auto;
+        bottom: 4px;
+        left: 6px;
+        font-size: 1rem;
+    }
+
+    #speed-hud {
+        bottom: 4px;
+        right: 6px;
+        font-size: 0.6rem;
+    }
+
+    #mute-btn,
+    #pause-btn {
+        top: 4px;
+        min-width: 40px;
+        min-height: 40px;
+        padding: 4px 8px;
+        font-size: 1rem;
+    }
+
+    #pause-btn {
+        right: 50px;
+    }
+
+    #mute-btn {
+        right: 6px;
+    }
+}
+
+@media (orientation: landscape) and (max-height: 500px) {
+    #ui-layer {
+        padding-left: max(10px, env(safe-area-inset-left, 0px));
+        padding-right: max(10px, env(safe-area-inset-right, 0px));
+    }
 }

@@ -980,6 +980,13 @@ document.getElementById('pause-btn')?.addEventListener('click', () => {
     if (gameState === 'play') togglePause();
 });
 
+pauseOverlay?.addEventListener('click', (e) => {
+    if (gameState === 'play' && paused) {
+        e.preventDefault();
+        togglePause();
+    }
+});
+
 if (profileImgEl) {
     profileImgEl.addEventListener('error', () => {
         const s = profileImgEl.getAttribute('src') || '';
@@ -1007,6 +1014,12 @@ gameContainerEl?.addEventListener(
 window.addEventListener('keydown', onKeyDown);
 window.addEventListener('keyup', onKeyUp);
 window.addEventListener('resize', resizeCanvasToContainer);
+window.addEventListener('orientationchange', () => {
+    requestAnimationFrame(() => {
+        resizeCanvasToContainer();
+        requestAnimationFrame(resizeCanvasToContainer);
+    });
+});
 window.addEventListener('blur', () => {
     if (gameState === 'play') {
         paused = true;

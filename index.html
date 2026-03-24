@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="description" content="Run, jump, and dodge in this hilarious chase game!">
     <meta property="og:title" content="Ma bolse durotto bojay rakhte">
     <meta property="og:description" content="Run, jump, and dodge in this hilarious chase runner game!">
@@ -32,9 +32,9 @@
             <div id="speed-hud">Speed: 100%</div>
             <button type="button" id="mute-btn" aria-label="Toggle sound">🔊</button>
             <button type="button" id="pause-btn" aria-label="Pause">⏸</button>
-            <div id="pause-overlay" class="hidden" aria-hidden="true">
+            <div id="pause-overlay" class="hidden" aria-hidden="true" role="dialog" aria-label="Paused">
                 <p class="title-font">PAUSED</p>
-                <p>Press P to resume</p>
+                <p class="pause-resume-hint">Press <kbd>P</kbd> or tap to resume</p>
             </div>
         </div>
         <div id="start-screen" class="screen active">
