@@ -32,79 +32,27 @@ body {
     justify-content: center;
 }
 
-/*
- * Wide viewports: letterbox 16:9 in the view (same as desktop).
- * Tall viewports (typical phone portrait): fill height and crop sides (cover),
- * so the game is not a thin strip with huge margins.
- */
 #game-container {
-    position: relative;
-    width: min(
-        100%,
-        1200px,
-        calc((100vh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)) * 16 / 9)
-    );
-    margin: 0 auto;
-    aspect-ratio: 16 / 9;
-    max-height: min(
-        calc(100vh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)),
-        calc((100vw - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px)) * 9 / 16)
-    );
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding:
+        env(safe-area-inset-top, 0px)
+        env(safe-area-inset-right, 0px)
+        env(safe-area-inset-bottom, 0px)
+        env(safe-area-inset-left, 0px);
     overflow: hidden;
-}
-
-@supports (height: 100dvh) {
-    #game-container {
-        width: min(
-            100%,
-            1200px,
-            calc((100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)) * 16 / 9)
-        );
-        max-height: min(
-            calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)),
-            calc((100vw - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px)) * 9 / 16)
-        );
-    }
+    background: var(--sand);
 }
 
 #game-stage {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-}
-
-/* Viewport taller than 16:9 — fill screen height; horizontal overflow clipped (matches “maximized” desktop feel). */
-@media (max-aspect-ratio: 16/9) {
-    body {
-        align-items: stretch;
-    }
-
-    #game-container {
-        width: 100%;
-        max-width: none;
-        margin: 0;
-        aspect-ratio: unset;
-        max-height: none;
-        height: calc(100vh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
-    }
-
-    @supports (height: 100dvh) {
-        #game-container {
-            height: calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
-        }
-    }
-
-    #game-stage {
-        left: 50%;
-        right: auto;
-        top: 0;
-        bottom: 0;
-        width: auto;
-        height: 100%;
-        aspect-ratio: 16 / 9;
-        transform: translateX(-50%);
-    }
+    position: relative;
+    width: 1200px;
+    height: 675px;
+    transform: scale(var(--stage-scale, 1));
+    transform-origin: center center;
 }
 
 #gameCanvas {

@@ -941,20 +941,19 @@ function onPointerCancel(e) {
     if (activePointerId === e.pointerId) activePointerId = null;
 }
 
-function resizeCanvasToContainer() {
-    const layoutEl = gameStage ?? gameContainer;
-    if (!layoutEl) return;
-    const rect = layoutEl.getBoundingClientRect();
-    const nextW = Math.max(320, Math.round(rect.width));
-    const nextH = Math.max(180, Math.round(rect.height));
-    if (canvas.width !== nextW || canvas.height !== nextH) {
-        canvas.width = nextW;
-        canvas.height = nextH;
-        if (player) {
-            player.canvas = canvas;
-            player.groundY = canvas.height - 150;
-        }
-    }
+function resizeStageToViewport() {
+    const containerEl = gameContainer ?? document.body;
+    const stageEl = gameStage ?? containerEl;
+    if (!containerEl || !stageEl) return;
+
+    // Keep internal game coordinates fixed (desktop-perfect), scale the whole stage to fit.
+    const BASE_W = 1200;
+    const BASE_H = 675;
+    const rect = containerEl.getBoundingClientRect();
+    const availW = Math.max(1, rect.width);
+    const availH = Math.max(1, rect.height);
+    const scale = Math.min(availW / BASE_W, availH / BASE_H, 1);
+    stageEl.style.setProperty('--stage-scale', String(scale));
 }
 
 async function boot() {
@@ -1061,11 +1060,11 @@ gameContainerEl?.addEventListener(
 
 window.addEventListener('keydown', onKeyDown);
 window.addEventListener('keyup', onKeyUp);
-window.addEventListener('resize', resizeCanvasToContainer);
+window.addEventListener('resize', resizeStageToViewport);
 window.addEventListener('orientationchange', () => {
     requestAnimationFrame(() => {
-        resizeCanvasToContainer();
-        requestAnimationFrame(resizeCanvasToContainer);
+        resizeStageToViewport();
+        requestAnimationFrame(resizeStageToViewport);
     });
 });
 window.addEventListener('blur', () => {
@@ -1103,5 +1102,5 @@ canvas.addEventListener('pointerup', onPointerUp, { passive: true });
 canvas.addEventListener('pointercancel', onPointerCancel, { passive: true });
 
 void boot();
-resizeCanvasToContainer();
+resizeStageToViewport();
 requestAnimationFrame(gameLoop);
