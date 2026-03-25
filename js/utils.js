@@ -82,7 +82,15 @@ export function loadImageOrPlaceholder(src, pw, ph, color, label) {
     return new Promise((resolve) => {
         const img = new Image();
         img.crossOrigin = 'anonymous';
-        img.onload = () => resolve(img);
+        // Help the browser decode without blocking layout/JS.
+        img.decoding = 'async';
+        img.onload = () => {
+            // Decode in the background so the canvas draw doesn't stall later.
+            if (typeof img.decode === 'function') {
+                void img.decode().catch(() => {});
+            }
+            resolve(img);
+        };
         img.onerror = () => {
             reportIssue('assets', 'Image missing or failed; using placeholder', { src });
             resolve(makePlaceholderCanvas(pw, ph, color, label));
@@ -102,7 +110,13 @@ export async function loadFirstAvailableImage(sources) {
         const ok = await new Promise((resolve) => {
             const img = new Image();
             img.crossOrigin = 'anonymous';
-            img.onload = () => resolve(img);
+            img.decoding = 'async';
+            img.onload = () => {
+                if (typeof img.decode === 'function') {
+                    void img.decode().catch(() => {});
+                }
+                resolve(img);
+            };
             img.onerror = () => resolve(null);
             img.src = src;
         });

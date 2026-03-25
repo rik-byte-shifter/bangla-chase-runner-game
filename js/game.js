@@ -965,11 +965,8 @@ async function boot() {
         // Kick off menu-music preload (may still require gesture to actually play).
         void sound.preloadStartingOnly().catch(() => {});
 
-        const schedule =
-            window.requestIdleCallback ??
-            ((cb) => window.setTimeout(() => cb({ timeRemaining: () => 0 }), 1));
-
-        schedule(() => {
+        // Start sprite fetching right after the first paint (more reliable than idle callbacks).
+        const startSprites = () => {
             void ensureSpritesLoading()
                 .then((loadedAssets) => {
                     assets = loadedAssets;
@@ -978,7 +975,12 @@ async function boot() {
                 .catch((e) => {
                     reportIssue('runtime', 'Sprite load failed', { error: String(e) });
                 });
-        });
+        };
+        if (typeof window.requestAnimationFrame === 'function') {
+            requestAnimationFrame(() => startSprites());
+        } else {
+            window.setTimeout(startSprites, 0);
+        }
 
         sound.preloadRemainingInBackground();
     } catch (e) {
