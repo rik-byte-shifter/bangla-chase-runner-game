@@ -199,6 +199,14 @@ let player = /** @type {Player | null} */ (null);
 let chaser = /** @type {Chaser | null} */ (null);
 let obstacles = /** @type {ObstacleManager | null} */ (null);
 
+/** @type {Promise<Awaited<ReturnType<typeof loadSprites>>> | null} */
+let spritesPromise = null;
+
+function ensureSpritesLoading() {
+    if (!spritesPromise) spritesPromise = loadSprites();
+    return spritesPromise;
+}
+
 let playerIframes = 0;
 
 /**
@@ -807,7 +815,7 @@ function showIntro3() {
 /**
  * Begin gameplay.
  */
-function startGame() {
+async function startGame() {
     gameState = 'play';
     paused = false;
     gameContainer?.classList.add('gameplay-active');
@@ -819,6 +827,28 @@ function startGame() {
     if (gameoverScreen) gameoverScreen.classList.remove('active');
     if (uiLayer) uiLayer.classList.remove('hidden');
     if (pauseOverlay) pauseOverlay.classList.add('hidden');
+
+    if (!assets) {
+        const introBtn = document.getElementById('intro-play-btn');
+        const restartBtn = document.getElementById('restart-btn');
+        const btn = introBtn || restartBtn;
+        const prevText = btn?.textContent || 'PLAY';
+        if (btn) {
+            btn.textContent = 'LOADING...';
+            btn.setAttribute('disabled', 'true');
+        }
+        try {
+            assets = await ensureSpritesLoading();
+        } catch (e) {
+            reportIssue('runtime', 'Sprites failed to load before play', { error: String(e) });
+        } finally {
+            if (btn) {
+                btn.textContent = prevText;
+                btn.removeAttribute('disabled');
+            }
+        }
+    }
+
     resetRun();
     sound.resume();
     sound.startBgm();
@@ -928,16 +958,31 @@ function resizeCanvasToContainer() {
 }
 
 async function boot() {
-    startPosterUi?.classList.add('boot-loading');
     try {
-        const [loadedAssets] = await Promise.all([loadSprites(), sound.preloadStartingOnly()]);
-        assets = loadedAssets;
+        // Never block the start screen. Load audio/sprites opportunistically in the background.
         enterStart();
+
+        // Kick off menu-music preload (may still require gesture to actually play).
+        void sound.preloadStartingOnly().catch(() => {});
+
+        const schedule =
+            window.requestIdleCallback ??
+            ((cb) => window.setTimeout(() => cb({ timeRemaining: () => 0 }), 1));
+
+        schedule(() => {
+            void ensureSpritesLoading()
+                .then((loadedAssets) => {
+                    assets = loadedAssets;
+                    resetRun();
+                })
+                .catch((e) => {
+                    reportIssue('runtime', 'Sprite load failed', { error: String(e) });
+                });
+        });
+
         sound.preloadRemainingInBackground();
     } catch (e) {
         reportIssue('runtime', 'Boot failed', { error: String(e) });
-    } finally {
-        startPosterUi?.classList.remove('boot-loading');
     }
 }
 
@@ -959,11 +1004,11 @@ document.getElementById('intro-next-btn')?.addEventListener('click', () => {
 
 document.getElementById('intro-play-btn')?.addEventListener('click', () => {
     void sound.resume();
-    startGame();
+    void startGame();
 });
 
 document.getElementById('restart-btn')?.addEventListener('click', () => {
-    startGame();
+    void startGame();
 });
 
 document.getElementById('home-btn')?.addEventListener('click', () => {

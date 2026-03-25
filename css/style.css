@@ -259,7 +259,6 @@ body {
 }
 
 #start-screen .start-poster-ui.boot-loading {
-    pointer-events: none;
     opacity: 0.92;
 }
 

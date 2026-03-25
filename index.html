@@ -9,8 +9,8 @@
     <meta property="og:type" content="website">
     <meta name="theme-color" content="#E67E22">
     <title>Ma bolse durotto bojay rakhte</title>
-    <link rel="preload" href="/assets/images/poster.png" as="image">
-    <link rel="preload" href="/assets/audio/starting.mp3" as="audio">
+    <link rel="preload" href="assets/images/poster.png" as="image" fetchpriority="high">
+    <link rel="preload" href="assets/audio/starting.mp3" as="audio" type="audio/mpeg">
     <link rel="manifest" href="manifest.json">
     <link rel="icon" href="assets/images/profileoo.png" type="image/png">
     <link rel="apple-touch-icon" href="assets/images/profileoo.png">
@@ -47,19 +47,19 @@
             </div>
         </div>
         <div id="intro-screen-2" class="screen intro-screen">
-            <img class="intro-bg" src="assets/images/background2.png" alt="" width="1920" height="1080" decoding="async">
+            <img class="intro-bg" src="assets/images/background2.png" alt="" width="1920" height="1080" decoding="async" loading="lazy" fetchpriority="low">
             <div class="intro-ui">
                 <button type="button" id="intro-next-btn" class="btn-primary intro-btn">NEXT</button>
             </div>
         </div>
         <div id="intro-screen-3" class="screen intro-screen">
-            <img class="intro-bg" src="assets/images/background3.png" alt="" width="1920" height="1080" decoding="async">
+            <img class="intro-bg" src="assets/images/background3.png" alt="" width="1920" height="1080" decoding="async" loading="lazy" fetchpriority="low">
             <div class="intro-ui">
                 <button type="button" id="intro-play-btn" class="btn-primary intro-btn">PLAY</button>
             </div>
         </div>
         <div id="gameover-screen" class="screen">
-            <img class="gameover-bg" src="assets/images/endscreen.png" alt="" width="1920" height="1080" decoding="async">
+            <img class="gameover-bg" src="assets/images/endscreen.png" alt="" width="1920" height="1080" decoding="async" loading="lazy" fetchpriority="low">
             <div class="gameover-ui">
                 <p class="gameover-line">আপনার পাসপোর্ট পাওয়ার দৌড়ে স্কোর: <span id="final-score">0</span></p>
                 <p id="achievements-panel" class="gameover-line"></p>
