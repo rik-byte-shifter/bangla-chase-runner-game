@@ -303,6 +303,40 @@ body {
     background: #000;
 }
 
+#game-container.mobile-portrait #gameover-screen .gameover-ui {
+    left: 50%;
+    right: auto;
+    top: auto;
+    bottom: max(8px, env(safe-area-inset-bottom, 0px));
+    transform: translateX(-50%);
+    width: min(calc(100% - 16px), 360px);
+    gap: 6px;
+}
+
+#game-container.mobile-portrait #gameover-screen .gameover-line {
+    padding: 4px 8px;
+    border-radius: 10px;
+    font-size: clamp(0.68rem, 2.8vw, 0.84rem);
+    line-height: 1.2;
+    border-width: 1px;
+}
+
+#game-container.mobile-portrait #gameover-screen #final-score {
+    margin-left: 2px;
+    font-size: 1.02em;
+}
+
+#game-container.mobile-portrait #gameover-screen #achievements-panel {
+    font-size: clamp(0.64rem, 2.5vw, 0.78rem);
+}
+
+#game-container.mobile-portrait #gameover-screen .gameover-btn {
+    width: min(240px, 72vw);
+    margin: 0 auto;
+    font-size: 1.12rem;
+    padding: 10px 22px;
+}
+
 #gameover-screen .gameover-ui {
     position: absolute;
     right: clamp(18px, 3.5vw, 48px);
@@ -515,7 +549,7 @@ body {
         box-shadow: 0 0 12px rgba(0, 0, 0, 0.25);
     }
 
-    #gameover-screen .gameover-ui {
+    #game-container:not(.mobile-portrait) #gameover-screen .gameover-ui {
         left: 50%;
         right: auto;
         transform: translate(-50%, -50%);
@@ -524,16 +558,16 @@ body {
         align-items: stretch;
     }
 
-    #gameover-screen .gameover-line {
+    #game-container:not(.mobile-portrait) #gameover-screen .gameover-line {
         font-size: clamp(0.95rem, 4.2vw, 1.35rem);
         padding: 8px 12px;
     }
 
-    #gameover-screen #achievements-panel {
+    #game-container:not(.mobile-portrait) #gameover-screen #achievements-panel {
         font-size: clamp(0.8rem, 3.5vw, 0.95rem);
     }
 
-    #gameover-screen .gameover-btn {
+    #game-container:not(.mobile-portrait) #gameover-screen .gameover-btn {
         width: 100%;
         max-width: 280px;
         margin-left: auto;
@@ -549,16 +583,16 @@ body {
     #player-profile {
         top: 6px;
         left: 8px;
-        width: clamp(48px, 14vw, 72px);
-        height: clamp(48px, 14vw, 72px);
+        width: clamp(50px, 13vw, 58px);
+        height: clamp(50px, 13vw, 58px);
         border-width: 3px;
     }
 
     #score {
         top: 6px;
-        left: clamp(58px, 14vw, 82px);
-        right: 108px;
-        font-size: clamp(0.85rem, 4vw, 1.1rem);
+        left: clamp(68px, 18vw, 84px);
+        right: 114px;
+        font-size: clamp(0.78rem, 3.6vw, 0.96rem);
         line-height: 1.2;
         white-space: nowrap;
         overflow: hidden;
@@ -566,21 +600,24 @@ body {
     }
 
     #high-score-hud {
-        top: clamp(26px, 8vw, 34px);
-        left: clamp(58px, 14vw, 82px);
-        right: 108px;
-        font-size: clamp(0.65rem, 2.8vw, 0.8rem);
+        top: clamp(24px, 7.5vw, 30px);
+        left: clamp(68px, 18vw, 84px);
+        right: 114px;
+        font-size: clamp(0.58rem, 2.5vw, 0.7rem);
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
     }
 
     #lives {
-        top: clamp(40px, 11vw, 52px);
-        left: 8px;
-        right: auto;
-        font-size: clamp(1.1rem, 5vw, 1.4rem);
+        top: clamp(52px, 13vw, 62px);
+        right: max(8px, env(safe-area-inset-right, 0px));
+        left: auto;
+        justify-content: flex-end;
+        font-size: clamp(0.9rem, 4.2vw, 1.1rem);
         gap: 2px;
+        max-width: 42%;
+        pointer-events: none;
     }
 
     #speed-hud {
@@ -615,18 +652,20 @@ body {
 
 @media (max-width: 380px) {
     #score {
-        right: 100px;
+        right: 108px;
     }
 
     #high-score-hud {
-        right: 100px;
+        right: 108px;
     }
 
     #lives {
-        top: auto;
-        bottom: 40px;
-        left: 8px;
-        font-size: 1.15rem;
+        top: 56px;
+        bottom: auto;
+        right: 6px;
+        left: auto;
+        font-size: 0.92rem;
+        max-width: 44%;
     }
 }
 
