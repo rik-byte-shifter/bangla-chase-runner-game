@@ -303,6 +303,10 @@ body {
     background: #000;
 }
 
+#game-container.mobile-portrait #gameover-screen {
+    background: #000;
+}
+
 #game-container.mobile-portrait #gameover-screen .gameover-ui {
     left: 50%;
     right: auto;
