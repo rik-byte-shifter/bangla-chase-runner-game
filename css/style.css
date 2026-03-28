@@ -49,8 +49,8 @@ body {
 
 #game-stage {
     position: relative;
-    width: 1200px;
-    height: 675px;
+    width: var(--stage-width, 1200px);
+    height: var(--stage-height, 675px);
     transform: scale(var(--stage-scale, 1));
     transform-origin: center center;
 }
@@ -64,6 +64,15 @@ body {
     background: #87CEEB;
     image-rendering: pixelated;
     image-rendering: crisp-edges;
+}
+
+#game-container.mobile-portrait #gameCanvas {
+    border-width: 0;
+    box-shadow: none;
+}
+
+#game-container.mobile-portrait {
+    background: #000;
 }
 
 #ui-layer {
@@ -194,6 +203,12 @@ body {
     pointer-events: none;
 }
 
+#game-container.mobile-portrait #start-screen .start-poster-bg {
+    object-fit: contain;
+    object-position: center center;
+    background: #000;
+}
+
 #start-screen .start-poster-ui {
     position: relative;
     z-index: 1;
@@ -280,6 +295,12 @@ body {
     z-index: 0;
     pointer-events: none;
     filter: none;
+}
+
+#game-container.mobile-portrait #gameover-screen .gameover-bg {
+    object-fit: contain;
+    object-position: center center;
+    background: #000;
 }
 
 #gameover-screen .gameover-ui {

@@ -2,7 +2,7 @@
  * Player (boy): run, jump, slide with smoother physics + frame animation.
  */
 
-import { clamp } from './utils.js';
+import { clamp, getGroundY } from './utils.js';
 
 export const PLAYER_W = 90;
 export const PLAYER_H = 140;
@@ -22,7 +22,7 @@ export class Player {
         this.state = 'run';
         this.x = 280;
         this.vy = 0;
-        this.groundY = canvas.height - 150;
+        this.groundY = getGroundY(canvas.height);
         this.y = this.groundY - PLAYER_H;
         this.targetX = this.x;
         /** Slide */

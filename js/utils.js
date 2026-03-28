@@ -28,6 +28,16 @@ export function clamp(v, min, max) {
 }
 
 /**
+ * Ground baseline used by gameplay/renders.
+ * Keeps composition stable across aspect ratios (including portrait mobile).
+ * @param {number} canvasHeight
+ * @returns {number}
+ */
+export function getGroundY(canvasHeight) {
+    return Math.round(canvasHeight * 0.78);
+}
+
+/**
  * Axis-aligned rectangle overlap test.
  * @param {Rect} rect1
  * @param {Rect} rect2

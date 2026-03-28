@@ -1,0 +1,4249 @@
+This file is a merged representation of the entire codebase, combined into a single document by Repomix.
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of the entire repository's contents.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+</file_summary>
+
+<directory_structure>
+.gitignore
+.htaccess
+assets/audio/.gitkeep
+assets/audio/background_song.mp3
+assets/audio/forever.mp3
+assets/audio/girl1.mp3
+assets/audio/girl2.mp3
+assets/audio/girl3.mp3
+assets/audio/girl4.mp3
+assets/audio/girl5.mp3
+assets/audio/girl6.mp3
+assets/audio/girl7.mp3
+assets/audio/girl8.mp3
+assets/audio/girl9.mp3
+assets/audio/rakin1.mp3
+assets/audio/rakin2.mp3
+assets/audio/rakin3.mp3
+assets/audio/rakin4.mp3
+assets/audio/starting.mp3
+assets/images/.gitkeep
+assets/images/background.png
+assets/images/background2.png
+assets/images/background3.png
+assets/images/boy.png
+assets/images/coin.png
+assets/images/endscreen.png
+assets/images/girl.png
+assets/images/heart.png
+assets/images/icon-192.svg
+assets/images/icon-512.svg
+assets/images/poster.png
+assets/images/profile.png
+assets/images/profileoo.png
+assets/images/rakin.png
+assets/images/riksha.png
+assets/images/rock.png
+css/style.css
+index.html
+js/audio.js
+js/chaser.js
+js/game.js
+js/issue-tracker.js
+js/obstacles.js
+js/player.js
+js/utils.js
+manifest.json
+netlify.toml
+README.md
+vercel.json
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path=".gitignore">
+# OS / editor files
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Dependency directories (if tooling gets added later)
+node_modules/
+
+# Environment / secrets
+.env
+.env.*
+
+# Build/cache artifacts
+dist/
+build/
+coverage/
+.cache/
+*.tmp
+</file>
+
+<file path=".htaccess">
+# Cache static assets (Apache)
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/css "access plus 7 days"
+  ExpiresByType application/javascript "access plus 7 days"
+  ExpiresByType image/png "access plus 30 days"
+  ExpiresByType image/webp "access plus 30 days"
+  ExpiresByType audio/mpeg "access plus 30 days"
+</IfModule>
+</file>
+
+<file path="assets/audio/.gitkeep">
+
+</file>
+
+<file path="assets/images/.gitkeep">
+
+</file>
+
+<file path="assets/images/icon-192.svg">
+<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 192 192" role="img" aria-label="Catch Me If You Can app icon">
+  <defs>
+    <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#f39c12"/>
+      <stop offset="100%" stop-color="#e67e22"/>
+    </linearGradient>
+  </defs>
+  <rect x="0" y="0" width="192" height="192" rx="42" fill="url(#g)"/>
+  <circle cx="64" cy="82" r="18" fill="#fff8e7"/>
+  <rect x="48" y="100" width="34" height="52" rx="14" fill="#fff8e7"/>
+  <circle cx="130" cy="88" r="16" fill="#e8f5e9"/>
+  <rect x="117" y="102" width="30" height="48" rx="12" fill="#e8f5e9"/>
+  <path d="M90 126 C104 114, 114 114, 130 124" stroke="#5d4037" stroke-width="8" fill="none" stroke-linecap="round"/>
+  <text x="96" y="36" text-anchor="middle" font-family="Arial, sans-serif" font-weight="700" font-size="20" fill="#2c1810">CMIYC</text>
+</svg>
+</file>
+
+<file path="assets/images/icon-512.svg">
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-label="Catch Me If You Can app icon">
+  <defs>
+    <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#f39c12"/>
+      <stop offset="100%" stop-color="#e67e22"/>
+    </linearGradient>
+  </defs>
+  <rect x="0" y="0" width="512" height="512" rx="112" fill="url(#g)"/>
+  <circle cx="172" cy="216" r="50" fill="#fff8e7"/>
+  <rect x="130" y="262" width="92" height="148" rx="34" fill="#fff8e7"/>
+  <circle cx="346" cy="228" r="44" fill="#e8f5e9"/>
+  <rect x="308" y="268" width="84" height="138" rx="30" fill="#e8f5e9"/>
+  <path d="M236 336 C272 302, 302 302, 346 332" stroke="#5d4037" stroke-width="20" fill="none" stroke-linecap="round"/>
+  <text x="256" y="102" text-anchor="middle" font-family="Arial, sans-serif" font-weight="700" font-size="58" fill="#2c1810">CMIYC</text>
+</svg>
+</file>
+
+<file path="js/issue-tracker.js">
+const ISSUE_STORAGE_KEY = 'catchMeRuntimeIssues';
+const MAX_ISSUES = 60;
+
+/**
+ * Persist and broadcast runtime issues for easier debugging.
+ * @param {'audio'|'assets'|'runtime'|'ui'} kind
+ * @param {string} message
+ * @param {Record<string, unknown>} [meta]
+ */
+export function reportIssue(kind, message, meta = {}) {
+    const entry = {
+        kind,
+        message,
+        meta,
+        at: new Date().toISOString(),
+    };
+    try {
+        const raw = localStorage.getItem(ISSUE_STORAGE_KEY);
+        const parsed = JSON.parse(raw || '[]');
+        const list = Array.isArray(parsed) ? parsed : [];
+        list.push(entry);
+        if (list.length > MAX_ISSUES) {
+            list.splice(0, list.length - MAX_ISSUES);
+        }
+        localStorage.setItem(ISSUE_STORAGE_KEY, JSON.stringify(list));
+    } catch {
+        // Storage can fail in private modes; keep logging fallback.
+    }
+    try {
+        window.dispatchEvent(new CustomEvent('game:issue', { detail: entry }));
+    } catch {
+        // Ignore event-dispatch failures in very old browsers.
+    }
+    console.warn(`[GameIssue:${kind}] ${message}`, meta);
+}
+</file>
+
+<file path="netlify.toml">
+[build]
+  publish = "."
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[[headers]]
+  for = "/css/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800, immutable"
+
+[[headers]]
+  for = "/js/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800, immutable"
+
+[[headers]]
+  for = "/assets/images/*"
+  [headers.values]
+    Cache-Control = "public, max-age=2592000, immutable"
+
+[[headers]]
+  for = "/assets/audio/*"
+  [headers.values]
+    Cache-Control = "public, max-age=2592000, immutable"
+</file>
+
+<file path="vercel.json">
+{
+  "cleanUrls": true,
+  "headers": [
+    {
+      "source": "/css/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=604800, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/js/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=604800, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/assets/images/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=2592000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/assets/audio/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=2592000, immutable"
+        }
+      ]
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
+</file>
+
+<file path="README.md">
+# Catch Me If You Can
+
+A browser-based 2D endless chase runner: you play the **girl** chasing the **boy** through a scrolling village-style scene. Jump (**Space**), slide (**Down**), dodge obstacles, collect pickups, and close the gap.
+
+## Run locally
+
+Static files only — use any local HTTP server (required for ES modules and audio):
+
+```bash
+# From this folder
+npx --yes serve .
+```
+
+Or with Python:
+
+```bash
+python -m http.server 8080
+```
+
+Then open `http://localhost:8080` (or the URL your tool prints).
+
+## Assets
+
+Audio is loaded from `assets/audio/` (optional; beeps are used if files are missing).
+
+### PNG images (`assets/images/`)
+
+| File | Role | Notes |
+|------|------|--------|
+| `girl.png` | Player | Drawn at **64×96** (scaled to fit). Transparent PNG recommended. |
+| `boy.png` | Chaser | Same size as girl; warm tint when close. |
+| `background.png` | Sky / scene | Tiled horizontally above the ground band. |
+| `ground.png` | Foreground strip | Tiled horizontally from the ground line to the bottom of the canvas. |
+| `rock.png` | Truck obstacle | Wide obstacle; jump timing challenge. |
+| `riksha.png` | Riksha obstacle | Medium obstacle; jump over. |
+| `rakin.png` | Runner obstacle | Tall obstacle; slide under. |
+| `heart.png` | Life pickup + UI | Extra life collectible. |
+| `coin.png` | Coin pickup | Bonus score collectible. |
+
+If any file is missing, the loader logs a warning and **`js/utils.js`** draws a **labeled placeholder** so the game still runs.
+
+## Deploy
+
+- **GitHub Pages:** Push this folder to a repo, enable Pages from the `main` branch `/` or `/chase-runner-game`, and set the site URL in `index.html` if you use a subpath.
+- **Netlify:** `netlify.toml` is included for SPA fallback + cache headers.
+- **Vercel:** `vercel.json` is included with equivalent static headers/routes.
+- **Apache:** `.htaccess` in this folder includes basic cache headers for CSS/JS/images/audio.
+
+## Production build (optional)
+
+- Minify `css/style.css` and `js/*.js` with your preferred tool.
+- Replace placeholders with compressed WebP/PNG and short MP3/OGG.
+- Keep `manifest.json` for installable PWA; add real icons under `assets/images/` if you want home-screen icons.
+
+## Controls
+
+| Input | Action |
+|-------|--------|
+| Space | Jump |
+| Down | Slide |
+| P | Pause |
+| D | Toggle hitbox debug |
+| Tap / swipe down | Jump / slide (touch/pointer) |
+
+High score is stored in `localStorage` under the key `catchMeHighScore`.
+
+## Runtime issue visibility
+
+- Runtime/audio/asset errors are stored in `localStorage` under `catchMeRuntimeIssues`.
+- While playing, HUD shows issue count if any issue is detected in the current session.
+</file>
+
+<file path="js/chaser.js">
+/**
+ * Chaser (girl): smooth follow + frame animation and angry tint when close.
+ */
+
+import { lerp } from './utils.js';
+import { PLAYER_H, PLAYER_W } from './player.js';
+
+export class Chaser {
+    /**
+     * @param {Object} opts
+     * @param {{ image: CanvasImageSource }} opts.sprites
+     */
+    constructor({ sprites }) {
+        this.sprites = sprites;
+        /** Screen X (smoothed) */
+        this.displayX = 0;
+        this.escapeDir = 1;
+        this.escapeSwitchMs = 420;
+        this.escapeTimerMs = this.escapeSwitchMs;
+        this.escapeOffset = 0;
+        this.bobPhase = 0;
+        this.animTimer = 0;
+        this.frameIndex = 0;
+        this.frameMs = 95;
+    }
+
+    /**
+     * @param {number} dtMs
+     * @param {number} targetX
+     * @param {number} [canvasW]
+     */
+    update(dtMs, targetX, canvasW) {
+        this.escapeTimerMs -= dtMs;
+        if (this.escapeTimerMs <= 0) {
+            this.escapeDir *= -1;
+            this.escapeSwitchMs = 260 + Math.random() * 420;
+            this.escapeTimerMs = this.escapeSwitchMs;
+        }
+        const wiggleBlend = Math.min(1, 0.12 * (dtMs / 16.67));
+        const escapeTargetOffset = this.escapeDir * 24;
+        this.escapeOffset = lerp(this.escapeOffset, escapeTargetOffset, wiggleBlend);
+
+        const blend = Math.min(1, 0.2 * (dtMs / 16.67));
+        this.displayX = lerp(this.displayX, targetX, blend);
+        if (Number.isFinite(canvasW)) {
+            const leftSafe = 18;
+            const rightSafe = 110;
+            const maxX = Math.max(leftSafe, canvasW - PLAYER_W - rightSafe);
+            this.displayX = Math.max(leftSafe, Math.min(maxX, this.displayX));
+        }
+        this.bobPhase += dtMs * 0.012;
+        const frameCount = this._getFrameCount();
+        if (frameCount > 1) {
+            this.animTimer += dtMs;
+            if (this.animTimer >= this.frameMs) {
+                this.animTimer -= this.frameMs;
+                this.frameIndex = (this.frameIndex + 1) % frameCount;
+            }
+        } else {
+            this.frameIndex = 0;
+            this.animTimer = 0;
+        }
+    }
+
+    /**
+     * @param {CanvasRenderingContext2D} ctx
+     * @param {number} groundY
+     * @param {number} gap
+     */
+    draw(ctx, groundY, gap) {
+        const y = groundY - PLAYER_H;
+        const bob = Math.sin(this.bobPhase) * 5;
+        const close = gap < 80;
+        const img = this.sprites.image;
+        const frame = this._getFrameRect();
+        const visual = this._getVisualSize(frame);
+        const drawX = this.displayX + this.escapeOffset + (PLAYER_W - visual.w) * 0.5;
+        const drawY = y + (PLAYER_H - visual.h) + bob;
+
+        ctx.save();
+        ctx.drawImage(
+            img,
+            frame.sx,
+            frame.sy,
+            frame.sw,
+            frame.sh,
+            drawX,
+            drawY,
+            visual.w,
+            visual.h
+        );
+        if (close) {
+            ctx.globalCompositeOperation = 'source-atop';
+            ctx.fillStyle = 'rgba(255, 120, 100, 0.35)';
+            ctx.fillRect(drawX, drawY, visual.w, visual.h);
+            ctx.globalCompositeOperation = 'source-over';
+        }
+        ctx.restore();
+    }
+
+    /**
+     * @returns {number}
+     */
+    _getFrameCount() {
+        const explicitFrameW = Number(this.sprites.frameWidth);
+        if (!Number.isFinite(explicitFrameW) || explicitFrameW <= 0) {
+            return 1;
+        }
+        const img = this.sprites.image;
+        const naturalW = Number(img.width) || explicitFrameW;
+        const frameW = explicitFrameW;
+        return Math.max(1, Math.floor(naturalW / frameW));
+    }
+
+    /**
+     * @returns {{ sx: number, sy: number, sw: number, sh: number }}
+     */
+    _getFrameRect() {
+        const frameW = Number(this.sprites.frameWidth) || Number(this.sprites.image.width) || PLAYER_W;
+        const frameH = Number(this.sprites.frameHeight) || Number(this.sprites.image.height) || PLAYER_H;
+        const frameCount = this._getFrameCount();
+        const safeFrame = Math.min(frameCount - 1, this.frameIndex);
+        return {
+            sx: safeFrame * frameW,
+            sy: 0,
+            sw: frameW,
+            sh: frameH,
+        };
+    }
+
+    /**
+     * Keep chaser proportionate for custom sprite dimensions.
+     * @param {{ sw: number, sh: number }} frame
+     * @returns {{ w: number, h: number }}
+     */
+    _getVisualSize(frame) {
+        const ratio = (Number(frame.sw) || PLAYER_W) / Math.max(1, Number(frame.sh) || PLAYER_H);
+        const customScale = Number(this.sprites.scale) || 1;
+        const scale = Math.max(0.85, Math.min(1.35, customScale));
+        const h = PLAYER_H * scale;
+        const customMaxWidthMult = Number(this.sprites.maxWidthMultiplier) || 1.65;
+        const maxWidthMult = Math.max(1.2, Math.min(3.4, customMaxWidthMult));
+        const w = Math.max(PLAYER_W * 0.7, Math.min(PLAYER_W * maxWidthMult, h * ratio));
+        return { w, h };
+    }
+}
+</file>
+
+<file path="js/player.js">
+/**
+ * Player (boy): run, jump, slide with smoother physics + frame animation.
+ */
+
+import { clamp } from './utils.js';
+
+export const PLAYER_W = 90;
+export const PLAYER_H = 140;
+
+/** @typedef {'run'|'jump'|'slide'} PlayerState */
+
+export class Player {
+    /**
+     * @param {Object} opts
+     * @param {HTMLCanvasElement} opts.canvas
+     * @param {{ image: CanvasImageSource }} opts.sprites
+     */
+    constructor({ canvas, sprites }) {
+        this.canvas = canvas;
+        this.sprites = sprites;
+        /** @type {PlayerState} */
+        this.state = 'run';
+        this.x = 280;
+        this.vy = 0;
+        this.groundY = canvas.height - 150;
+        this.y = this.groundY - PLAYER_H;
+        this.targetX = this.x;
+        /** Slide */
+        this.slideTimer = 0;
+        this.slideDuration = 450;
+        this.slideEnterMs = 110;
+        this.slideExitMs = 120;
+        /** Bob */
+        this.bobPhase = 0;
+        /** Hit slow */
+        this.slowMult = 1;
+        this.slowTimer = 0;
+        /** Shield power-up */
+        this.shieldHits = 0;
+        /** Boost */
+        this.boostTimer = 0;
+        /** Dust */
+        this.dustTimer = 0;
+        /** Responsive movement helpers */
+        this.jumpBufferMs = 0;
+        this.jumpBufferDuration = 130;
+        this.coyoteMs = 0;
+        this.coyoteDuration = 120;
+        this.jumpCutMultiplier = 0.7;
+        /** Animation timing */
+        this.animTimer = 0;
+        this.frameIndex = 0;
+        this.runFrameMs = 85;
+        this.jumpFrameMs = 120;
+        this.slideFrameMs = 95;
+        /** Long-jump assist (used for truck obstacles). */
+        this.longJumpActive = false;
+        this.longJumpLockMs = 0;
+        this.longJumpGlideMs = 0;
+        /** One mid-air jump allowed (double-press jump key). */
+        this.airJumpAvailable = true;
+    }
+
+    /**
+     * @param {number} dtMs
+     */
+    update(dtMs) {
+        const dt = dtMs / (1000 / 60);
+        const baseG = 0.62 * dt;
+        const term = 15 * dt;
+        const longJumpLift = this.longJumpActive && this.longJumpGlideMs > 0;
+        const g = baseG * (longJumpLift ? 0.8 : 1);
+        const fallBoost = this.vy > 0 ? (longJumpLift ? 1.08 : 1.12) : 1;
+
+        this.x += (this.targetX - this.x) * Math.min(1, 0.2 * dt);
+
+        if (this.slowTimer > 0) {
+            this.slowTimer -= dtMs;
+            if (this.slowTimer <= 0) {
+                this.slowMult = 1;
+            }
+        }
+
+        if (this.boostTimer > 0) {
+            this.boostTimer -= dtMs;
+        }
+
+        const groundedBefore = this.y + PLAYER_H >= this.groundY - 0.5;
+        if (groundedBefore) {
+            this.coyoteMs = this.coyoteDuration;
+        } else {
+            this.coyoteMs = Math.max(0, this.coyoteMs - dtMs);
+        }
+
+        if (this.jumpBufferMs > 0) {
+            this.jumpBufferMs -= dtMs;
+        }
+        if (this.longJumpLockMs > 0) {
+            this.longJumpLockMs = Math.max(0, this.longJumpLockMs - dtMs);
+        }
+        if (this.longJumpGlideMs > 0) {
+            this.longJumpGlideMs = Math.max(0, this.longJumpGlideMs - dtMs);
+        }
+
+        if (this.state === 'slide') {
+            this.slideTimer -= dtMs;
+            if (this.slideTimer <= 0) {
+                this.state = 'run';
+            }
+            this.vy = 0;
+            const progress = 1 - this.slideTimer / this.slideDuration;
+            const settle = Math.min(1, progress / 0.3);
+            this.y = this.groundY - PLAYER_H + 42 * settle;
+        } else {
+            this.y += this.vy;
+            this.vy += g * fallBoost;
+            this.vy = clamp(this.vy, -20, term);
+
+            if (this.y + PLAYER_H >= this.groundY) {
+                this.y = this.groundY - PLAYER_H;
+                this.vy = 0;
+                this.coyoteMs = this.coyoteDuration;
+                if (this.state === 'jump') {
+                    this.state = 'run';
+                    this.longJumpActive = false;
+                    this.longJumpLockMs = 0;
+                    this.longJumpGlideMs = 0;
+                    this.airJumpAvailable = true;
+                }
+                this.bobPhase += dtMs * 0.012;
+            } else {
+                this.state = 'jump';
+            }
+        }
+
+        if (this.jumpBufferMs > 0 && this.canJumpNow()) {
+            this.vy = this.longJumpActive ? -14.9 : -12.5;
+            this.state = 'jump';
+            this.jumpBufferMs = 0;
+            this.coyoteMs = 0;
+        }
+
+        this._updateAnimation(dtMs);
+        this.dustTimer += dtMs;
+    }
+
+    /**
+     * @param {boolean} onGround
+     * @param {boolean} [longJump=false]
+     */
+    jump(onGround, longJump = false) {
+        if (this.state === 'slide') return;
+        const canAirJump = !onGround && this.state === 'jump' && this.airJumpAvailable;
+        if (canAirJump) {
+            this.vy = -16.5;
+            this.state = 'jump';
+            this.longJumpActive = true;
+            this.longJumpLockMs = 130;
+            this.longJumpGlideMs = 230;
+            this.airJumpAvailable = false;
+            this.jumpBufferMs = 0;
+            this.coyoteMs = 0;
+            return;
+        }
+        this.longJumpActive = longJump;
+        this.longJumpLockMs = longJump ? 230 : 0;
+        this.longJumpGlideMs = longJump ? 300 : 0;
+        this.jumpBufferMs = this.jumpBufferDuration;
+        if (onGround || this.canJumpNow()) {
+            this.vy = longJump ? -14.9 : -12.5;
+            this.state = 'jump';
+            this.airJumpAvailable = true;
+            this.jumpBufferMs = 0;
+            this.coyoteMs = 0;
+        }
+    }
+
+    slide() {
+        if (this.state === 'jump' && this.y + PLAYER_H < this.groundY - 4) return;
+        this.state = 'slide';
+        this.slideTimer = this.slideDuration;
+        this.vy = 0;
+    }
+
+    /**
+     * Cut jump height if player releases jump early.
+     */
+    releaseJump() {
+        if (this.longJumpActive && this.longJumpLockMs > 0) return;
+        if (this.state === 'jump' && this.vy < -2) {
+            this.vy *= this.jumpCutMultiplier;
+        }
+    }
+
+    /**
+     * Apply obstacle hit: slow boy.
+     */
+    applyHitSlow() {
+        this.slowMult = 0.6;
+        this.slowTimer = 1800;
+    }
+
+    /**
+     * @returns {boolean}
+     */
+    isGrounded() {
+        return this.y + PLAYER_H >= this.groundY - 0.5 && this.state !== 'slide';
+    }
+
+    /**
+     * @returns {boolean}
+     */
+    canJumpNow() {
+        return this.coyoteMs > 0 && this.state !== 'slide';
+    }
+
+    /**
+     * @returns {number} Speed multiplier for world scroll.
+     */
+    getSpeedMultiplier() {
+        let m = this.slowMult;
+        if (this.boostTimer > 0) m *= 1.35;
+        return m;
+    }
+
+    /**
+     * @returns {{ x: number, y: number, width: number, height: number }}
+     */
+    getBounds() {
+        const padX = 14;
+        let h = PLAYER_H - (this.state === 'slide' ? 52 : 0);
+        let y = this.y;
+        if (this.state === 'slide') y += 52;
+        return {
+            x: this.x + padX,
+            y,
+            width: PLAYER_W - padX * 2,
+            height: h,
+        };
+    }
+
+    /**
+     * @param {CanvasRenderingContext2D} ctx
+     */
+    draw(ctx) {
+        const img = this.sprites.image;
+        const frame = this._getFrameRect();
+        const visual = this._getVisualSize(frame);
+        ctx.save();
+        const bob =
+            this.state === 'run' && this.isGrounded()
+                ? Math.sin(this.bobPhase) * 5
+                : 0;
+        const drawY = this.y + (PLAYER_H - visual.h) + bob;
+        const drawX = this.x + (PLAYER_W - visual.w) * 0.5;
+
+        // Subtle contact shadow helps the character feel less flat.
+        if (this.state !== 'jump') {
+            ctx.save();
+            ctx.globalAlpha = 0.24;
+            ctx.fillStyle = '#000';
+            const shadowW = Math.max(36, visual.w * (this.state === 'slide' ? 0.92 : 0.76));
+            ctx.beginPath();
+            ctx.ellipse(this.x + PLAYER_W / 2, this.groundY - 3, shadowW / 2, 9, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+        }
+
+        if (this.state === 'jump') {
+            ctx.translate(drawX + visual.w / 2, drawY + visual.h / 2);
+            ctx.rotate(-0.15);
+            ctx.drawImage(
+                img,
+                frame.sx,
+                frame.sy,
+                frame.sw,
+                frame.sh,
+                -visual.w / 2,
+                -visual.h / 2,
+                visual.w,
+                visual.h
+            );
+        } else if (this.state === 'slide') {
+            const slideFx = this._getSlideVisuals();
+            const cx = this.x + PLAYER_W * 0.5;
+            const cy = drawY + PLAYER_H * 0.72;
+            const slideH = visual.h - 42;
+            const slideW = visual.w * (slideH / visual.h);
+
+            ctx.translate(cx, cy);
+            ctx.rotate(slideFx.tilt);
+            ctx.scale(slideFx.scaleX, slideFx.scaleY);
+            ctx.drawImage(
+                img,
+                frame.sx,
+                frame.sy,
+                frame.sw,
+                frame.sh,
+                -slideW * 0.5 + slideFx.forwardShift,
+                -PLAYER_H * 0.22 + slideFx.drop,
+                slideW,
+                slideH
+            );
+            this._drawSlideStreak(ctx, slideFx);
+        } else {
+            ctx.drawImage(
+                img,
+                frame.sx,
+                frame.sy,
+                frame.sw,
+                frame.sh,
+                drawX,
+                drawY,
+                visual.w,
+                visual.h
+            );
+        }
+
+        if (this.shieldHits > 0) {
+            ctx.strokeStyle = 'rgba(100, 200, 255, 0.8)';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.arc(
+                this.x + PLAYER_W / 2,
+                drawY + PLAYER_H / 2,
+                PLAYER_H / 2 + 4,
+                0,
+                Math.PI * 2
+            );
+            ctx.stroke();
+        }
+
+        ctx.restore();
+    }
+
+    /**
+     * @returns {{ tilt: number, scaleX: number, scaleY: number, drop: number, forwardShift: number, streakAlpha: number }}
+     */
+    _getSlideVisuals() {
+        const duration = Math.max(1, this.slideDuration);
+        const elapsed = clamp(duration - this.slideTimer, 0, duration);
+        const p = elapsed / duration;
+        const enter = Math.min(1, elapsed / Math.max(1, this.slideEnterMs));
+        const exit =
+            this.slideTimer < this.slideExitMs
+                ? 1 - this.slideTimer / Math.max(1, this.slideExitMs)
+                : 0;
+        const settle = enter * (1 - exit * 0.85);
+        return {
+            tilt: 0.2 * settle,
+            scaleX: 1 + 0.1 * settle,
+            scaleY: 1 - 0.22 * settle,
+            drop: 14 * settle + Math.sin(p * Math.PI) * 4,
+            forwardShift: 8 * settle,
+            streakAlpha: 0.35 * settle,
+        };
+    }
+
+    /**
+     * Adds a subtle speed streak behind sliding character.
+     * @param {CanvasRenderingContext2D} ctx
+     * @param {{ streakAlpha: number }} slideFx
+     */
+    _drawSlideStreak(ctx, slideFx) {
+        if (slideFx.streakAlpha <= 0.02) return;
+        ctx.save();
+        ctx.globalAlpha = slideFx.streakAlpha;
+        const grad = ctx.createLinearGradient(-70, 0, -10, 0);
+        grad.addColorStop(0, 'rgba(255,255,255,0)');
+        grad.addColorStop(1, 'rgba(255,255,255,0.75)');
+        ctx.fillStyle = grad;
+        ctx.fillRect(-80, 8, 70, 10);
+        ctx.fillRect(-74, 24, 58, 8);
+        ctx.restore();
+    }
+
+    /**
+     * Advance animation for current state.
+     * @param {number} dtMs
+     */
+    _updateAnimation(dtMs) {
+        const frameCount = this._getFrameCount();
+        if (frameCount <= 1) {
+            this.frameIndex = 0;
+            this.animTimer = 0;
+            return;
+        }
+        let speed = this.runFrameMs;
+        if (this.state === 'jump') speed = this.jumpFrameMs;
+        if (this.state === 'slide') speed = this.slideFrameMs;
+        this.animTimer += dtMs;
+        if (this.animTimer >= speed) {
+            this.animTimer -= speed;
+            this.frameIndex = (this.frameIndex + 1) % frameCount;
+        }
+    }
+
+    /**
+     * @returns {number}
+     */
+    _getFrameCount() {
+        const explicitFrameW = Number(this.sprites.frameWidth);
+        if (!Number.isFinite(explicitFrameW) || explicitFrameW <= 0) {
+            return 1;
+        }
+        const img = this.sprites.image;
+        const naturalW = Number(img.width) || explicitFrameW;
+        const frameW = explicitFrameW;
+        return Math.max(1, Math.floor(naturalW / frameW));
+    }
+
+    /**
+     * @returns {{ sx: number, sy: number, sw: number, sh: number }}
+     */
+    _getFrameRect() {
+        const frameW = Number(this.sprites.frameWidth) || Number(this.sprites.image.width) || PLAYER_W;
+        const frameH = Number(this.sprites.frameHeight) || Number(this.sprites.image.height) || PLAYER_H;
+        const frameCount = this._getFrameCount();
+        const safeFrame = Math.min(frameCount - 1, this.frameIndex);
+        return {
+            sx: safeFrame * frameW,
+            sy: 0,
+            sw: frameW,
+            sh: frameH,
+        };
+    }
+
+    /**
+     * Keep character proportionate even when custom sprite dimensions vary.
+     * @param {{ sw: number, sh: number }} frame
+     * @returns {{ w: number, h: number }}
+     */
+    _getVisualSize(frame) {
+        const ratio = (Number(frame.sw) || PLAYER_W) / Math.max(1, Number(frame.sh) || PLAYER_H);
+        const customScale = Number(this.sprites.scale) || 1;
+        const scale = Math.max(0.85, Math.min(1.35, customScale));
+        const targetH = PLAYER_H * scale;
+        const minW = PLAYER_W * 0.72;
+        const customMaxWidthMult = Number(this.sprites.maxWidthMultiplier) || 1.65;
+        const maxWidthMult = Math.max(1.2, Math.min(3.4, customMaxWidthMult));
+        const maxW = PLAYER_W * maxWidthMult;
+
+        let w = targetH * ratio;
+        let h = targetH;
+
+        if (w > maxW) {
+            w = maxW;
+            h = w / Math.max(0.0001, ratio);
+        } else if (w < minW) {
+            w = minW;
+            h = Math.min(targetH, w / Math.max(0.0001, ratio));
+        }
+
+        return { w, h };
+    }
+
+    /**
+     * Dust particles behind feet.
+     * @param {CanvasRenderingContext2D} ctx
+     * @param {number} scrollSpeed
+     */
+    drawDust(ctx, scrollSpeed) {
+        if (this.state !== 'run' || !this.isGrounded()) return;
+        if (this.dustTimer % 80 > 20) return;
+        ctx.save();
+        ctx.globalAlpha = 0.45;
+        const px = this.x - 8 - (scrollSpeed % 12);
+        const py = this.groundY - 4;
+        for (let i = 0; i < 3; i++) {
+            ctx.fillStyle = `rgba(180,140,90,${0.5 - i * 0.12})`;
+            ctx.beginPath();
+            ctx.arc(px - i * 14, py - i * 2, 4 + i, 0, Math.PI * 2);
+            ctx.fill();
+        }
+        ctx.restore();
+    }
+}
+</file>
+
+<file path="js/utils.js">
+import { reportIssue } from './issue-tracker.js';
+/**
+ * Shared helpers: math, rects, placeholders, pooling.
+ */
+
+/** @typedef {{ x: number, y: number, width: number, height: number }} Rect */
+
+/**
+ * Linear interpolation.
+ * @param {number} a
+ * @param {number} b
+ * @param {number} t 0..1
+ * @returns {number}
+ */
+export function lerp(a, b, t) {
+    return a + (b - a) * t;
+}
+
+/**
+ * Clamp value to range.
+ * @param {number} v
+ * @param {number} min
+ * @param {number} max
+ * @returns {number}
+ */
+export function clamp(v, min, max) {
+    return Math.max(min, Math.min(max, v));
+}
+
+/**
+ * Axis-aligned rectangle overlap test.
+ * @param {Rect} rect1
+ * @param {Rect} rect2
+ * @returns {boolean}
+ */
+export function checkCollision(rect1, rect2) {
+    return (
+        rect1.x < rect2.x + rect2.width &&
+        rect1.x + rect1.width > rect2.x &&
+        rect1.y < rect2.y + rect2.height &&
+        rect1.y + rect1.height > rect2.y
+    );
+}
+
+/**
+ * Draw a labeled placeholder sprite to an offscreen canvas.
+ * @param {number} w
+ * @param {number} h
+ * @param {string} fill
+ * @param {string} label
+ * @returns {HTMLCanvasElement}
+ */
+export function makePlaceholderCanvas(w, h, fill, label) {
+    const c = document.createElement('canvas');
+    c.width = w;
+    c.height = h;
+    const g = c.getContext('2d');
+    if (!g) return c;
+    g.fillStyle = fill;
+    g.fillRect(0, 0, w, h);
+    g.strokeStyle = '#333';
+    g.lineWidth = 2;
+    g.strokeRect(1, 1, w - 2, h - 2);
+    g.fillStyle = '#fff';
+    g.font = 'bold 10px Arial';
+    g.textAlign = 'center';
+    g.textBaseline = 'middle';
+    g.fillText(label, w / 2, h / 2);
+    return c;
+}
+
+/**
+ * Load an image; on failure, return a canvas-based placeholder.
+ * @param {string} src
+ * @param {number} pw
+ * @param {number} ph
+ * @param {string} color
+ * @param {string} label
+ * @returns {Promise<HTMLImageElement | HTMLCanvasElement>}
+ */
+export function loadImageOrPlaceholder(src, pw, ph, color, label) {
+    return new Promise((resolve) => {
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        // Help the browser decode without blocking layout/JS.
+        img.decoding = 'async';
+        img.onload = () => {
+            // Decode in the background so the canvas draw doesn't stall later.
+            if (typeof img.decode === 'function') {
+                void img.decode().catch(() => {});
+            }
+            resolve(img);
+        };
+        img.onerror = () => {
+            reportIssue('assets', 'Image missing or failed; using placeholder', { src });
+            resolve(makePlaceholderCanvas(pw, ph, color, label));
+        };
+        img.src = src;
+    });
+}
+
+/**
+ * Try loading one image from multiple candidates without placeholder.
+ * @param {string[]} sources
+ * @returns {Promise<HTMLImageElement | null>}
+ */
+export async function loadFirstAvailableImage(sources) {
+    for (const src of sources) {
+        // eslint-disable-next-line no-await-in-loop
+        const ok = await new Promise((resolve) => {
+            const img = new Image();
+            img.crossOrigin = 'anonymous';
+            img.decoding = 'async';
+            img.onload = () => {
+                if (typeof img.decode === 'function') {
+                    void img.decode().catch(() => {});
+                }
+                resolve(img);
+            };
+            img.onerror = () => resolve(null);
+            img.src = src;
+        });
+        if (ok) return ok;
+    }
+    return null;
+}
+
+/**
+ * Simple object pool for obstacles.
+ * @template T
+ */
+export class ObjectPool {
+    /**
+     * @param {() => T} factory
+     * @param {(o: T) => void} reset
+     */
+    constructor(factory, reset) {
+        this._factory = factory;
+        this._reset = reset;
+        /** @type {T[]} */
+        this._free = [];
+    }
+
+    /**
+     * @returns {T}
+     */
+    acquire() {
+        const o = this._free.pop();
+        return o !== undefined ? o : this._factory();
+    }
+
+    /**
+     * @param {T} o
+     */
+    release(o) {
+        this._reset(o);
+        this._free.push(o);
+    }
+}
+</file>
+
+<file path="manifest.json">
+{
+  "name": "Ma bolse durotto bojay rakhte",
+  "short_name": "Ma bolse",
+  "description": "Run, jump, and dodge in this hilarious chase game!",
+  "id": "/",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "landscape",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": ["games", "entertainment"],
+  "background_color": "#F39C12",
+  "theme_color": "#E67E22",
+  "icons": [
+    {
+      "src": "assets/images/icon-192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/images/icon-512.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
+</file>
+
+<file path="js/obstacles.js">
+/**
+ * Obstacles & power-ups: pooling, spawn, types.
+ */
+
+import { ObjectPool, checkCollision } from './utils.js';
+
+/** @typedef {'rock'|'riksha'|'rakin'|'heart'|'coin'} ObstacleKind */
+
+/**
+ * @typedef {Object} Obstacle
+ * @property {number} x
+ * @property {number} y
+ * @property {number} width
+ * @property {number} height
+ * @property {ObstacleKind} kind
+ * @property {boolean} active
+ * @property {boolean} scoredNearMiss
+ * @property {boolean} slideBonusScored
+ */
+
+const MAX_ACTIVE = 10;
+
+function createObstacle() {
+    return {
+        x: 0,
+        y: 0,
+        width: 0,
+        height: 0,
+        kind: /** @type {ObstacleKind} */ ('rock'),
+        active: false,
+        scoredNearMiss: false,
+        dealtDamage: false,
+        slideBonusScored: false,
+        /** @type {number} */
+        minGap: Infinity,
+        animPhase: 0,
+    };
+}
+
+function resetObstacle(o) {
+    o.active = false;
+    o.scoredNearMiss = false;
+    o.dealtDamage = false;
+    o.slideBonusScored = false;
+    o.minGap = Infinity;
+}
+
+export class ObstacleManager {
+    /**
+     * @param {Object} opts
+     * @param {HTMLCanvasElement} opts.canvas
+     * @param {{ rock: CanvasImageSource, riksha: CanvasImageSource, rakin: CanvasImageSource, heart: CanvasImageSource, coin: CanvasImageSource }} opts.images
+     */
+    constructor({ canvas, images }) {
+        this.canvas = canvas;
+        this.images = images;
+        this.pool = new ObjectPool(createObstacle, resetObstacle);
+        /** @type {Obstacle[]} */
+        this.active = [];
+        this.spawnAcc = 0;
+        this.nextSpawnIn = 2500;
+        this.baseScroll = 6;
+        this.elapsedMs = 0;
+        /** @type {number[]} */
+        this.collectibleHeightBag = [];
+        /** @type {number} */
+        this.collectibleHeightCursor = 0;
+        /** @type {number[]} */
+        this.coinHeightBag = [];
+        /** @type {number} */
+        this.coinHeightCursor = 0;
+    }
+
+    /**
+     * @param {number} dtMs
+     * @param {number} scrollSpeed
+     * @param {number} difficulty
+     */
+    updateSpawn(dtMs, scrollSpeed, difficulty) {
+        this.elapsedMs += dtMs;
+        this.spawnAcc += dtMs;
+        const tier = Math.floor(difficulty / 1000) * 0.15;
+        const freqMod = 1 - Math.min(0.55, difficulty * 0.00015 + tier);
+        if (this.spawnAcc >= this.nextSpawnIn * freqMod) {
+            this.spawnAcc = 0;
+            this.nextSpawnIn = 2000 + Math.random() * 2000;
+            if (this.active.length < MAX_ACTIVE) {
+                this._spawnOne(scrollSpeed);
+            }
+        }
+    }
+
+    /**
+     * @param {number} scrollSpeed
+     */
+    _spawnOne(scrollSpeed) {
+        const groundY = this.canvas.height - 150;
+        const o = this.pool.acquire();
+        o.active = true;
+        o.x = this.canvas.width + 40;
+        o.animPhase = Math.random() * Math.PI * 2;
+
+        const roll = Math.random();
+        if (roll < 0.07) {
+            o.kind = 'heart';
+            o.width = 72;
+            o.height = 72;
+            o.y = this._getCollectibleY('heart', groundY, o.height);
+        } else if (roll < 0.55) {
+            o.kind = 'coin';
+            const coinImgW = Number(/** @type {any} */ (this.images.coin).width) || 1;
+            const coinImgH = Number(/** @type {any} */ (this.images.coin).height) || 1;
+            // Preserve the source coin image ratio (254x310) so it doesn't look flattened.
+            const coinAspect = coinImgW / coinImgH;
+            const coinBaseH = 88 + Math.random() * 12;
+            o.height = coinBaseH;
+            o.width = coinBaseH * coinAspect * 1.2;
+            o.y = this._getCollectibleY('coin', groundY, o.height);
+        } else {
+            const t = Math.random();
+            const canSpawnRakin = this.elapsedMs >= 8000;
+            const rakinChance = canSpawnRakin ? 0.45 : 0;
+            const rockChance = canSpawnRakin ? 0.3 : 0.55;
+            const rikshaChance = 1 - rockChance - rakinChance;
+            if (t < rockChance) {
+                o.kind = 'rock';
+                // Keep truck sprite proportionate (rock.png now holds truck art).
+                const truckImgW = Number(/** @type {any} */ (this.images.rock).width) || 1;
+                const truckImgH = Number(/** @type {any} */ (this.images.rock).height) || 1;
+                const truckAspect = Math.max(1.1, Math.min(3.8, truckImgW / truckImgH));
+                o.width = 230 + Math.random() * 40;
+                o.height = o.width / truckAspect;
+                o.y = groundY - o.height;
+            } else if (t < rockChance + rikshaChance) {
+                o.kind = 'riksha';
+                const rikshaImgW = Number(/** @type {any} */ (this.images.riksha).width) || 1;
+                const rikshaImgH = Number(/** @type {any} */ (this.images.riksha).height) || 1;
+                const rikshaAspect = Math.max(1.3, Math.min(3.4, rikshaImgW / rikshaImgH));
+                // Taller riksha for stronger on-screen presence.
+                o.height = 138 + Math.random() * 24;
+                o.width = o.height * rikshaAspect;
+                // Place riksha deeper into the road band so it stays away from busy shop/background details.
+                o.y = groundY - o.height + 24;
+            } else {
+                o.kind = 'rakin';
+                const rakinImgW = Number(/** @type {any} */ (this.images.rakin).width) || 1;
+                const rakinImgH = Number(/** @type {any} */ (this.images.rakin).height) || 1;
+                const rakinAspect = Math.max(0.38, Math.min(1.15, rakinImgW / rakinImgH));
+                o.height = 146 + Math.random() * 18;
+                o.width = o.height * rakinAspect;
+                o.y = groundY - o.height;
+            }
+        }
+
+        this.active.push(o);
+    }
+
+    /**
+     * Returns one of 3 consistent collectible lanes:
+     * 0 = ground lane, 1 = normal-jump lane, 2 = high-jump lane.
+     * Lanes are shuffled in a bag for variety but still cycle consistently.
+     * Coins never use lane 0 (ground).
+     * @param {'heart'|'coin'} kind
+     * @param {number} groundY
+     * @param {number} itemHeight
+     * @returns {number}
+     */
+    _getCollectibleY(kind, groundY, itemHeight) {
+        const lane = kind === 'coin' ? this._nextCoinLane() : this._nextCollectibleLane();
+        const laneCenterOffsets = [28, 172, 330];
+        const laneCenterFromGround = laneCenterOffsets[lane];
+        const centerY = groundY - laneCenterFromGround;
+        return centerY - itemHeight / 2;
+    }
+
+    /**
+     * Draws a heart lane index from shuffled bag [1,2].
+     * Ground lane (0) is excluded for hearts.
+     * @returns {number}
+     */
+    _nextCollectibleLane() {
+        if (this.collectibleHeightCursor >= this.collectibleHeightBag.length) {
+            this.collectibleHeightBag = [1, 2];
+            for (let i = this.collectibleHeightBag.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                const temp = this.collectibleHeightBag[i];
+                this.collectibleHeightBag[i] = this.collectibleHeightBag[j];
+                this.collectibleHeightBag[j] = temp;
+            }
+            this.collectibleHeightCursor = 0;
+        }
+        const lane = this.collectibleHeightBag[this.collectibleHeightCursor];
+        this.collectibleHeightCursor += 1;
+        return lane;
+    }
+
+    /**
+     * Draws a coin lane from shuffled bag [1,2].
+     * Ground lane (0) is intentionally excluded for coins.
+     * @returns {number}
+     */
+    _nextCoinLane() {
+        if (this.coinHeightCursor >= this.coinHeightBag.length) {
+            this.coinHeightBag = [1, 2];
+            for (let i = this.coinHeightBag.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                const temp = this.coinHeightBag[i];
+                this.coinHeightBag[i] = this.coinHeightBag[j];
+                this.coinHeightBag[j] = temp;
+            }
+            this.coinHeightCursor = 0;
+        }
+        const lane = this.coinHeightBag[this.coinHeightCursor];
+        this.coinHeightCursor += 1;
+        return lane;
+    }
+
+    /**
+     * @param {number} scrollSpeed
+     * @param {number} [dtMs=16.67]
+     */
+    scrollAll(scrollSpeed, dtMs = 16.67) {
+        const frameScale = Math.max(0.45, Math.min(2, dtMs / 16.67));
+        for (let i = this.active.length - 1; i >= 0; i--) {
+            const o = this.active[i];
+            if (!o) continue;
+            const extraRun = o.kind === 'rakin' ? scrollSpeed * 0.55 : 0;
+            o.x -= (scrollSpeed + extraRun) * frameScale;
+            o.animPhase += o.kind === 'rakin' ? 0.28 : 0.08;
+            if (o.x + o.width < -20) {
+                this.pool.release(o);
+                this.active.splice(i, 1);
+            }
+        }
+    }
+
+    /**
+     * Count how many obstacles of a kind are visible on screen.
+     * @param {ObstacleKind} kind
+     * @returns {number}
+     */
+    countVisibleKind(kind) {
+        let n = 0;
+        for (const o of this.active) {
+            if (!o.active || o.kind !== kind) continue;
+            if (o.x <= this.canvas.width && o.x + o.width >= 0) n += 1;
+        }
+        return n;
+    }
+
+    /**
+     * Track closest horizontal gap for near-miss scoring.
+     * @param {import('./player.js').Player} player
+     */
+    trackProximity(player) {
+        const pb = player.getBounds();
+        const pc = pb.x + pb.width / 2;
+        for (const o of this.active) {
+            if (o.kind === 'heart' || o.kind === 'coin') continue;
+            if (!o.active) continue;
+            if (o.x > this.canvas.width || o.x + o.width < 0) continue;
+            const oc = o.x + o.width / 2;
+            const gap = Math.abs(pc - oc);
+            if (gap < o.minGap) o.minGap = gap;
+        }
+    }
+
+    /**
+     * @param {import('./player.js').Player} player
+     * @returns {{ hit: boolean, powerup: ObstacleKind | null, nearMiss: boolean, coinPoints: number, lifeGain: number, rakinSlidePoints: number }}
+     */
+    checkPlayer(player) {
+        const pb = player.getBounds();
+        let hit = false;
+        /** @type {ObstacleKind | null} */
+        let powerup = null;
+        let nearMiss = false;
+        let coinPoints = 0;
+        let lifeGain = 0;
+        let rakinSlidePoints = 0;
+
+        for (const o of this.active) {
+            if (!o.active) continue;
+
+            if (o.kind === 'heart' || o.kind === 'coin') {
+                const cr = { x: o.x, y: o.y, width: o.width, height: o.height };
+                if (checkCollision(pb, cr)) {
+                    if (o.kind === 'heart') {
+                        powerup = 'heart';
+                        lifeGain += 1;
+                    } else {
+                        powerup = 'coin';
+                        coinPoints += 100;
+                    }
+                    o.active = false;
+                }
+                continue;
+            }
+
+            const obstacleRect = this._obstacleHitRect(o);
+            const colliding = checkCollision(pb, obstacleRect);
+
+            let safe = false;
+            if (o.kind === 'rock') {
+                const footClear = pb.y + pb.height <= obstacleRect.y + 3;
+                safe =
+                    player.state === 'jump' ||
+                    footClear ||
+                    pb.y > obstacleRect.y + obstacleRect.height;
+            } else if (o.kind === 'riksha') {
+                const footClear = pb.y + pb.height <= obstacleRect.y + 4;
+                safe =
+                    player.state === 'jump' ||
+                    footClear ||
+                    pb.y > obstacleRect.y + obstacleRect.height;
+            } else if (o.kind === 'rakin') {
+                const headClear = pb.y + pb.height <= obstacleRect.y + 8;
+                safe =
+                    player.state === 'slide' ||
+                    headClear;
+            }
+
+            if (
+                o.kind === 'rakin' &&
+                colliding &&
+                safe &&
+                player.state === 'slide' &&
+                !o.slideBonusScored
+            ) {
+                o.slideBonusScored = true;
+                rakinSlidePoints += 50;
+            }
+
+            if (colliding && !safe && !o.dealtDamage) {
+                hit = true;
+                o.dealtDamage = true;
+            }
+
+            if (!o.scoredNearMiss && o.x + o.width < pb.x && !o.dealtDamage) {
+                const nearMissThreshold = Math.max(52, Math.min(88, o.width * 0.22));
+                if (o.minGap < nearMissThreshold) {
+                    o.scoredNearMiss = true;
+                    nearMiss = true;
+                }
+            }
+        }
+
+        return { hit, powerup, nearMiss, coinPoints, lifeGain, rakinSlidePoints };
+    }
+
+    /**
+     * Whether jump input should trigger long-jump assist.
+     * Supports large ground obstacles like truck and riksha.
+     * @param {import('./player.js').Player} player
+     * @returns {boolean}
+     */
+    shouldUseTruckLongJump(player) {
+        const pb = player.getBounds();
+        const lookAheadX = pb.x + 460;
+        for (const o of this.active) {
+            if (!o.active || (o.kind !== 'rock' && o.kind !== 'riksha')) continue;
+            const truckFrontInRange = o.x <= lookAheadX;
+            const truckNotPassed = o.x + o.width >= pb.x + pb.width * 0.6;
+            if (truckFrontInRange && truckNotPassed) return true;
+        }
+        return false;
+    }
+
+    /**
+     * @param {Obstacle} o
+     * @returns {{ x: number, y: number, width: number, height: number }}
+     */
+    _obstacleHitRect(o) {
+        if (o.kind === 'rock') {
+            // Truck uses a tighter body hitbox so jump timing feels fair.
+            return {
+                x: o.x + o.width * 0.1,
+                y: o.y + o.height * 0.04,
+                width: o.width * 0.82,
+                height: o.height * 0.66,
+            };
+        }
+        if (o.kind === 'rakin') {
+            return {
+                x: o.x + o.width * 0.16,
+                y: o.y + o.height * 0.08,
+                width: o.width * 0.68,
+                height: o.height * 0.88,
+            };
+        }
+        if (o.kind === 'riksha') {
+            // Slightly tighter than visual sprite so jump-over timing is forgiving.
+            return {
+                x: o.x + o.width * 0.1,
+                y: o.y + o.height * 0.14,
+                width: o.width * 0.8,
+                height: o.height * 0.72,
+            };
+        }
+        return { x: o.x, y: o.y, width: o.width, height: o.height };
+    }
+
+    /**
+     * Remove inactive obstacles (collected powerups).
+     */
+    cullInactive() {
+        for (let i = this.active.length - 1; i >= 0; i--) {
+            const o = this.active[i];
+            if (o && !o.active) {
+                this.pool.release(o);
+                this.active.splice(i, 1);
+            }
+        }
+    }
+
+    /**
+     * @param {CanvasRenderingContext2D} ctx
+     * @param {boolean} debug
+     */
+    draw(ctx, debug) {
+        const groundY = this.canvas.height - 150;
+        for (const o of this.active) {
+            if (!o.active) continue;
+            let src = this.images.rock;
+            if (o.kind === 'riksha') src = this.images.riksha;
+            if (o.kind === 'rakin') src = this.images.rakin;
+            if (o.kind === 'heart') src = this.images.heart;
+            if (o.kind === 'coin') src = this.images.coin;
+
+            if (o.kind === 'heart') {
+                const floatY = Math.sin(o.animPhase * 1.7) * 5;
+                const pulse = 1 + Math.sin(o.animPhase * 2.2) * 0.08;
+                let flipX = Math.cos(o.animPhase * 1.7);
+                if (Math.abs(flipX) < 0.2) {
+                    flipX = 0.2 * (flipX < 0 ? -1 : 1);
+                }
+                const cx = o.x + o.width / 2;
+                const cy = o.y + o.height / 2 + floatY;
+
+                ctx.save();
+                ctx.translate(cx, cy);
+                ctx.scale(flipX * pulse, pulse);
+                ctx.shadowColor = 'rgba(255, 40, 120, 0.55)';
+                ctx.shadowBlur = 20 + Math.sin(o.animPhase * 3) * 3;
+                ctx.drawImage(src, -o.width / 2, -o.height / 2, o.width, o.height);
+                ctx.restore();
+            } else {
+                const bob =
+                    o.kind === 'rakin' ? Math.sin(o.animPhase) * 4 : o.kind === 'coin' ? Math.sin(o.animPhase) * 3 : 0;
+                if (o.kind === 'coin') {
+                    // Keep coin visible but avoid an overly strong glow.
+                    ctx.save();
+                    ctx.filter = 'contrast(1.18) saturate(1.2) brightness(1.06)';
+                    ctx.shadowColor = 'rgba(255, 208, 64, 0.42)';
+                    ctx.shadowBlur = 6;
+                    ctx.shadowOffsetX = 0;
+                    ctx.shadowOffsetY = 0;
+                    ctx.drawImage(src, o.x, o.y + bob, o.width, o.height);
+                    ctx.restore();
+
+                    // Bonus indicator ring so coin reads as a special item.
+                    const cx = o.x + o.width / 2;
+                    const cy = o.y + bob + o.height / 2;
+                    const pulse = 1 + Math.sin(o.animPhase * 2.4) * 0.05;
+                    const radius = (Math.max(o.width, o.height) * 0.58) * pulse;
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+                    ctx.strokeStyle = 'rgba(255, 224, 120, 0.8)';
+                    ctx.lineWidth = 5;
+                    ctx.shadowColor = 'rgba(255, 215, 90, 0.45)';
+                    ctx.shadowBlur = 8;
+                    ctx.stroke();
+                    ctx.restore();
+                } else if (o.kind === 'riksha') {
+                    // Boost contrast/saturation and add shadow so riksha stays visible on similar-toned backgrounds.
+                    ctx.save();
+                    ctx.filter = 'contrast(1.28) saturate(1.35) brightness(1.08)';
+                    ctx.shadowColor = 'rgba(0, 0, 0, 0.42)';
+                    ctx.shadowBlur = 12;
+                    ctx.shadowOffsetX = 0;
+                    ctx.shadowOffsetY = 4;
+                    ctx.drawImage(src, o.x, o.y + bob, o.width, o.height);
+                    ctx.restore();
+                } else {
+                    ctx.drawImage(src, o.x, o.y + bob, o.width, o.height);
+                }
+            }
+
+            if (debug) {
+                ctx.strokeStyle = 'lime';
+                const r = this._obstacleHitRect(o);
+                ctx.strokeRect(r.x, r.y, r.width, r.height);
+            }
+        }
+        if (debug) {
+            ctx.strokeStyle = 'cyan';
+            ctx.strokeRect(0, groundY, this.canvas.width, 2);
+        }
+    }
+}
+</file>
+
+<file path="js/audio.js">
+/**
+ * Sound manager: Web Audio + HTMLAudioElement with graceful fallback.
+ */
+import { reportIssue } from './issue-tracker.js';
+
+const BGM_VOL = 0.4;
+const STARTING_VOL = 0.4;
+const GIRL_VOL = 0.6;
+const BOY_VOL = 0.72;
+const GO_VOL = 0.8;
+const END_VOL = 0.5;
+const SCORE_VOL = 0.35;
+const RAKIN_VOL = 0.72;
+const RAKIN_GAP_MIN_MS = 1200;
+const RAKIN_GAP_MAX_MS = 2400;
+const GIRL_EVENT_GAP_MS = 650;
+
+/**
+ * @typedef {Object} AudioConfig
+ * @property {string} key
+ * @property {string} src
+ * @property {number} [volume]
+ * @property {boolean} [loop]
+ */
+
+export class SoundManager {
+    /**
+     * @param {Object} options
+     * @param {string} options.basePath
+     */
+    constructor({ basePath } = {}) {
+        // Root-relative so requests always hit `/assets/audio/...` (reliable on Vercel; avoids broken relative resolution).
+        this.basePath = basePath ?? '/assets/audio/';
+        if (!this.basePath.endsWith('/')) this.basePath += '/';
+        /** @type {boolean} */
+        this.muted = false;
+        /** @type {AudioContext | null} */
+        this._ctx = null;
+        /** @type {Map<string, HTMLAudioElement>} */
+        this._buffers = new Map();
+        /** @type {number | null} */
+        this._girlVoiceTimer = null;
+        this._girlVoiceMin = 3000;
+        this._girlVoiceMax = 7000;
+        /** @type {Set<HTMLAudioElement>} */
+        this._activeGirlAudios = new Set();
+        /** @type {number} */
+        this._lastGirlVoiceAt = 0;
+        /** @type {number} */
+        this._lastGirlClip = -1;
+        /** @type {number[]} */
+        this._girlShuffleBag = [];
+        /** @type {GainNode | null} */
+        this._masterGain = null;
+        /** @type {(() => void) | null} */
+        this._bgmEndedHandler = null;
+        /** @type {number} */
+        this._lastRakinTrack = -1;
+        /** @type {boolean} */
+        this._firstRakinClipPending = true;
+        /** @type {Set<HTMLAudioElement>} */
+        this._activeRakinAudios = new Set();
+        /** @type {number} */
+        this._nextRakinAllowedAt = 0;
+        /** @type {boolean} */
+        this._rakinIncoming = false;
+        try {
+            const AC = window.AudioContext || window.webkitAudioContext;
+            if (AC) {
+                this._ctx = new AC();
+                this._masterGain = this._ctx.createGain();
+                this._masterGain.connect(this._ctx.destination);
+                this._masterGain.gain.value = 1;
+            }
+        } catch (e) {
+            reportIssue('audio', 'Web AudioContext unavailable', { error: String(e) });
+        }
+    }
+
+    /**
+     * Resume context after user gesture.
+     */
+    async resume() {
+        try {
+            if (this._ctx && this._ctx.state === 'suspended') {
+                await this._ctx.resume();
+            }
+        } catch (e) {
+            reportIssue('audio', 'Audio resume failed', { error: String(e) });
+        }
+    }
+
+    /**
+     * @param {number} from
+     * @param {number} to
+     * @param {number} ms
+     */
+    fadeMaster(from, to, ms) {
+        if (!this._masterGain || !this._ctx) return;
+        const g = this._masterGain.gain;
+        const now = this._ctx.currentTime;
+        g.cancelScheduledValues(now);
+        g.setValueAtTime(from, now);
+        g.linearRampToValueAtTime(to, now + ms / 1000);
+    }
+
+    /**
+     * @param {string} name
+     * @param {string} file
+     * @param {number} [vol]
+     * @param {boolean} [loop]
+     */
+    async _loadOne(name, file, vol = 1, loop = false) {
+        const url = this.basePath + file;
+        try {
+            const audio = new Audio();
+            audio.preload = 'auto';
+            audio.loop = loop;
+            audio.volume = vol * (this.muted ? 0 : 1);
+            await new Promise((resolve, reject) => {
+                // `canplay` fires much sooner than `canplaythrough` (full buffer). Parallel + this cuts cold-load time a lot on slow networks.
+                let settled = false;
+                const onReady = () => {
+                    if (settled) return;
+                    settled = true;
+                    resolve();
+                };
+                audio.addEventListener('canplay', onReady, { once: true });
+                audio.addEventListener('loadeddata', onReady, { once: true });
+                audio.addEventListener('error', reject, { once: true });
+                audio.src = url;
+                audio.load();
+            });
+            this._buffers.set(name, audio);
+        } catch {
+            reportIssue('audio', 'Audio file failed to load; fallback active', { url });
+            this._buffers.set(name, null);
+        }
+    }
+
+    /**
+     * Only menu loop — await this so the home screen can show and play music quickly.
+     */
+    async preloadStartingOnly() {
+        await this._loadOne('starting', 'starting.mp3', STARTING_VOL, true);
+    }
+
+    /**
+     * Everything except `starting` — run after first paint; does not block boot.
+     */
+    preloadRemainingInBackground() {
+        void this._preloadRemainingClips().catch((e) => {
+            reportIssue('audio', 'Deferred audio preload failed', { error: String(e) });
+        });
+    }
+
+    /**
+     * @returns {Promise<void>}
+     */
+    async _preloadRemainingClips() {
+        const girlLoads = [];
+        for (let i = 1; i <= 9; i += 1) {
+            girlLoads.push(this._loadOne(`girl${i}`, `girl${i}.mp3`, GIRL_VOL, false));
+        }
+        await Promise.all([
+            this._loadOneAny('bgm', ['background_song.mp3', 'bgm.mp3'], BGM_VOL, true),
+            ...girlLoads,
+            this._loadOne('boy', 'boy_voice.mp3', BOY_VOL, false),
+            this._loadOne('gameover', 'game_over.mp3', GO_VOL, false),
+            this._loadOne('endscreen', 'forever.mp3', END_VOL, true),
+            this._loadOne('score', 'score_point.mp3', SCORE_VOL, false),
+            this._loadOne('rakin1', 'rakin1.mp3', RAKIN_VOL, false),
+            this._loadOne('rakin2', 'rakin2.mp3', RAKIN_VOL, false),
+            this._loadOne('rakin3', 'rakin3.mp3', RAKIN_VOL, false),
+            this._loadOne('rakin4', 'rakin4.mp3', RAKIN_VOL, false),
+        ]);
+    }
+
+    /**
+     * Full preload (e.g. tests); production boot uses {@link preloadStartingOnly} + {@link preloadRemainingInBackground}.
+     */
+    async preloadAll() {
+        await Promise.all([this.preloadStartingOnly(), this._preloadRemainingClips()]);
+    }
+
+    /**
+     * @param {string} name
+     * @param {string[]} files
+     * @param {number} [vol]
+     * @param {boolean} [loop]
+     */
+    async _loadOneAny(name, files, vol = 1, loop = false) {
+        for (const file of files) {
+            // eslint-disable-next-line no-await-in-loop
+            await this._loadOne(name, file, vol, loop);
+            if (this._buffers.get(name)) return;
+        }
+    }
+
+    /**
+     * @param {string} name
+     * @returns {HTMLAudioElement | null | undefined}
+     */
+    _get(name) {
+        return this._buffers.get(name);
+    }
+
+    /**
+     * Play short beep using oscillator (fallback).
+     * @param {number} freq
+     * @param {number} durMs
+     * @param {number} vol
+     */
+    _beep(freq, durMs, vol) {
+        if (!this._ctx || this.muted) return;
+        try {
+            const o = this._ctx.createOscillator();
+            const g = this._ctx.createGain();
+            o.type = 'sine';
+            o.frequency.value = freq;
+            g.gain.value = vol;
+            o.connect(g);
+            g.connect(this._masterGain || this._ctx.destination);
+            o.start();
+            o.stop(this._ctx.currentTime + durMs / 1000);
+        } catch (e) {
+            reportIssue('audio', 'Oscillator beep fallback failed', { error: String(e) });
+        }
+    }
+
+    /**
+     * Safely play an audio element without throwing.
+     * @param {HTMLAudioElement | null | undefined} a
+     * @param {number} volume
+     * @param {number} [playbackRate=1]
+     * @returns {boolean}
+     */
+    _safePlay(a, volume, playbackRate = 1) {
+        if (!a) return false;
+        try {
+            a.currentTime = 0;
+            a.playbackRate = playbackRate;
+            a.volume = volume * (this.muted ? 0 : 1);
+            void a.play();
+            return true;
+        } catch {
+            return false;
+        }
+    }
+
+    /**
+     * Start looping BGM.
+     */
+    startBgm() {
+        this.stopStartingLoop();
+        const a = this._get('bgm');
+        if (a) {
+            try {
+                if (this._bgmEndedHandler) {
+                    a.removeEventListener('ended', this._bgmEndedHandler);
+                }
+                this._bgmEndedHandler = () => {
+                    if (this.muted) return;
+                    try {
+                        a.currentTime = 0;
+                        void a.play();
+                    } catch {
+                        // Ignore replay failures (usually user-gesture restrictions).
+                    }
+                };
+                // Keep replaying even if native loop is interrupted.
+                a.addEventListener('ended', this._bgmEndedHandler);
+                a.currentTime = 0;
+                a.loop = true;
+                a.volume = BGM_VOL * (this.muted ? 0 : 1);
+                void a.play();
+            } catch (e) {
+                reportIssue('audio', 'BGM play failed', { error: String(e) });
+            }
+        }
+    }
+
+    /**
+     * Stop BGM.
+     */
+    stopBgm() {
+        const a = this._get('bgm');
+        if (a) {
+            if (this._bgmEndedHandler) {
+                a.removeEventListener('ended', this._bgmEndedHandler);
+                this._bgmEndedHandler = null;
+            }
+            a.pause();
+            a.currentTime = 0;
+        }
+    }
+
+    /**
+     * Start looping pre-game/menu music.
+     */
+    startStartingLoop() {
+        const a = this._get('starting');
+        if (!a) return;
+        try {
+            // If the intro track is already running, keep continuity.
+            if (!a.paused && !a.ended) return;
+            a.loop = true;
+            a.playbackRate = 1;
+            a.volume = STARTING_VOL * (this.muted ? 0 : 1);
+            const p = a.play();
+            if (p !== undefined && typeof p.catch === 'function') {
+                p.catch(() => {
+                    // Autoplay policy: will work after a user gesture (see playStartingFromUserGesture).
+                });
+            }
+        } catch (e) {
+            reportIssue('audio', 'Starting loop play failed', { error: String(e) });
+        }
+    }
+
+    /**
+     * Call from a user gesture (tap/click). Creates the menu track if preload failed and starts `starting.mp3`.
+     */
+    playStartingFromUserGesture() {
+        void this.resume();
+        const url = `${this.basePath}starting.mp3`;
+        let a = this._get('starting');
+        if (!a) {
+            a = new Audio(url);
+            a.preload = 'auto';
+            this._buffers.set('starting', a);
+        }
+        if (!a.paused && !a.ended) return;
+        a.loop = true;
+        a.playbackRate = 1;
+        a.volume = STARTING_VOL * (this.muted ? 0 : 1);
+        try {
+            if (!a.currentSrc || !a.currentSrc.includes('starting')) {
+                a.src = url;
+                a.load();
+            }
+            const p = a.play();
+            if (p !== undefined && typeof p.catch === 'function') {
+                p.catch(() => {});
+            }
+        } catch (e) {
+            reportIssue('audio', 'Menu music gesture play failed', { error: String(e) });
+        }
+    }
+
+    /**
+     * Stop pre-game/menu loop music.
+     */
+    stopStartingLoop() {
+        const a = this._get('starting');
+        if (!a) return;
+        a.pause();
+        a.currentTime = 0;
+    }
+
+    /**
+     * Optional: start BGM on menu hover (spec).
+     */
+    startBgmPreview() {
+        this.startStartingLoop();
+    }
+
+    stopGirlVoiceLoop() {
+        if (this._girlVoiceTimer !== null) {
+            clearTimeout(this._girlVoiceTimer);
+            this._girlVoiceTimer = null;
+        }
+        for (const a of this._activeGirlAudios) {
+            a.pause();
+            a.currentTime = 0;
+        }
+        this._activeGirlAudios.clear();
+        this._lastGirlVoiceAt = 0;
+        this._girlShuffleBag = [];
+    }
+
+    /**
+     * @param {'heart'|'hit'|'jump'|'slide'|'coin'|'nearMiss'|'generic'} kind
+     * @returns {boolean}
+     */
+    playGirlEvent(kind = 'generic') {
+        for (const a of Array.from(this._activeGirlAudios)) {
+            if (a.paused || a.ended) {
+                this._activeGirlAudios.delete(a);
+            }
+        }
+        if (this.muted) return false;
+        if (this._rakinIncoming) return false;
+        if (this._activeRakinAudios.size > 0) return false;
+        if (this._activeGirlAudios.size > 0) return false;
+        const now = Date.now();
+        if (now - this._lastGirlVoiceAt < GIRL_EVENT_GAP_MS) return false;
+
+        if (kind === 'heart') {
+            const ok = this._playGirlClip(2, false);
+            if (ok) this._lastGirlVoiceAt = now;
+            return ok;
+        }
+
+        let clipIndex = 1;
+        if (kind === 'hit') {
+            const hitPool = [3, 4, 5];
+            const useHitPool = Math.random() < 0.8;
+            if (useHitPool) {
+                clipIndex = hitPool[Math.floor(Math.random() * hitPool.length)];
+            } else {
+                clipIndex = this._nextShuffledGirl([1, 3, 4, 5, 6, 7, 8]);
+            }
+        } else {
+            clipIndex = this._nextShuffledGirl([1, 3, 4, 5, 6, 7, 8]);
+        }
+        if (clipIndex === this._lastGirlClip) {
+            clipIndex = this._nextShuffledGirl([1, 3, 4, 5, 6, 7, 8]);
+        }
+        const ok = this._playGirlClip(clipIndex, false);
+        if (ok) this._lastGirlVoiceAt = now;
+        return ok;
+    }
+
+    playJump() {
+        const a = this._get('boy');
+        const ok = this._safePlay(a, BOY_VOL, 1.1 + Math.random() * 0.35);
+        if (!ok) {
+            this._beep(520, 90, 0.09);
+        }
+    }
+
+    playHit() {
+        const a = this._get('boy');
+        const ok = this._safePlay(a, BOY_VOL, 0.8 + Math.random() * 0.2);
+        if (ok) {
+            this._beep(95, 85, 0.1);
+        } else {
+            this._beep(120, 120, 0.12);
+        }
+    }
+
+    playGameOver() {
+        const a = this._get('gameover');
+        const ok = this._safePlay(a, GO_VOL, 1);
+        if (!ok) {
+            this._beep(200, 200, 0.1);
+        }
+    }
+
+    startEndscreenLoop() {
+        const a = this._get('endscreen');
+        if (!a) return;
+        try {
+            a.currentTime = 0;
+            a.loop = true;
+            a.playbackRate = 1;
+            a.volume = END_VOL * (this.muted ? 0 : 1);
+            void a.play();
+        } catch (e) {
+            reportIssue('audio', 'Endscreen loop play failed', { error: String(e) });
+        }
+    }
+
+    stopEndscreenLoop() {
+        const a = this._get('endscreen');
+        if (!a) return;
+        a.pause();
+        a.currentTime = 0;
+    }
+
+    /**
+     * Play only one full rakin clip at a time.
+     * New clips start only when no rakin clip is currently playing.
+     * @param {number} visibleCount
+     */
+    syncRakinEncounterVoices(visibleCount) {
+        const count = Math.floor(visibleCount || 0);
+        this._rakinIncoming = count > 0;
+        const now = Date.now();
+        for (const a of Array.from(this._activeRakinAudios)) {
+            if (a.paused || a.ended) {
+                this._activeRakinAudios.delete(a);
+            }
+        }
+        if (count > 0 && this._activeGirlAudios.size > 0) {
+            // Rakin has strict priority; stop any active girl clip immediately.
+            this.stopGirlVoiceLoop();
+        }
+        // Never interrupt an active clip; let it finish naturally.
+        if (this._activeRakinAudios.size > 0) return;
+        if (this.muted) return;
+        if (now < this._nextRakinAllowedAt) return;
+        if (count >= 1) {
+            this._playOneRakinEncounter();
+        }
+    }
+
+    /**
+     * @returns {boolean}
+     */
+    _playOneRakinEncounter() {
+        const r1 = this._get('rakin1');
+        const tracks = [r1, this._get('rakin2'), this._get('rakin3'), this._get('rakin4')].filter(Boolean);
+        if (tracks.length === 0) return false;
+        let a = null;
+        if (this._firstRakinClipPending && r1) {
+            a = r1;
+            this._firstRakinClipPending = false;
+            this._lastRakinTrack = 0;
+        } else {
+            const available = tracks.filter((track) => !this._activeRakinAudios.has(track));
+            const pool = available.length > 0 ? available : tracks;
+            let idx = Math.floor(Math.random() * pool.length);
+            if (pool.length > 1 && idx === this._lastRakinTrack) {
+                idx = (idx + 1) % pool.length;
+            }
+            this._lastRakinTrack = idx;
+            a = /** @type {HTMLAudioElement} */ (pool[idx]);
+        }
+        try {
+            if (!a) return false;
+            a.currentTime = 0;
+            a.playbackRate = 0.96 + Math.random() * 0.12;
+            a.volume = RAKIN_VOL * (this.muted ? 0 : 1);
+            this._activeRakinAudios.add(a);
+            a.onended = () => {
+                this._activeRakinAudios.delete(a);
+                this._setNextRakinGap();
+            };
+            void a.play();
+            return true;
+        } catch (e) {
+            this._activeRakinAudios.delete(a);
+            return false;
+        }
+    }
+
+    /**
+     * Stop all active rakin encounter clips.
+     */
+    stopRakinEncounter() {
+        for (const a of this._activeRakinAudios) {
+            a.pause();
+            a.currentTime = 0;
+        }
+        this._activeRakinAudios.clear();
+    }
+
+    _setNextRakinGap() {
+        const gap = RAKIN_GAP_MIN_MS + Math.random() * (RAKIN_GAP_MAX_MS - RAKIN_GAP_MIN_MS);
+        this._nextRakinAllowedAt = Date.now() + gap;
+    }
+
+    /**
+     * Every 100 points milestone.
+     * @param {number} score
+     */
+    maybeScoreMilestone(score) {
+        if (score > 0 && score % 100 === 0) {
+            const a = this._get('score');
+            const ok = this._safePlay(a, SCORE_VOL, 1);
+            if (!ok) {
+                this._beep(880, 60, 0.05);
+            }
+        }
+    }
+
+    _applyVolumes() {
+        const starting = this._get('starting');
+        if (starting) starting.volume = STARTING_VOL;
+        const bgm = this._get('bgm');
+        if (bgm) bgm.volume = BGM_VOL;
+        const girlKeys = ['girl1', 'girl2', 'girl3', 'girl4', 'girl5', 'girl6', 'girl7', 'girl8', 'girl9'];
+        for (const key of girlKeys) {
+            const g = this._get(key);
+            if (g) g.volume = GIRL_VOL;
+        }
+        const b = this._get('boy');
+        if (b) b.volume = BOY_VOL;
+        const go = this._get('gameover');
+        if (go) go.volume = GO_VOL;
+        const end = this._get('endscreen');
+        if (end) end.volume = END_VOL;
+        const sc = this._get('score');
+        if (sc) sc.volume = SCORE_VOL;
+        const r1 = this._get('rakin1');
+        if (r1) r1.volume = RAKIN_VOL;
+        const r2 = this._get('rakin2');
+        if (r2) r2.volume = RAKIN_VOL;
+        const r3 = this._get('rakin3');
+        if (r3) r3.volume = RAKIN_VOL;
+        const r4 = this._get('rakin4');
+        if (r4) r4.volume = RAKIN_VOL;
+    }
+
+    toggleMute() {
+        this.muted = !this.muted;
+        if (this.muted) {
+            this.fadeMaster(1, 0, 150);
+            for (const [, el] of this._buffers) {
+                if (el) el.volume = 0;
+            }
+        } else {
+            this.fadeMaster(0, 1, 200);
+            this._applyVolumes();
+            const bgm = this._get('bgm');
+            if (bgm && !bgm.paused) bgm.volume = BGM_VOL;
+        }
+        return this.muted;
+    }
+
+    /**
+     * @param {number[]} pool
+     * @returns {number}
+     */
+    _nextShuffledGirl(pool) {
+        if (!Array.isArray(pool) || pool.length === 0) return 1;
+        this._girlShuffleBag = this._girlShuffleBag.filter((x) => pool.includes(x));
+        if (this._girlShuffleBag.length === 0) {
+            this._girlShuffleBag = [...pool];
+            for (let i = this._girlShuffleBag.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                const t = this._girlShuffleBag[i];
+                this._girlShuffleBag[i] = this._girlShuffleBag[j];
+                this._girlShuffleBag[j] = t;
+            }
+        }
+        let next = this._girlShuffleBag.shift();
+        if (next === undefined) next = pool[0];
+        if (pool.length > 1 && next === this._lastGirlClip) {
+            const alt = this._girlShuffleBag.shift();
+            if (alt !== undefined) {
+                this._girlShuffleBag.push(next);
+                next = alt;
+            }
+        }
+        return next;
+    }
+
+    /**
+     * @param {number} clipIndex
+     * @param {boolean} [allowRateVariance=true]
+     * @returns {boolean}
+     */
+    _playGirlClip(clipIndex, allowRateVariance = true) {
+        const key = `girl${clipIndex}`;
+        const a = this._get(key);
+        if (!a) return false;
+        try {
+            a.currentTime = 0;
+            a.playbackRate = allowRateVariance ? 0.96 + Math.random() * 0.12 : 1;
+            a.volume = GIRL_VOL * (this.muted ? 0 : 1);
+            this._activeGirlAudios.add(a);
+            a.onended = () => {
+                this._activeGirlAudios.delete(a);
+            };
+            this._lastGirlClip = clipIndex;
+            void a.play();
+            return true;
+        } catch (e) {
+            this._activeGirlAudios.delete(a);
+            return false;
+        }
+    }
+}
+</file>
+
+<file path="css/style.css">
+/* Catch Me If You Can - main styles */
+:root {
+    --primary: #E67E22;
+    --secondary: #27AE60;
+    --accent: #E74C3C;
+    --sand: #F39C12;
+    --brown-border: #8B4513;
+    --ui-bg: rgba(0, 0, 0, 0.45);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100%;
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow: hidden;
+    font-family: Arial, Helvetica, sans-serif;
+    background: var(--sand);
+    touch-action: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#game-container {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding:
+        env(safe-area-inset-top, 0px)
+        env(safe-area-inset-right, 0px)
+        env(safe-area-inset-bottom, 0px)
+        env(safe-area-inset-left, 0px);
+    overflow: hidden;
+    background: var(--sand);
+}
+
+#game-stage {
+    position: relative;
+    width: 1200px;
+    height: 675px;
+    transform: scale(var(--stage-scale, 1));
+    transform-origin: center center;
+}
+
+#gameCanvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 4px solid var(--brown-border);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    background: #87CEEB;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+}
+
+#ui-layer {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    padding: 12px 16px;
+    font-size: 14px;
+    color: #fff;
+    text-shadow: 1px 1px 2px #000;
+}
+
+#ui-layer > * {
+    pointer-events: auto;
+}
+
+#player-profile {
+    position: absolute;
+    top: 12px;
+    left: 16px;
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    border: 5px solid #fff;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+    background: rgba(255, 255, 255, 0.15);
+}
+
+#player-profile-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+#score {
+    position: absolute;
+    top: 50px;
+    left: 176px;
+    font-size: 24px;
+    font-weight: bold;
+    color: #5D4037;
+    text-shadow: 1px 1px 0 #fff;
+}
+
+#high-score-hud {
+    position: absolute;
+    top: 84px;
+    left: 176px;
+    font-size: 14px;
+    color: #5D4037;
+}
+
+#lives {
+    position: absolute;
+    top: 12px;
+    right: 120px;
+    display: flex;
+    gap: 4px;
+    font-size: 28px;
+    line-height: 1;
+}
+
+#speed-hud {
+    position: absolute;
+    bottom: 12px;
+    right: 16px;
+    font-size: 14px;
+    color: #5D4037;
+}
+
+#mute-btn, #pause-btn {
+    position: absolute;
+    top: 8px;
+    right: 16px;
+    font-size: 22px;
+    background: var(--ui-bg);
+    border: 2px solid var(--brown-border);
+    border-radius: 10px;
+    padding: 4px 10px;
+    cursor: pointer;
+    transition: transform 0.15s ease;
+}
+
+#pause-btn {
+    right: 64px;
+}
+
+#mute-btn:hover, #pause-btn:hover {
+    transform: scale(1.05);
+}
+
+.screen {
+    position: absolute;
+    inset: 0;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: rgba(243, 156, 18, 0.92);
+    color: #2c1810;
+    padding: 24px;
+    z-index: 10;
+}
+
+.screen.active {
+    display: flex;
+}
+
+/* Start menu: full-frame poster + overlaid actions */
+#start-screen {
+    padding: 0;
+    justify-content: flex-end;
+    background: #1a1208;
+    overflow: hidden;
+}
+
+#start-screen .start-poster-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    z-index: 0;
+    pointer-events: none;
+}
+
+#start-screen .start-poster-ui {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: clamp(20px, 5vw, 40px) 16px clamp(24px, 6vh, 48px);
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.72) 0%, rgba(0, 0, 0, 0.35) 55%, transparent 100%);
+}
+
+#start-screen .start-poster-ui.boot-loading {
+    opacity: 0.92;
+}
+
+#start-screen .start-poster-btn {
+    min-width: min(280px, 85vw);
+    margin: 0;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35), 0 4px 0 #a0521a;
+}
+
+#start-screen .start-poster-btn.btn-secondary {
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35), 0 3px 0 #1e8449;
+}
+
+#start-screen .start-high-toast {
+    margin: 4px 0 0;
+    font-size: clamp(1rem, 3.5vw, 1.25rem);
+    font-weight: bold;
+    color: #fff;
+    text-shadow: 0 1px 3px #000;
+}
+
+.intro-screen {
+    padding: 0;
+    background: #111;
+    overflow: hidden;
+}
+
+.intro-screen .intro-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center center;
+    z-index: 0;
+    pointer-events: none;
+    background: #000;
+}
+
+.intro-screen .intro-ui {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 10px;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 12px;
+}
+
+.intro-screen .intro-btn {
+    min-width: min(220px, 70vw);
+    margin: 0;
+}
+
+#gameover-screen {
+    padding: 0;
+    background: transparent;
+    overflow: hidden;
+}
+
+#gameover-screen .gameover-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
+    z-index: 0;
+    pointer-events: none;
+    filter: none;
+}
+
+#gameover-screen .gameover-ui {
+    position: absolute;
+    right: clamp(18px, 3.5vw, 48px);
+    top: 62%;
+    transform: translateY(-50%);
+    z-index: 1;
+    width: min(520px, 44vw);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 0;
+    border-radius: 0;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+}
+
+#gameover-screen .gameover-line {
+    margin: 0;
+    padding: 10px 16px;
+    border-radius: 14px;
+    color: #ffffff;
+    font-size: clamp(1.15rem, 2.8vw, 1.75rem);
+    font-weight: 900;
+    letter-spacing: 0.2px;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.72), rgba(0, 0, 0, 0.5));
+    border: 2px solid rgba(255, 255, 255, 0.25);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.4);
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.72);
+}
+
+#gameover-screen #final-score {
+    display: inline-block;
+    margin-left: 4px;
+    font-size: 1.08em;
+    font-weight: 900;
+    color: #ffd66f;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8), 0 0 6px rgba(255, 206, 90, 0.35);
+}
+
+#gameover-screen #achievements-panel {
+    font-size: clamp(0.95rem, 1.9vw, 1.05rem);
+    color: #d6f8e4;
+}
+
+#gameover-screen .gameover-btn {
+    width: min(260px, 80vw);
+    margin: 2px 0;
+}
+
+.title-font {
+    font-family: 'Bangers', 'Press Start 2P', cursive, sans-serif;
+    font-size: clamp(2rem, 6vw, 3.5rem);
+    letter-spacing: 2px;
+    margin: 0 0 16px;
+    color: var(--accent);
+    text-shadow: 2px 2px 0 #fff;
+}
+
+.caught {
+    animation: pulse 0.8s ease-in-out infinite alternate;
+}
+
+@keyframes pulse {
+    from { transform: scale(1); }
+    to { transform: scale(1.08); }
+}
+
+.instructions {
+    font-size: 16px;
+    margin-bottom: 12px;
+}
+
+.high-score-line {
+    font-size: 20px;
+    font-weight: bold;
+    margin: 14px 0 6px;
+}
+
+.btn-primary, .btn-secondary {
+    font-family: 'Bangers', cursive, sans-serif;
+    font-size: 1.5rem;
+    padding: 14px 36px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    margin: 8px;
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: #fff;
+    box-shadow: 0 4px 0 #a0521a;
+}
+
+.btn-primary:hover {
+    transform: scale(1.05);
+}
+
+.btn-primary:active {
+    transform: scale(0.98);
+    box-shadow: 0 2px 0 #a0521a;
+}
+
+.btn-secondary {
+    background: var(--secondary);
+    color: #fff;
+    font-size: 1.1rem;
+    box-shadow: 0 3px 0 #1e8449;
+}
+
+.btn-secondary:hover {
+    transform: scale(1.05);
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Pause UI must never appear on menu / intro / game-over (z-index was above those screens). */
+#game-container:not(.gameplay-active) #pause-overlay {
+    display: none !important;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+#pause-overlay.hidden {
+    display: none !important;
+}
+
+#pause-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 15;
+    color: #fff;
+    cursor: pointer;
+    touch-action: manipulation;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.pause-resume-hint {
+    margin: 0;
+    font-size: clamp(0.9rem, 3.5vw, 1.1rem);
+    text-align: center;
+    padding: 0 16px;
+    line-height: 1.5;
+}
+
+.pause-resume-hint kbd {
+    display: inline-block;
+    padding: 0.15em 0.5em;
+    font-size: 0.85em;
+    font-family: inherit;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    background: rgba(0, 0, 0, 0.35);
+}
+
+/* Inside HUD layer so when #ui-layer is hidden (menu / intros / game-over), pause cannot appear. */
+#ui-layer #pause-overlay {
+    z-index: 100;
+}
+
+#pause-overlay .title-font {
+    color: #fff;
+    text-shadow: 2px 2px 0 #000;
+}
+
+#achievements-panel {
+    max-width: 90%;
+    font-size: 14px;
+    color: #333;
+}
+
+#ui-layer.hidden {
+    display: none;
+}
+
+/* ——— Mobile & small viewports ——— */
+.btn-primary,
+.btn-secondary,
+.start-poster-btn,
+.intro-btn,
+.gameover-btn {
+    touch-action: manipulation;
+    min-height: 44px;
+}
+
+#start-screen .start-poster-ui {
+    padding-bottom: max(clamp(24px, 6vh, 48px), env(safe-area-inset-bottom, 0px));
+}
+
+.intro-screen .intro-ui {
+    bottom: max(10px, env(safe-area-inset-bottom, 0px));
+    padding-left: max(12px, env(safe-area-inset-left, 0px));
+    padding-right: max(12px, env(safe-area-inset-right, 0px));
+}
+
+@media (max-width: 640px) {
+    #gameCanvas {
+        border-width: 2px;
+        box-shadow: 0 0 12px rgba(0, 0, 0, 0.25);
+    }
+
+    #gameover-screen .gameover-ui {
+        left: 50%;
+        right: auto;
+        transform: translate(-50%, -50%);
+        width: min(calc(100% - 24px), 420px);
+        top: 56%;
+        align-items: stretch;
+    }
+
+    #gameover-screen .gameover-line {
+        font-size: clamp(0.95rem, 4.2vw, 1.35rem);
+        padding: 8px 12px;
+    }
+
+    #gameover-screen #achievements-panel {
+        font-size: clamp(0.8rem, 3.5vw, 0.95rem);
+    }
+
+    #gameover-screen .gameover-btn {
+        width: 100%;
+        max-width: 280px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+@media (max-width: 520px) {
+    #ui-layer {
+        padding: 8px 10px;
+    }
+
+    #player-profile {
+        top: 6px;
+        left: 8px;
+        width: clamp(48px, 14vw, 72px);
+        height: clamp(48px, 14vw, 72px);
+        border-width: 3px;
+    }
+
+    #score {
+        top: 6px;
+        left: clamp(58px, 14vw, 82px);
+        right: 108px;
+        font-size: clamp(0.85rem, 4vw, 1.1rem);
+        line-height: 1.2;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    #high-score-hud {
+        top: clamp(26px, 8vw, 34px);
+        left: clamp(58px, 14vw, 82px);
+        right: 108px;
+        font-size: clamp(0.65rem, 2.8vw, 0.8rem);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    #lives {
+        top: clamp(40px, 11vw, 52px);
+        left: 8px;
+        right: auto;
+        font-size: clamp(1.1rem, 5vw, 1.4rem);
+        gap: 2px;
+    }
+
+    #speed-hud {
+        bottom: 6px;
+        right: 8px;
+        left: auto;
+        font-size: clamp(0.65rem, 2.8vw, 0.75rem);
+        max-width: 42%;
+        text-align: right;
+    }
+
+    #mute-btn,
+    #pause-btn {
+        top: max(6px, env(safe-area-inset-top, 0px));
+        min-width: 44px;
+        min-height: 44px;
+        padding: 6px 12px;
+        font-size: 1.1rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #pause-btn {
+        right: max(58px, calc(env(safe-area-inset-right, 0px) + 52px));
+    }
+
+    #mute-btn {
+        right: max(8px, env(safe-area-inset-right, 0px));
+    }
+}
+
+@media (max-width: 380px) {
+    #score {
+        right: 100px;
+    }
+
+    #high-score-hud {
+        right: 100px;
+    }
+
+    #lives {
+        top: auto;
+        bottom: 40px;
+        left: 8px;
+        font-size: 1.15rem;
+    }
+}
+
+/* Short landscape (phones): keep HUD out of the way */
+@media (max-height: 420px) and (orientation: landscape) {
+    #ui-layer {
+        padding: 4px 8px;
+    }
+
+    #player-profile {
+        width: 36px;
+        height: 36px;
+        border-width: 2px;
+        top: 4px;
+        left: 6px;
+    }
+
+    #score {
+        top: 4px;
+        left: 46px;
+        right: 96px;
+        font-size: 0.8rem;
+    }
+
+    #high-score-hud {
+        top: 22px;
+        left: 46px;
+        right: 96px;
+        font-size: 0.6rem;
+    }
+
+    #lives {
+        top: auto;
+        bottom: 4px;
+        left: 6px;
+        font-size: 1rem;
+    }
+
+    #speed-hud {
+        bottom: 4px;
+        right: 6px;
+        font-size: 0.6rem;
+    }
+
+    #mute-btn,
+    #pause-btn {
+        top: 4px;
+        min-width: 40px;
+        min-height: 40px;
+        padding: 4px 8px;
+        font-size: 1rem;
+    }
+
+    #pause-btn {
+        right: 50px;
+    }
+
+    #mute-btn {
+        right: 6px;
+    }
+}
+
+@media (orientation: landscape) and (max-height: 500px) {
+    #ui-layer {
+        padding-left: max(10px, env(safe-area-inset-left, 0px));
+        padding-right: max(10px, env(safe-area-inset-right, 0px));
+    }
+}
+</file>
+
+<file path="index.html">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="Run, jump, and dodge in this hilarious chase game!">
+    <meta property="og:title" content="Ma bolse durotto bojay rakhte">
+    <meta property="og:description" content="Run, jump, and dodge in this hilarious chase runner game!">
+    <meta property="og:type" content="website">
+    <meta name="theme-color" content="#E67E22">
+    <title>Ma bolse durotto bojay rakhte</title>
+    <link rel="preload" href="assets/images/poster.png" as="image" fetchpriority="high">
+    <link rel="preload" href="assets/audio/starting.mp3" as="audio" type="audio/mpeg">
+    <!-- Gameplay-critical PNGs (preloaded to avoid late sprite/background rendering on Vercel). -->
+    <link rel="preload" href="assets/images/background.png" as="image" fetchpriority="high">
+    <link rel="preload" href="assets/images/ground.png" as="image" fetchpriority="high">
+    <link rel="preload" href="assets/images/boy.png" as="image" fetchpriority="high">
+    <link rel="preload" href="assets/images/girl.png" as="image" fetchpriority="high">
+    <link rel="preload" href="assets/images/rock.png" as="image">
+    <link rel="preload" href="assets/images/riksha.png" as="image">
+    <link rel="preload" href="assets/images/rakin.png" as="image">
+    <link rel="preload" href="assets/images/heart.png" as="image">
+    <link rel="preload" href="assets/images/coin.png" as="image">
+    <link rel="preload" href="assets/images/background2.png" as="image">
+    <link rel="preload" href="assets/images/background3.png" as="image">
+    <link rel="preload" href="assets/images/endscreen.png" as="image">
+    <link rel="preload" href="assets/images/profile.png" as="image">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="assets/images/profileoo.png" type="image/png">
+    <link rel="apple-touch-icon" href="assets/images/profileoo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="game-container">
+        <div id="game-stage">
+        <canvas id="gameCanvas" width="1200" height="675"></canvas>
+        <div id="ui-layer" class="hidden">
+            <div id="player-profile" aria-label="Player profile">
+                <img id="player-profile-img" src="/assets/images/profile.png" alt="Player profile">
+            </div>
+            <div id="score">Score: 0</div>
+            <div id="high-score-hud">Best: 0</div>
+            <div id="lives" aria-label="Lives"></div>
+            <div id="speed-hud">Speed: 100%</div>
+            <button type="button" id="mute-btn" aria-label="Toggle sound">🔊</button>
+            <button type="button" id="pause-btn" aria-label="Pause">⏸</button>
+            <div id="pause-overlay" class="hidden" aria-hidden="true" role="dialog" aria-label="Paused">
+                <p class="title-font">PAUSED</p>
+                <p class="pause-resume-hint">Press <kbd>P</kbd> or tap to resume</p>
+            </div>
+        </div>
+        <div id="start-screen" class="screen active">
+            <img class="start-poster-bg" src="assets/images/poster.png" alt="" width="1920" height="1080" decoding="async" fetchpriority="high">
+            <div class="start-poster-ui">
+                <button type="button" id="play-btn" class="btn-primary start-poster-btn">PLAY</button>
+                <button type="button" id="highest-btn" class="btn-secondary start-poster-btn">HIGHEST SCORE</button>
+                <p id="start-high-score" class="start-high-toast hidden">HIGH SCORE: <span id="menu-high-score">0</span></p>
+            </div>
+        </div>
+        <div id="intro-screen-2" class="screen intro-screen">
+            <img class="intro-bg" src="assets/images/background2.png" alt="" width="1920" height="1080" decoding="async" loading="lazy" fetchpriority="low">
+            <div class="intro-ui">
+                <button type="button" id="intro-next-btn" class="btn-primary intro-btn">NEXT</button>
+            </div>
+        </div>
+        <div id="intro-screen-3" class="screen intro-screen">
+            <img class="intro-bg" src="assets/images/background3.png" alt="" width="1920" height="1080" decoding="async" loading="lazy" fetchpriority="low">
+            <div class="intro-ui">
+                <button type="button" id="intro-play-btn" class="btn-primary intro-btn">PLAY</button>
+            </div>
+        </div>
+        <div id="gameover-screen" class="screen">
+            <img class="gameover-bg" src="assets/images/endscreen.png" alt="" width="1920" height="1080" decoding="async" loading="lazy" fetchpriority="low">
+            <div class="gameover-ui">
+                <p class="gameover-line">আপনার পাসপোর্ট পাওয়ার দৌড়ে স্কোর: <span id="final-score">0</span></p>
+                <p id="achievements-panel" class="gameover-line"></p>
+                <button type="button" id="restart-btn" class="btn-primary gameover-btn">PLAY</button>
+                <button type="button" id="home-btn" class="btn-secondary gameover-btn">HOME</button>
+            </div>
+        </div>
+        </div>
+    </div>
+    <script type="module" src="js/game.js"></script>
+</body>
+</html>
+</file>
+
+<file path="js/game.js">
+/**
+ * Main entry: game loop, states, rendering, achievements, input.
+ */
+
+import { SoundManager } from './audio.js';
+import { Chaser } from './chaser.js';
+import { ObstacleManager } from './obstacles.js';
+import { Player, PLAYER_H } from './player.js';
+import { reportIssue } from './issue-tracker.js';
+import { loadFirstAvailableImage, loadImageOrPlaceholder } from './utils.js';
+
+const STORAGE_KEY = 'catchMeHighScore';
+const ASSET_BASE = '/assets/images/';
+
+/** @type {'start'|'intro2'|'intro3'|'play'|'over'} */
+let gameState = 'start';
+
+const canvas = /** @type {HTMLCanvasElement} */ (document.getElementById('gameCanvas'));
+if (!canvas) throw new Error('Canvas missing');
+const ctx = canvas.getContext('2d');
+if (!ctx) throw new Error('2D context unavailable');
+
+const uiLayer = document.getElementById('ui-layer');
+const scoreEl = document.getElementById('score');
+const highHud = document.getElementById('high-score-hud');
+const livesEl = document.getElementById('lives');
+const profileImgEl = document.getElementById('player-profile-img');
+const speedHud = document.getElementById('speed-hud');
+const startScreen = document.getElementById('start-screen');
+const introScreen2 = document.getElementById('intro-screen-2');
+const introScreen3 = document.getElementById('intro-screen-3');
+const gameoverScreen = document.getElementById('gameover-screen');
+const gameContainer = document.getElementById('game-container');
+const gameStage = document.getElementById('game-stage');
+const pauseOverlay = document.getElementById('pause-overlay');
+const menuHigh = document.getElementById('menu-high-score');
+const finalScoreEl = document.getElementById('final-score');
+const achievementsPanel = document.getElementById('achievements-panel');
+const startHighScoreLine = document.getElementById('start-high-score');
+const startPosterUi = document.querySelector('#start-screen .start-poster-ui');
+
+let highScore = Number(localStorage.getItem(STORAGE_KEY) || '0');
+let score = 0;
+const MAX_LIVES = 5;
+let lives = MAX_LIVES;
+/** @type {number} Horizontal gap between boy and girl (px). */
+let gap = 400;
+let paused = false;
+let debug = false;
+
+const BASE_SCROLL = 6;
+let scrollSpeed = BASE_SCROLL;
+let difficulty = 0;
+let targetEscapeRate = 0.12;
+
+let shakeMs = 0;
+let flashMs = 0;
+/** @type {number} Last score whole number that triggered milestone beep. */
+let lastScoreMilestone = 0;
+/** @type {number} Last score shown for share / game over. */
+let lastRunScore = 0;
+
+/** @type {{ text: string, x: number, y: number, life: number, maxLife: number, kind: 'generic'|'score'|'life' }[]} */
+const floatTexts = [];
+/** @type {{ x: number, y: number, vx: number, vy: number, life: number }[]} */
+const trailDots = [];
+
+const sound = new SoundManager();
+const MAX_DT_MS = 50;
+
+let bgOffset = 0;
+let paraOffset = 0;
+
+let lastTs = 0;
+let surviveMs = 0;
+let closeChaseMs = 0;
+
+const achievements = {
+    firstSteps: false,
+    speedDemon: false,
+    closeCall: false,
+};
+let runtimeIssueCount = 0;
+
+function getFrameScale(dtMs) {
+    return dtMs / 16.67;
+}
+
+/**
+ * Load PNG assets (`boy.png`, `girl.png`, `background.png`, `ground.png`, obstacles, UI).
+ * Missing files use canvas placeholders (see `utils.loadImageOrPlaceholder`).
+ */
+async function loadSprites() {
+    const loadCustomImage = async (candidates, pw, ph, color, label) => {
+        const found = await loadFirstAvailableImage(candidates);
+        if (found) return found;
+        return loadImageOrPlaceholder(candidates[0], pw, ph, color, label);
+    };
+    const inferFrameMeta = (img) => {
+        const w = Number(img?.width) || 0;
+        const h = Number(img?.height) || 0;
+        if (w <= 0 || h <= 0) return {};
+        const ratio = w / Math.max(1, h);
+        if (ratio < 1.8) return {};
+        const guessedFrames = Math.round(ratio);
+        if (guessedFrames < 2 || guessedFrames > 6) return {};
+        if (Math.abs(ratio - guessedFrames) > 0.14) return {};
+        const frameWidth = Math.floor(w / guessedFrames);
+        if (frameWidth <= 0) return {};
+        return { frameWidth, frameHeight: h };
+    };
+
+    const customBg = await loadFirstAvailableImage([
+        `${ASSET_BASE}background.png`,
+        `${ASSET_BASE}bg.png`,
+    ]);
+    const [
+        boyImg,
+        girlImg,
+        ground,
+        rock,
+        riksha,
+        rakin,
+        heart,
+        coin,
+    ] = await Promise.all([
+        loadCustomImage(
+            [`${ASSET_BASE}boy.png`],
+            64,
+            96,
+            '#fff8e7',
+            'BOY'
+        ),
+        loadCustomImage(
+            [`${ASSET_BASE}girl.png`],
+            64,
+            96,
+            '#e8f5e9',
+            'GIRL'
+        ),
+        loadCustomImage(
+            [`${ASSET_BASE}ground.png`],
+            100,
+            50,
+            '#c2a068',
+            'GND'
+        ),
+        loadCustomImage(
+            [`${ASSET_BASE}rock.png`, `${ASSET_BASE}obstacle_rock.png`, `${ASSET_BASE}obstacle1.png`],
+            120,
+            120,
+            '#795548',
+            'R'
+        ),
+        loadCustomImage(
+            [`${ASSET_BASE}riksha.png`, `${ASSET_BASE}obstacle_riksha.png`, `${ASSET_BASE}obstacle2.png`],
+            170,
+            130,
+            '#6d4c41',
+            'RIKSHA'
+        ),
+        loadCustomImage(
+            [`${ASSET_BASE}rakin.png`, `${ASSET_BASE}obstacle_rakin.png`, `${ASSET_BASE}obstacle3.png`],
+            110,
+            150,
+            '#8e24aa',
+            'RAKIN'
+        ),
+        loadCustomImage(
+            [`${ASSET_BASE}heart.png`, `${ASSET_BASE}life_heart.png`],
+            56,
+            56,
+            '#e91e63',
+            'HEART'
+        ),
+        loadCustomImage(
+            [`${ASSET_BASE}coin.png`, `${ASSET_BASE}gold_coin.png`],
+            52,
+            52,
+            '#ffca28',
+            'COIN'
+        ),
+    ]);
+    const bg =
+        customBg ||
+        (await loadImageOrPlaceholder(`${ASSET_BASE}background.png`, 1200, 600, '#deb887', 'BG'));
+
+    return {
+        boy: { image: boyImg, scale: 1.05, maxWidthMultiplier: 2.8, ...inferFrameMeta(boyImg) },
+        girl: { image: girlImg, scale: 1.04, maxWidthMultiplier: 2.9, ...inferFrameMeta(girlImg) },
+        bg,
+        ground,
+        obs: { rock, riksha, rakin, heart, coin },
+    };
+}
+
+let assets = /** @type {Awaited<ReturnType<typeof loadSprites>> | null} */ (null);
+let player = /** @type {Player | null} */ (null);
+let chaser = /** @type {Chaser | null} */ (null);
+let obstacles = /** @type {ObstacleManager | null} */ (null);
+
+/** @type {Promise<Awaited<ReturnType<typeof loadSprites>>> | null} */
+let spritesPromise = null;
+
+function ensureSpritesLoading() {
+    if (!spritesPromise) spritesPromise = loadSprites();
+    return spritesPromise;
+}
+
+let playerIframes = 0;
+
+/**
+ * Reset run state.
+ */
+function resetRun() {
+    score = 0;
+    lives = MAX_LIVES;
+    gap = 400;
+    scrollSpeed = BASE_SCROLL;
+    difficulty = 0;
+    targetEscapeRate = 0.12;
+    surviveMs = 0;
+    closeChaseMs = 0;
+    lastScoreMilestone = 0;
+    shakeMs = 0;
+    flashMs = 0;
+    floatTexts.length = 0;
+    trailDots.length = 0;
+    playerIframes = 0;
+    sound.stopRakinEncounter();
+    bgOffset = 0;
+    paraOffset = 0;
+    achievements.firstSteps = false;
+    achievements.speedDemon = false;
+    achievements.closeCall = false;
+    if (assets && canvas) {
+        // Player is now the girl; target/chaser actor is the boy.
+        player = new Player({ canvas, sprites: assets.girl });
+        chaser = new Chaser({ sprites: assets.boy });
+        obstacles = new ObstacleManager({
+            canvas,
+            images: {
+                rock: assets.obs.rock,
+                riksha: assets.obs.riksha,
+                rakin: assets.obs.rakin,
+                heart: assets.obs.heart,
+                coin: assets.obs.coin,
+            },
+        });
+    }
+    if (chaser && player) {
+        chaser.displayX = player.x + gap;
+    }
+}
+
+/**
+ * @param {string} t
+ * @param {number} x
+ * @param {number} y
+ * @param {'generic'|'score'|'life'} [kind]
+ */
+function addFloatText(t, x, y, kind = 'generic') {
+    const life = kind === 'score' ? 760 : kind === 'life' ? 980 : 900;
+    floatTexts.push({ text: t, x, y, life, maxLife: life, kind });
+}
+
+/**
+ * Update HUD DOM (hearts).
+ */
+function updateLivesHud() {
+    if (!livesEl) return;
+    livesEl.textContent = '';
+    for (let i = 0; i < MAX_LIVES; i++) {
+        const s = document.createElement('span');
+        s.textContent = i < lives ? '❤️' : '🖤';
+        livesEl.appendChild(s);
+    }
+}
+
+/**
+ * @param {number} dt
+ */
+function updateAchievements(dt) {
+    surviveMs += dt;
+    if (!achievements.firstSteps && surviveMs >= 10000) {
+        achievements.firstSteps = true;
+        addFloatText('Achievement: First Steps', canvas.width / 2 - 80, 80);
+    }
+    if (!achievements.speedDemon && score >= 1000) {
+        achievements.speedDemon = true;
+        addFloatText('Achievement: Speed Demon', canvas.width / 2 - 90, 110);
+    }
+    if (gap < 50) {
+        closeChaseMs += dt;
+        if (!achievements.closeCall && closeChaseMs >= 5000) {
+            achievements.closeCall = true;
+            addFloatText('Achievement: Close Call', canvas.width / 2 - 85, 140);
+        }
+    } else {
+        closeChaseMs = 0;
+    }
+}
+
+/**
+ * @param {string} reason
+ */
+function gameOver(reason) {
+    gameState = 'over';
+    gameContainer?.classList.remove('gameplay-active');
+    paused = false;
+    if (pauseOverlay) pauseOverlay.classList.add('hidden');
+    sound.stopRakinEncounter();
+    lastRunScore = Math.floor(score);
+    sound.stopGirlVoiceLoop();
+    sound.stopStartingLoop();
+    sound.stopEndscreenLoop();
+    sound.stopBgm();
+    sound.playGameOver();
+    sound.startEndscreenLoop();
+    if (uiLayer) uiLayer.classList.add('hidden');
+    if (gameoverScreen) {
+        gameoverScreen.classList.add('active');
+        if (finalScoreEl) finalScoreEl.textContent = String(lastRunScore);
+        const beat = lastRunScore > highScore;
+        if (beat) {
+            highScore = lastRunScore;
+            localStorage.setItem(STORAGE_KEY, String(highScore));
+        }
+        if (achievementsPanel) {
+            const lines = [];
+            if (achievements.firstSteps) lines.push('First Steps');
+            if (achievements.speedDemon) lines.push('Speed Demon');
+            if (achievements.closeCall) lines.push('Close Call');
+            achievementsPanel.textContent =
+                lines.length > 0
+                    ? `Achievement Unlocked: ${lines.join(', ')}`
+                    : 'Achievement Unlocked: None';
+        }
+    }
+}
+
+/**
+ * @param {number} dt
+ */
+function updatePlay(dt) {
+    if (!player || !chaser || !obstacles || !assets) return;
+
+    if (playerIframes > 0) playerIframes -= dt;
+
+    difficulty = score;
+    const speedTier = Math.min(1.5, 1 + Math.floor(score / 500) * 0.1);
+    scrollSpeed = BASE_SCROLL * speedTier * player.getSpeedMultiplier();
+
+    // Boy slowly escapes; girl player must close the gap.
+    const frameScale = getFrameScale(dt);
+    targetEscapeRate = 0.12 + score * 0.00002;
+    gap += targetEscapeRate * frameScale * scrollSpeed * 0.08;
+    if (player.boostTimer > 0) {
+        gap -= 0.45 * frameScale;
+    }
+
+    player.update(dt);
+    obstacles.updateSpawn(dt, scrollSpeed, difficulty);
+    obstacles.scrollAll(scrollSpeed, dt);
+    obstacles.trackProximity(player);
+    const visibleRakinCount = obstacles.countVisibleKind('rakin');
+    sound.syncRakinEncounterVoices(visibleRakinCount);
+
+    const { hit, nearMiss, coinPoints, lifeGain, rakinSlidePoints } = obstacles.checkPlayer(player);
+
+    if (lifeGain > 0) {
+        sound.playGirlEvent('heart');
+        const prev = lives;
+        lives = Math.min(MAX_LIVES, lives + lifeGain);
+        if (lives > prev) {
+            addFloatText('+1 LIFE', player.x + 20, player.y - 50, 'life');
+            updateLivesHud();
+        }
+    }
+
+    if (coinPoints > 0) {
+        sound.playGirlEvent('coin');
+        score += coinPoints;
+        addFloatText(`+${coinPoints}`, player.x + 40, player.y - 60, 'score');
+    }
+
+    if (rakinSlidePoints > 0) {
+        score += rakinSlidePoints;
+        addFloatText(`+${rakinSlidePoints}`, player.x + 35, player.y - 52, 'score');
+    }
+
+    if (nearMiss) {
+        sound.playGirlEvent('nearMiss');
+        score += 10;
+        addFloatText('+10', player.x + 50, player.y - 40, 'score');
+    }
+
+    if (hit && playerIframes <= 0) {
+        let took = true;
+        if (player.shieldHits > 0) {
+            player.shieldHits = 0;
+            took = false;
+            addFloatText('Shield!', player.x, player.y - 50);
+        }
+        if (took) {
+            sound.playHit();
+            sound.playGirlEvent('hit');
+            lives -= 1;
+            gap += 150;
+            player.applyHitSlow();
+            shakeMs = 260;
+            flashMs = 100;
+            playerIframes = 900;
+            updateLivesHud();
+        }
+    }
+
+    const pb = player.getBounds();
+    for (let i = trailDots.length - 1; i >= 0; i--) {
+        const d = trailDots[i];
+        d.x += d.vx;
+        d.y += d.vy;
+        d.life -= dt;
+        if (d.life <= 0) trailDots.splice(i, 1);
+    }
+    if (player.state === 'jump') {
+        trailDots.push({
+            x: pb.x + pb.width / 2,
+            y: pb.y + pb.height / 2,
+            vx: -2 - Math.random() * 2,
+            vy: -0.5,
+            life: 280,
+        });
+    }
+
+    if (shakeMs > 0) shakeMs -= dt;
+    if (flashMs > 0) flashMs -= dt;
+
+    const boyX = player.x;
+    const targetBoyX = boyX + gap;
+    chaser.update(dt, targetBoyX, canvas.width);
+
+    obstacles.cullInactive();
+
+    score += frameScale;
+
+    const ms = Math.floor(score);
+    if (ms > 0 && ms % 100 === 0 && ms !== lastScoreMilestone) {
+        lastScoreMilestone = ms;
+        sound.maybeScoreMilestone(ms);
+    }
+
+    updateAchievements(dt);
+
+    if (scoreEl) scoreEl.textContent = `Score: ${Math.floor(score)}`;
+    if (highHud) highHud.textContent = `Best: ${Math.floor(highScore)}`;
+    if (speedHud) {
+        const spPct = Math.round((scrollSpeed / BASE_SCROLL) * 100);
+        speedHud.textContent =
+            runtimeIssueCount > 0
+                ? `Speed: ${spPct}% | Issues: ${runtimeIssueCount}`
+                : `Speed: ${spPct}%`;
+    }
+
+    if (lives <= 0 || gap <= 0) {
+        gameOver(lives <= 0 ? 'hearts' : 'caught');
+    }
+    gap = Math.max(0, Math.min(1200, gap));
+
+    for (let i = floatTexts.length - 1; i >= 0; i--) {
+        const ft = floatTexts[i];
+        ft.y -= 0.04 * dt;
+        ft.life -= dt;
+        if (ft.life <= 0) floatTexts.splice(i, 1);
+    }
+}
+
+/**
+ * Draw parallax background.
+ */
+function drawBackground(dt) {
+    if (!assets) return;
+    const w = canvas.width;
+    const h = canvas.height;
+    const groundY = h - 150;
+
+    const img = assets.bg;
+    const srcW = Number(img.width) || w;
+    const srcH = Number(img.height) || groundY;
+    const drawH = groundY;
+    const bgScale = drawH / srcH;
+    const tileW = Math.max(w, srcW * bgScale);
+
+    ctx.save();
+    const bx = -(bgOffset % tileW);
+    for (let x = bx; x < w + tileW; x += tileW) {
+        ctx.drawImage(img, x, 0, tileW, drawH);
+    }
+
+    drawRoad(groundY, h);
+
+    bgOffset += scrollSpeed * getFrameScale(dt);
+    ctx.restore();
+}
+
+/**
+ * Draw a stylized asphalt road with lane marks.
+ * @param {number} groundY
+ * @param {number} canvasH
+ */
+function drawRoad(groundY, canvasH) {
+    const roadH = canvasH - groundY;
+
+    // Main asphalt strip.
+    const asphalt = ctx.createLinearGradient(0, groundY, 0, canvasH);
+    asphalt.addColorStop(0, '#3f434a');
+    asphalt.addColorStop(0.5, '#32363d');
+    asphalt.addColorStop(1, '#262a30');
+    ctx.fillStyle = asphalt;
+    ctx.fillRect(0, groundY, canvas.width, roadH);
+
+    // Shoulders.
+    const shoulderH = Math.max(10, roadH * 0.12);
+    ctx.fillStyle = '#545b65';
+    ctx.fillRect(0, groundY, canvas.width, shoulderH);
+    ctx.fillStyle = '#20242a';
+    ctx.fillRect(0, canvasH - shoulderH, canvas.width, shoulderH);
+
+    // Center dashed lane lines.
+    const laneY = groundY + roadH * 0.5;
+    const dashW = 64;
+    const gapW = 40;
+    const startX = -((bgOffset * 1.25) % (dashW + gapW));
+    ctx.fillStyle = '#ffe082';
+    for (let x = startX; x < canvas.width + dashW; x += dashW + gapW) {
+        ctx.fillRect(x, laneY - 4, dashW, 8);
+    }
+
+    // Small texture speckles for cartoon-real vibe.
+    ctx.save();
+    ctx.globalAlpha = 0.08;
+    ctx.fillStyle = '#ffffff';
+    for (let i = 0; i < 70; i++) {
+        const px = (i * 181 + bgOffset * 0.6) % (canvas.width + 40) - 20;
+        const py = groundY + ((i * 37) % Math.max(1, roadH - 6)) + 3;
+        ctx.fillRect(px, py, 2, 2);
+    }
+    ctx.restore();
+}
+
+/**
+ * @param {number} dt
+ */
+function render(dt) {
+    if (!player || !chaser || !obstacles || !assets) return;
+
+    ctx.save();
+    let sx = 0;
+    let sy = 0;
+    if (shakeMs > 0) {
+        const intensity = 7 * (shakeMs / 260);
+        sx = (Math.random() - 0.5) * intensity;
+        sy = (Math.random() - 0.5) * intensity;
+    }
+    ctx.translate(sx, sy);
+
+    ctx.clearRect(-20, -20, canvas.width + 40, canvas.height + 40);
+    drawBackground(dt);
+
+    const groundY = canvas.height - 150;
+    chaser.draw(ctx, groundY, gap);
+    player.drawDust(ctx, scrollSpeed);
+    player.draw(ctx);
+    obstacles.draw(ctx, debug);
+
+    for (const d of trailDots) {
+        ctx.save();
+        ctx.globalAlpha = d.life / 280;
+        ctx.fillStyle = 'rgba(255,255,255,0.7)';
+        ctx.beginPath();
+        ctx.arc(d.x, d.y, 3, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+    }
+
+    for (const ft of floatTexts) {
+        ctx.save();
+        const progress = 1 - ft.life / ft.maxLife;
+        if (ft.kind === 'score') {
+            const alpha = Math.max(0, 1 - progress);
+            const scale = 0.92 + Math.sin(progress * Math.PI) * 0.18;
+            const textY = ft.y - progress * 6;
+            const padX = 10;
+            const pillH = 30;
+            ctx.font = 'bold 20px Arial';
+            const textW = ctx.measureText(ft.text).width;
+            const pillW = textW + padX * 2;
+            const left = ft.x - pillW / 2;
+            const top = textY - 22;
+            const radius = 14;
+
+            ctx.globalAlpha = alpha;
+            ctx.translate(ft.x, textY - 8);
+            ctx.scale(scale, scale);
+            ctx.translate(-ft.x, -(textY - 8));
+
+            const bgGrad = ctx.createLinearGradient(left, top, left, top + pillH);
+            bgGrad.addColorStop(0, 'rgba(255, 218, 121, 0.95)');
+            bgGrad.addColorStop(1, 'rgba(255, 153, 73, 0.95)');
+            ctx.fillStyle = bgGrad;
+            ctx.strokeStyle = 'rgba(255, 243, 204, 0.95)';
+            ctx.lineWidth = 2.5;
+            ctx.shadowColor = 'rgba(255, 183, 77, 0.45)';
+            ctx.shadowBlur = 10;
+            ctx.beginPath();
+            ctx.roundRect(left, top, pillW, pillH, radius);
+            ctx.fill();
+            ctx.stroke();
+
+            ctx.shadowBlur = 0;
+            ctx.fillStyle = '#ffffff';
+            ctx.strokeStyle = 'rgba(113, 46, 24, 0.9)';
+            ctx.lineWidth = 2;
+            ctx.textAlign = 'center';
+            ctx.strokeText(ft.text, ft.x, textY);
+            ctx.fillText(ft.text, ft.x, textY);
+        } else if (ft.kind === 'life') {
+            const progress = 1 - ft.life / ft.maxLife;
+            const alpha = Math.max(0, 1 - progress * 0.9);
+            const rise = progress * 12;
+            const pulse = 1 + Math.sin(progress * Math.PI * 3) * 0.04;
+            const r = 36 + Math.sin(progress * Math.PI * 2) * 2;
+            const cx = ft.x;
+            const cy = ft.y - 10 - rise;
+
+            ctx.globalAlpha = alpha;
+            ctx.translate(cx, cy);
+            ctx.scale(pulse, pulse);
+            ctx.translate(-cx, -cy);
+
+            const orb = ctx.createRadialGradient(cx, cy - 8, 6, cx, cy, r);
+            orb.addColorStop(0, 'rgba(226, 255, 238, 0.98)');
+            orb.addColorStop(0.5, 'rgba(86, 214, 142, 0.78)');
+            orb.addColorStop(1, 'rgba(20, 102, 66, 0.12)');
+            ctx.fillStyle = orb;
+            ctx.beginPath();
+            ctx.arc(cx, cy, r, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.strokeStyle = 'rgba(191, 255, 218, 0.88)';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(cx, cy, r * 0.7, 0, Math.PI * 2);
+            ctx.stroke();
+
+            // Tiny orbiting sparkle particles for a power-up feel.
+            const sparkleCount = 6;
+            for (let i = 0; i < sparkleCount; i++) {
+                const t = progress * 0.018 + i * (Math.PI * 2 / sparkleCount);
+                const orbit = r * (0.78 + 0.2 * Math.sin(progress * 8 + i));
+                const sx = cx + Math.cos(t * 12) * orbit;
+                const sy = cy + Math.sin(t * 10) * orbit * 0.7;
+                const twinkle = 0.45 + 0.55 * Math.sin(progress * 20 + i * 1.7);
+                const sparkleR = 1.2 + twinkle * 1.6;
+                ctx.fillStyle = `rgba(226, 255, 239, ${0.45 + twinkle * 0.5})`;
+                ctx.shadowColor = 'rgba(130, 255, 184, 0.8)';
+                ctx.shadowBlur = 6;
+                ctx.beginPath();
+                ctx.arc(sx, sy, sparkleR, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            ctx.shadowColor = 'rgba(71, 214, 128, 0.45)';
+            ctx.shadowBlur = 12;
+            ctx.fillStyle = '#f2fff7';
+            ctx.strokeStyle = 'rgba(19, 87, 57, 0.92)';
+            ctx.lineWidth = 2.5;
+            ctx.font = 'bold 17px Arial';
+            ctx.textAlign = 'center';
+            ctx.strokeText(ft.text, cx, cy + 6);
+            ctx.fillText(ft.text, cx, cy + 6);
+        } else {
+            ctx.font = 'bold 18px Arial';
+            ctx.fillStyle = '#5D4037';
+            ctx.strokeStyle = '#fff';
+            ctx.lineWidth = 3;
+            ctx.strokeText(ft.text, ft.x, ft.y);
+            ctx.fillText(ft.text, ft.x, ft.y);
+        }
+        ctx.restore();
+    }
+
+    if (debug && player) {
+        const b = player.getBounds();
+        ctx.strokeStyle = 'yellow';
+        ctx.strokeRect(b.x, b.y, b.width, b.height);
+    }
+
+    ctx.restore();
+
+    if (flashMs > 0) {
+        ctx.save();
+        ctx.fillStyle = `rgba(231, 76, 60, ${0.35 * (flashMs / 100)})`;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.restore();
+    }
+}
+
+/**
+ * @param {number} ts
+ */
+function gameLoop(ts) {
+    const dt = Math.min(MAX_DT_MS, lastTs ? ts - lastTs : 16.67);
+    lastTs = ts;
+
+    // Pause overlay has z-index above menus; CSS + class gate it to gameplay only.
+    if (gameContainer) {
+        gameContainer.classList.toggle('gameplay-active', gameState === 'play');
+    }
+    if (gameState !== 'play') {
+        paused = false;
+        if (pauseOverlay) {
+            pauseOverlay.classList.add('hidden');
+            pauseOverlay.setAttribute('aria-hidden', 'true');
+        }
+    }
+
+    if (gameState === 'play') {
+        if (!paused) {
+            updatePlay(dt);
+        }
+        render(dt);
+    } else if (gameState === 'start' || gameState === 'intro2' || gameState === 'intro3') {
+        renderTitleIdle(dt);
+    }
+
+    requestAnimationFrame(gameLoop);
+}
+
+/**
+ * Idle animation on start screen.
+ * @param {number} dt
+ */
+function renderTitleIdle(dt) {
+    if (!assets || !player || !chaser) return;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawBackground(dt);
+    const groundY = canvas.height - 150;
+    player.y = groundY - PLAYER_H;
+    player.x = canvas.width / 2 - 120;
+    player.state = 'run';
+    player.bobPhase += dt * 0.012;
+    chaser.displayX = player.x + 140;
+    chaser.bobPhase += dt * 0.012;
+    chaser.draw(ctx, groundY, 200);
+    player.draw(ctx);
+}
+
+/** Start menu music in the same turn as a user gesture (required on Vercel / most browsers). */
+function tryUnlockPreGameAudio() {
+    if (gameState !== 'start' && gameState !== 'intro2' && gameState !== 'intro3') return;
+    sound.playStartingFromUserGesture();
+}
+
+/** Home / post–game-over menu. */
+function enterStart() {
+    gameState = 'start';
+    gameContainer?.classList.remove('gameplay-active');
+    sound.stopBgm();
+    sound.stopEndscreenLoop();
+    if (startScreen) startScreen.classList.add('active');
+    if (introScreen2) introScreen2.classList.remove('active');
+    if (introScreen3) introScreen3.classList.remove('active');
+    if (gameoverScreen) gameoverScreen.classList.remove('active');
+    if (uiLayer) uiLayer.classList.add('hidden');
+    if (pauseOverlay) pauseOverlay.classList.add('hidden');
+    paused = false;
+    if (menuHigh) menuHigh.textContent = String(Math.floor(highScore));
+    if (startHighScoreLine) startHighScoreLine.classList.add('hidden');
+    resetRun();
+    // Start pre-game loop; gameplay BGM starts only inside startGame().
+    sound.startStartingLoop();
+}
+
+function showIntro2() {
+    gameState = 'intro2';
+    gameContainer?.classList.remove('gameplay-active');
+    paused = false;
+    if (pauseOverlay) pauseOverlay.classList.add('hidden');
+    sound.stopBgm();
+    sound.stopEndscreenLoop();
+    if (startScreen) startScreen.classList.remove('active');
+    if (introScreen2) introScreen2.classList.add('active');
+    if (introScreen3) introScreen3.classList.remove('active');
+    if (gameoverScreen) gameoverScreen.classList.remove('active');
+    if (uiLayer) uiLayer.classList.add('hidden');
+    if (pauseOverlay) pauseOverlay.classList.add('hidden');
+}
+
+function showIntro3() {
+    gameState = 'intro3';
+    gameContainer?.classList.remove('gameplay-active');
+    paused = false;
+    if (pauseOverlay) pauseOverlay.classList.add('hidden');
+    sound.stopBgm();
+    sound.stopEndscreenLoop();
+    if (startScreen) startScreen.classList.remove('active');
+    if (introScreen2) introScreen2.classList.remove('active');
+    if (introScreen3) introScreen3.classList.add('active');
+    if (gameoverScreen) gameoverScreen.classList.remove('active');
+    if (uiLayer) uiLayer.classList.add('hidden');
+    if (pauseOverlay) pauseOverlay.classList.add('hidden');
+}
+
+/**
+ * Begin gameplay.
+ */
+async function startGame() {
+    gameState = 'play';
+    paused = false;
+    gameContainer?.classList.add('gameplay-active');
+    sound.stopStartingLoop();
+    sound.stopEndscreenLoop();
+    if (startScreen) startScreen.classList.remove('active');
+    if (introScreen2) introScreen2.classList.remove('active');
+    if (introScreen3) introScreen3.classList.remove('active');
+    if (gameoverScreen) gameoverScreen.classList.remove('active');
+    if (uiLayer) uiLayer.classList.remove('hidden');
+    if (pauseOverlay) pauseOverlay.classList.add('hidden');
+
+    if (!assets) {
+        const introBtn = document.getElementById('intro-play-btn');
+        const restartBtn = document.getElementById('restart-btn');
+        const btn = introBtn || restartBtn;
+        const prevText = btn?.textContent || 'PLAY';
+        if (btn) {
+            btn.textContent = 'LOADING...';
+            btn.setAttribute('disabled', 'true');
+        }
+        try {
+            assets = await ensureSpritesLoading();
+        } catch (e) {
+            reportIssue('runtime', 'Sprites failed to load before play', { error: String(e) });
+        } finally {
+            if (btn) {
+                btn.textContent = prevText;
+                btn.removeAttribute('disabled');
+            }
+        }
+    }
+
+    resetRun();
+    sound.resume();
+    sound.startBgm();
+    updateLivesHud();
+    if (highHud) highHud.textContent = `Best: ${Math.floor(highScore)}`;
+}
+
+function togglePause() {
+    if (gameState !== 'play') return;
+    paused = !paused;
+    if (pauseOverlay) {
+        pauseOverlay.classList.toggle('hidden', !paused);
+        pauseOverlay.setAttribute('aria-hidden', paused ? 'false' : 'true');
+    }
+}
+
+function onKeyDown(e) {
+    if (
+        (gameState === 'start' || gameState === 'intro2' || gameState === 'intro3') &&
+        !e.repeat &&
+        (e.code === 'Space' || e.code === 'Enter')
+    ) {
+        tryUnlockPreGameAudio();
+    }
+    if (e.code === 'Space') {
+        e.preventDefault();
+    }
+    if (e.code === 'KeyP') {
+        if (gameState === 'play' && !e.repeat) {
+            e.preventDefault();
+            togglePause();
+        }
+        return;
+    }
+    if (gameState === 'play' && !paused && player) {
+        if (e.code === 'Space') {
+            sound.playJump();
+            sound.playGirlEvent('jump');
+            const truckLongJump = obstacles ? obstacles.shouldUseTruckLongJump(player) : false;
+            player.jump(player.isGrounded(), truckLongJump);
+        }
+        if (e.code === 'ArrowDown') {
+            sound.playGirlEvent('slide');
+            player.slide();
+        }
+    }
+    if (e.code === 'KeyD') {
+        debug = !debug;
+    }
+}
+
+function onKeyUp(e) {
+    if (e.code === 'Space') {
+        e.preventDefault();
+        if (player) player.releaseJump();
+    }
+}
+
+let touchStartY = 0;
+let touchStartX = 0;
+let touchStartTs = 0;
+let activePointerId = null;
+function onPointerDown(e) {
+    if (activePointerId !== null) return;
+    activePointerId = e.pointerId;
+    touchStartX = e.clientX;
+    touchStartY = e.clientY;
+    touchStartTs = performance.now();
+}
+function onPointerUp(e) {
+    if (gameState !== 'play' || paused || !player) return;
+    if (activePointerId !== e.pointerId) return;
+    const dx = e.clientX - touchStartX;
+    const dy = e.clientY - touchStartY;
+    const elapsed = performance.now() - touchStartTs;
+    activePointerId = null;
+    // Ignore long presses and horizontal drags to reduce accidental jumps/slides.
+    if (elapsed > 450 || Math.abs(dx) > 80) return;
+    if (dy > 42) {
+        sound.playGirlEvent('slide');
+        player.slide();
+    } else {
+        sound.playJump();
+        sound.playGirlEvent('jump');
+        const truckLongJump = obstacles ? obstacles.shouldUseTruckLongJump(player) : false;
+        player.jump(player.isGrounded(), truckLongJump);
+    }
+}
+function onPointerCancel(e) {
+    if (activePointerId === e.pointerId) activePointerId = null;
+}
+
+function resizeStageToViewport() {
+    const containerEl = gameContainer ?? document.body;
+    const stageEl = gameStage ?? containerEl;
+    if (!containerEl || !stageEl) return;
+
+    // Keep internal game coordinates fixed (desktop-perfect), scale the whole stage to fit.
+    const BASE_W = 1200;
+    const BASE_H = 675;
+    const rect = containerEl.getBoundingClientRect();
+    const availW = Math.max(1, rect.width);
+    const availH = Math.max(1, rect.height);
+    const scale = Math.min(availW / BASE_W, availH / BASE_H, 1);
+    stageEl.style.setProperty('--stage-scale', String(scale));
+}
+
+async function boot() {
+    try {
+        // Never block the start screen. Load audio/sprites opportunistically in the background.
+        enterStart();
+
+        // Kick off menu-music preload (may still require gesture to actually play).
+        void sound.preloadStartingOnly().catch(() => {});
+
+        // Start sprite fetching right after the first paint (more reliable than idle callbacks).
+        const startSprites = () => {
+            void ensureSpritesLoading()
+                .then((loadedAssets) => {
+                    assets = loadedAssets;
+                    resetRun();
+                })
+                .catch((e) => {
+                    reportIssue('runtime', 'Sprite load failed', { error: String(e) });
+                });
+        };
+        if (typeof window.requestAnimationFrame === 'function') {
+            requestAnimationFrame(() => startSprites());
+        } else {
+            window.setTimeout(startSprites, 0);
+        }
+
+        sound.preloadRemainingInBackground();
+    } catch (e) {
+        reportIssue('runtime', 'Boot failed', { error: String(e) });
+    }
+}
+
+document.getElementById('play-btn')?.addEventListener('click', () => {
+    tryUnlockPreGameAudio();
+    showIntro2();
+});
+
+document.getElementById('highest-btn')?.addEventListener('click', () => {
+    tryUnlockPreGameAudio();
+    if (menuHigh) menuHigh.textContent = String(Math.floor(highScore));
+    if (startHighScoreLine) startHighScoreLine.classList.remove('hidden');
+});
+
+document.getElementById('intro-next-btn')?.addEventListener('click', () => {
+    tryUnlockPreGameAudio();
+    showIntro3();
+});
+
+document.getElementById('intro-play-btn')?.addEventListener('click', () => {
+    void sound.resume();
+    void startGame();
+});
+
+document.getElementById('restart-btn')?.addEventListener('click', () => {
+    void startGame();
+});
+
+document.getElementById('home-btn')?.addEventListener('click', () => {
+    enterStart();
+    tryUnlockPreGameAudio();
+});
+
+document.getElementById('mute-btn')?.addEventListener('click', () => {
+    const m = sound.toggleMute();
+    const btn = document.getElementById('mute-btn');
+    if (btn) btn.textContent = m ? '🔇' : '🔊';
+});
+
+document.getElementById('pause-btn')?.addEventListener('click', () => {
+    if (gameState === 'play') togglePause();
+});
+
+pauseOverlay?.addEventListener('click', (e) => {
+    if (gameState === 'play' && paused) {
+        e.preventDefault();
+        togglePause();
+    }
+});
+
+if (profileImgEl) {
+    profileImgEl.addEventListener('error', () => {
+        const s = profileImgEl.getAttribute('src') || '';
+        if (s.includes('profile.png')) {
+            profileImgEl.setAttribute('src', `${ASSET_BASE}profileoo.png`);
+        } else {
+            profileImgEl.setAttribute('src', `${ASSET_BASE}girl.png`);
+        }
+    });
+}
+
+document.getElementById('play-btn')?.addEventListener('mouseenter', () => {
+    tryUnlockPreGameAudio();
+});
+
+const gameContainerEl = document.getElementById('game-container');
+gameContainerEl?.addEventListener(
+    'pointerdown',
+    () => {
+        tryUnlockPreGameAudio();
+    },
+    { capture: true }
+);
+
+window.addEventListener('keydown', onKeyDown);
+window.addEventListener('keyup', onKeyUp);
+window.addEventListener('resize', resizeStageToViewport);
+window.addEventListener('orientationchange', () => {
+    requestAnimationFrame(() => {
+        resizeStageToViewport();
+        requestAnimationFrame(resizeStageToViewport);
+    });
+});
+window.addEventListener('blur', () => {
+    if (gameState === 'play') {
+        paused = true;
+        if (pauseOverlay) {
+            pauseOverlay.classList.remove('hidden');
+            pauseOverlay.setAttribute('aria-hidden', 'false');
+        }
+    }
+});
+window.addEventListener('error', (e) => {
+    reportIssue('runtime', 'Unhandled window error', {
+        message: e.message,
+        source: e.filename,
+        line: e.lineno,
+        column: e.colno,
+    });
+});
+window.addEventListener('unhandledrejection', (e) => {
+    reportIssue('runtime', 'Unhandled promise rejection', {
+        reason: String(e.reason),
+    });
+});
+window.addEventListener('game:issue', () => {
+    runtimeIssueCount += 1;
+    if (speedHud && gameState === 'play') {
+        const spPct = Math.round((scrollSpeed / BASE_SCROLL) * 100);
+        speedHud.textContent = `Speed: ${spPct}% | Issues: ${runtimeIssueCount}`;
+    }
+});
+
+canvas.addEventListener('pointerdown', onPointerDown, { passive: true });
+canvas.addEventListener('pointerup', onPointerUp, { passive: true });
+canvas.addEventListener('pointercancel', onPointerCancel, { passive: true });
+
+void boot();
+resizeStageToViewport();
+requestAnimationFrame(gameLoop);
+</file>
+
+</files>

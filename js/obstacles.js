@@ -2,7 +2,7 @@
  * Obstacles & power-ups: pooling, spawn, types.
  */
 
-import { ObjectPool, checkCollision } from './utils.js';
+import { ObjectPool, checkCollision, getGroundY } from './utils.js';
 
 /** @typedef {'rock'|'riksha'|'rakin'|'heart'|'coin'} ObstacleKind */
 
@@ -94,7 +94,7 @@ export class ObstacleManager {
      * @param {number} scrollSpeed
      */
     _spawnOne(scrollSpeed) {
-        const groundY = this.canvas.height - 150;
+        const groundY = getGroundY(this.canvas.height);
         const o = this.pool.acquire();
         o.active = true;
         o.x = this.canvas.width + 40;
@@ -218,13 +218,15 @@ export class ObstacleManager {
     /**
      * @param {number} scrollSpeed
      * @param {number} [dtMs=16.67]
+     * @param {boolean} [isMobilePortrait=false]
      */
-    scrollAll(scrollSpeed, dtMs = 16.67) {
+    scrollAll(scrollSpeed, dtMs = 16.67, isMobilePortrait = false) {
         const frameScale = Math.max(0.45, Math.min(2, dtMs / 16.67));
         for (let i = this.active.length - 1; i >= 0; i--) {
             const o = this.active[i];
             if (!o) continue;
-            const extraRun = o.kind === 'rakin' ? scrollSpeed * 0.55 : 0;
+            const rakinBoost = isMobilePortrait ? 0.22 : 0.55;
+            const extraRun = o.kind === 'rakin' ? scrollSpeed * rakinBoost : 0;
             o.x -= (scrollSpeed + extraRun) * frameScale;
             o.animPhase += o.kind === 'rakin' ? 0.28 : 0.08;
             if (o.x + o.width < -20) {
@@ -418,7 +420,7 @@ export class ObstacleManager {
      * @param {boolean} debug
      */
     draw(ctx, debug) {
-        const groundY = this.canvas.height - 150;
+        const groundY = getGroundY(this.canvas.height);
         for (const o of this.active) {
             if (!o.active) continue;
             let src = this.images.rock;

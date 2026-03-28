@@ -7,10 +7,12 @@ import { Chaser } from './chaser.js';
 import { ObstacleManager } from './obstacles.js';
 import { Player, PLAYER_H } from './player.js';
 import { reportIssue } from './issue-tracker.js';
-import { loadFirstAvailableImage, loadImageOrPlaceholder } from './utils.js';
+import { getGroundY, loadFirstAvailableImage, loadImageOrPlaceholder } from './utils.js';
 
 const STORAGE_KEY = 'catchMeHighScore';
 const ASSET_BASE = '/assets/images/';
+const LANDSCAPE_STAGE = Object.freeze({ width: 1200, height: 675 });
+const MOBILE_PORTRAIT_STAGE = Object.freeze({ width: 540, height: 960 });
 
 /** @type {'start'|'intro2'|'intro3'|'play'|'over'} */
 let gameState = 'start';
@@ -81,9 +83,19 @@ const achievements = {
     closeCall: false,
 };
 let runtimeIssueCount = 0;
+let isMobilePortraitMode = false;
 
 function getFrameScale(dtMs) {
     return dtMs / 16.67;
+}
+
+function getPlayerStartX() {
+    if (isMobilePortraitMode) return 0;
+    return Math.round(canvas.width * 0.23);
+}
+
+function getInitialGap() {
+    return Math.round(canvas.width * 0.36);
 }
 
 /**
@@ -215,7 +227,7 @@ let playerIframes = 0;
 function resetRun() {
     score = 0;
     lives = MAX_LIVES;
-    gap = 400;
+    gap = getInitialGap();
     scrollSpeed = BASE_SCROLL;
     difficulty = 0;
     targetEscapeRate = 0.12;
@@ -236,6 +248,8 @@ function resetRun() {
     if (assets && canvas) {
         // Player is now the girl; target/chaser actor is the boy.
         player = new Player({ canvas, sprites: assets.girl });
+        player.x = getPlayerStartX();
+        player.targetX = player.x;
         chaser = new Chaser({ sprites: assets.boy });
         obstacles = new ObstacleManager({
             canvas,
@@ -306,6 +320,7 @@ function updateAchievements(dt) {
  */
 function gameOver(reason) {
     gameState = 'over';
+    resizeStageToViewport();
     gameContainer?.classList.remove('gameplay-active');
     paused = false;
     if (pauseOverlay) pauseOverlay.classList.add('hidden');
@@ -361,7 +376,7 @@ function updatePlay(dt) {
 
     player.update(dt);
     obstacles.updateSpawn(dt, scrollSpeed, difficulty);
-    obstacles.scrollAll(scrollSpeed, dt);
+    obstacles.scrollAll(scrollSpeed, dt, isMobilePortraitMode);
     obstacles.trackProximity(player);
     const visibleRakinCount = obstacles.countVisibleKind('rakin');
     sound.syncRakinEncounterVoices(visibleRakinCount);
@@ -465,7 +480,7 @@ function updatePlay(dt) {
     if (lives <= 0 || gap <= 0) {
         gameOver(lives <= 0 ? 'hearts' : 'caught');
     }
-    gap = Math.max(0, Math.min(1200, gap));
+    gap = Math.max(0, Math.min(canvas.width, gap));
 
     for (let i = floatTexts.length - 1; i >= 0; i--) {
         const ft = floatTexts[i];
@@ -482,7 +497,7 @@ function drawBackground(dt) {
     if (!assets) return;
     const w = canvas.width;
     const h = canvas.height;
-    const groundY = h - 150;
+    const groundY = getGroundY(h);
 
     const img = assets.bg;
     const srcW = Number(img.width) || w;
@@ -567,7 +582,7 @@ function render(dt) {
     ctx.clearRect(-20, -20, canvas.width + 40, canvas.height + 40);
     drawBackground(dt);
 
-    const groundY = canvas.height - 150;
+    const groundY = getGroundY(canvas.height);
     chaser.draw(ctx, groundY, gap);
     player.drawDust(ctx, scrollSpeed);
     player.draw(ctx);
@@ -745,9 +760,10 @@ function renderTitleIdle(dt) {
     if (!assets || !player || !chaser) return;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawBackground(dt);
-    const groundY = canvas.height - 150;
+    const groundY = getGroundY(canvas.height);
     player.y = groundY - PLAYER_H;
-    player.x = canvas.width / 2 - 120;
+    player.x = Math.max(56, Math.round(canvas.width * 0.36));
+    player.targetX = player.x;
     player.state = 'run';
     player.bobPhase += dt * 0.012;
     chaser.displayX = player.x + 140;
@@ -765,6 +781,7 @@ function tryUnlockPreGameAudio() {
 /** Home / post–game-over menu. */
 function enterStart() {
     gameState = 'start';
+    resizeStageToViewport();
     gameContainer?.classList.remove('gameplay-active');
     sound.stopBgm();
     sound.stopEndscreenLoop();
@@ -784,6 +801,7 @@ function enterStart() {
 
 function showIntro2() {
     gameState = 'intro2';
+    resizeStageToViewport();
     gameContainer?.classList.remove('gameplay-active');
     paused = false;
     if (pauseOverlay) pauseOverlay.classList.add('hidden');
@@ -799,6 +817,7 @@ function showIntro2() {
 
 function showIntro3() {
     gameState = 'intro3';
+    resizeStageToViewport();
     gameContainer?.classList.remove('gameplay-active');
     paused = false;
     if (pauseOverlay) pauseOverlay.classList.add('hidden');
@@ -817,6 +836,7 @@ function showIntro3() {
  */
 async function startGame() {
     gameState = 'play';
+    resizeStageToViewport();
     paused = false;
     gameContainer?.classList.add('gameplay-active');
     sound.stopStartingLoop();
@@ -946,13 +966,40 @@ function resizeStageToViewport() {
     const stageEl = gameStage ?? containerEl;
     if (!containerEl || !stageEl) return;
 
-    // Keep internal game coordinates fixed (desktop-perfect), scale the whole stage to fit.
-    const BASE_W = 1200;
-    const BASE_H = 675;
     const rect = containerEl.getBoundingClientRect();
     const availW = Math.max(1, rect.width);
     const availH = Math.max(1, rect.height);
-    const scale = Math.min(availW / BASE_W, availH / BASE_H, 1);
+    const isNarrowViewport = availW <= 900;
+    const shouldUsePortraitStage = isNarrowViewport && availH > availW;
+    const base = shouldUsePortraitStage ? MOBILE_PORTRAIT_STAGE : LANDSCAPE_STAGE;
+
+    if (shouldUsePortraitStage !== isMobilePortraitMode) {
+        isMobilePortraitMode = shouldUsePortraitStage;
+        gameContainer?.classList.toggle('mobile-portrait', shouldUsePortraitStage);
+    }
+
+    stageEl.style.setProperty('--stage-width', `${base.width}px`);
+    stageEl.style.setProperty('--stage-height', `${base.height}px`);
+    if (canvas.width !== base.width || canvas.height !== base.height) {
+        canvas.width = base.width;
+        canvas.height = base.height;
+        if (player) {
+            player.groundY = getGroundY(canvas.height);
+            player.x = getPlayerStartX();
+            player.targetX = player.x;
+            player.y = Math.min(player.y, player.groundY - PLAYER_H);
+        }
+        if (chaser && player) {
+            chaser.displayX = player.x + gap;
+        }
+    }
+
+    // Mobile portrait gameplay uses cover for immersive action.
+    // Menus/game-over use contain so poster art is fully visible.
+    const useCoverScale = shouldUsePortraitStage && gameState === 'play';
+    const scale = useCoverScale
+        ? Math.max(availW / base.width, availH / base.height)
+        : Math.min(availW / base.width, availH / base.height);
     stageEl.style.setProperty('--stage-scale', String(scale));
 }
 
